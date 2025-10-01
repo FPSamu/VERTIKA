@@ -1,4 +1,5 @@
 # VERTIKA
 
-#Diagrama ER
-[Imgur](https://imgur.com/0IM0Os5)
+## Diagrama ER
+
+![Imgur](https://imgur.com/0IM0Os5.png)
