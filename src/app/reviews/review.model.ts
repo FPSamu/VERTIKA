@@ -6,7 +6,7 @@ class Review {
     userId: ObjectId;
     experienceId: ObjectId;
     guideId: ObjectId;
-    rating?: number;
+    experienceRating?: number;
     guideRating?: number;
     comment?: string;
     photos?: string[];
@@ -27,7 +27,7 @@ class Review {
         this.userId = userId;
         this.experienceId = experienceId;
         this.guideId = guideId;
-        this.rating = rating;
+        this.experienceRating = rating;
         this.guideRating = guideRating;
         this.comment = comment;
         this.photos = photos;
