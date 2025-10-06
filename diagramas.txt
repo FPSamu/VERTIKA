@@ -1,0 +1,135 @@
+--- Diagrama entidad relacion ---
+
+erDiagram
+	direction LR
+	USER {
+		ObjectId _id  ""  
+		string name  ""  
+		string email  ""  
+		string[] roles  ""  
+		boolean emailVerified  ""  
+		date dateOfBirth  ""  
+		date createdAt  ""  
+		date updatedAt  ""  
+	}
+
+	GUIDE {
+		ObjectId _id  ""  
+		ObjectId userId  "referencia a USER"  
+		string bio  ""  
+		string[] certifications  ""  
+		number experienceYears  ""  
+		string[] specialties  ""  
+		string[] languages  ""  
+		boolean verified  ""  
+		number rating  "promedio o valor agregado si más adelante agregas cálculo"  
+		date createdAt  ""  
+		date updatedAt  ""  
+	}
+
+	EXPERIENCE {
+		ObjectId _id  ""  
+		ObjectId guideId  "referencia a GUIDE"  
+		string title  ""  
+		string activity  "ej: hiking | mountaineering | rock_climbing | trail"  
+		string location  "texto libre: parque/área/ruta"  
+		string difficulty  "escala"  
+		date date  ""  
+		number minGroupSize  "mínimo requerido"  
+		number maxGroupSize  "capacidad máxima"  
+		number pricePerPerson  ""  
+		string currency  "MXN|USD"  
+		string[] photos  "URLs"  
+		string status  "draft|published|archived|cancelled"  
+		boolean booked  "true al confirmar la única reserva"  
+		number rating  "UN SOLO rating (1..5) por experiencia"  
+		date createdAt  ""  
+		date updatedAt  ""  
+	}
+
+	RESERVATION {
+		ObjectId _id  ""  
+		ObjectId experienceId  "referencia a EXPERIENCE (única)"  
+		ObjectId userId  "líder/pagador (USER)"  
+		number seats  "1..maxGroupSize"  
+		string status  "pending|confirmed|cancelled|completed|expired"  
+		number total  ""  
+		date createdAt  ""  
+		date updatedAt  ""  
+	}
+
+	REVIEW {
+		ObjectId _id  ""  
+		ObjectId reservationId  "referencia única a RESERVATION"  
+		ObjectId userId  "autor (USER)"  
+		ObjectId experienceId  "EXPERIENCE"  
+		ObjectId guideId  "GUIDE"  
+		number rating  "1..5"  
+		string comment  ""  
+		string[] photos  "URLs"  
+		date createdAt  ""  
+		date updatedAt  ""  
+	}
+
+	USER||--||GUIDE:"perfil (1:1 por userId)"
+	GUIDE||--o{EXPERIENCE:"publica"
+	USER||--o{RESERVATION:"hace (líder)"
+	EXPERIENCE||--o|RESERVATION:"1 a 1 (una reserva por experiencia)"
+	RESERVATION||--o|REVIEW:"1 a 1 tras completed"
+	EXPERIENCE||--o{REVIEW:"muestra comentarios"
+	GUIDE||--o{REVIEW:"acumula reputación"
+
+
+--- Diagrama de Flujo ----
+
+@startuml
+title Flujo principal de reservación y reseña (Vertika)
+
+actor Usuario as U
+participant "Web/App" as FE
+participant "API Backend" as API
+database "MongoDB" as DB
+participant "Guía" as G
+
+== Explorar experiencias ==
+U -> FE: Buscar experiencias
+FE -> API: GET /experiences?status=published
+API -> DB: find(Experience)
+DB --> API: lista de experiencias
+API --> FE: lista experiencias
+
+U -> FE: Ver detalle de experiencia
+FE -> API: GET /experiences/{id}
+API -> DB: findOne(Experience)
+DB --> API: experiencia
+API --> FE: detalle experiencia
+
+== Crear reserva ==
+U -> FE: Reservar (indica seats)
+FE -> API: POST /reservations {experienceId, seats}
+API -> DB: insertOne(Reservation status=pending)
+DB --> API: reserva creada
+API --> FE: confirmación (pending)
+
+== Confirmación ==
+API -> DB: validar seats <= maxGroupSize
+API -> DB: update Reservation.status="confirmed"
+API -> DB: update Experience.booked=true
+DB --> API: OK
+API --> FE: Reserva confirmada
+
+== Salida y finalización ==
+G -> API: Marcar experiencia como completada
+API -> DB: update Reservation.status="completed"
+API -> DB: update Experience.status="archived"
+
+== Review ==
+U -> FE: Escribir reseña
+FE -> API: POST /reviews {reservationId, rating, comment, photos}
+API -> DB: insertOne(Review)
+API -> DB: update Experience.rating
+API -> DB: update Guide.rating
+DB --> API: OK
+API --> FE: Reseña publicada
+
+@enduml
