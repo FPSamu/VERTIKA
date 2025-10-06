@@ -7,7 +7,7 @@ const options: SwaggerOptions = {
        info: {
             title: 'API VERTIKA',
             description: 'API de Vertika',
-            version: '0.0.1'
+            version: '0.1.0'
        },
        servers: [
             { url: 'http://localhost:' + port}

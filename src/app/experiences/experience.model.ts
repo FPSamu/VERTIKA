@@ -4,6 +4,7 @@ class Experience {
     _id?: ObjectId;
     guideId: ObjectId;
     title: string;
+    description: string;
     activity: ActivityType;
     location: string;
     difficulty: DifficultyType;
@@ -22,6 +23,7 @@ class Experience {
     constructor(
         guideId: ObjectId,
         title: string,
+        description: string,
         activity: ActivityType,
         location: string,
         difficulty: DifficultyType,
@@ -36,6 +38,7 @@ class Experience {
         this.guideId = guideId;
         this.title = title;
         this.activity = activity;
+        this.description = description;
         this.location = location;
         this.difficulty = difficulty;
         this.date = date;

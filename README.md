@@ -39,3 +39,15 @@
 5. Tras confirmarse el pago, se crea la **reserva** en la base de datos.  
 6. El **guía** recibe la notificación y confirma la asistencia.  
 7. Al finalizar la expedición, el usuario puede dejar una **reseña**.  
+
+
+## Documentación de la API (Swagger)
+ 
+La documentación interactiva del API se encuentra disponible **al correr el proyecto** en:
+
+👉 http://localhost:3000/swagger
+
+Ahí podrás:
+- Explorar todos los **endpoints** agrupados por módulo (Users, Guides, Experiences, Reservations, Reviews).
+- Probar **peticiones** GET / POST / PATCH / DELETE directamente desde el navegador.
+- Consultar los **schemas** esperados en cada endpoint y las respuestas actuales.
