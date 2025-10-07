@@ -1,6 +1,9 @@
 <p align="center">
   <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA" height="240">
 </p> 
+
+**VERTIKA** es una plataforma web que conecta a usuarios con guías y agencias de montaña para reservar experiencias al aire libre.
+Busca ofrecer un servicio confiable, accesible y regional, verificación de guías y un sistema de reseñas para fomentar la seguridad y transparencia.
   
 ##  Diagrama ER  
 <p align="center">
