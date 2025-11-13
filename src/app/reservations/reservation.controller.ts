@@ -1,58 +1,71 @@
 import { Request, Response } from "express";
+import Reservation from "../reservations/reservation.model";
+import mongoose from "mongoose";
 
 /* GET /reservations */
-export function listReservations(req: Request, res: Response) {
-  res.json([
-    {
-      id: "res1",
-      experienceId: "exp1",
-      userId: "user1",
-      seats: 2,
-      status: "pending",
-      total: 17000,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ]);
+export async function listReservations(req: Request, res: Response) {
+  try {
+    const reservations = await Reservation.find();
+    res.json(reservations);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al listar reservas" });
+  }
 }
 
 /* GET /reservations/:id */
-export function getReservationById(req: Request, res: Response) {
-  res.json({ id: req.params.id });
+export async function getReservationById(req: Request, res: Response) {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) return res.status(404).json({ error: "Reserva no encontrada" });
+    res.json(reservation);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener reserva" });
+  }
 }
 
 /* POST /reservations */
-export function createReservation(req: Request, res: Response) {
-  const now = new Date().toISOString();
-  res.status(201).json({
-    id: "new_res_id",
-    status: "pending",
-    ...req.body,
-    createdAt: now,
-    updatedAt: now,
-  });
+export async function createReservation(req: Request, res: Response) {
+  try {
+    const { experienceId, userId, seats, total, status } = req.body;
+
+    const newReservation = await Reservation.create({
+      experienceId,
+      userId,
+      seats,
+      total,
+      status, // opcional, por defecto 'pending'
+    });
+
+    res.status(201).json(newReservation);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al crear reserva" });
+  }
 }
+
 
 /* PATCH /reservations/:id */
-export function updateReservation(req: Request, res: Response) {
-  res.json({
-    id: req.params.id,
-    ...req.body,
-    updatedAt: new Date().toISOString(),
-  });
-}
-
-/* PATCH /reservations/:id/status */
-export function updateReservationStatus(req: Request, res: Response) {
-  const { status } = req.body;
-  res.json({
-    id: req.params.id,
-    status: status ?? "pending",
-    updatedAt: new Date().toISOString(),
-  });
+export async function updateReservation(req: Request, res: Response) {
+  try {
+    const updated = await Reservation.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) return res.status(404).json({ error: "Reserva no encontrada" });
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al actualizar reserva" });
+  }
 }
 
 /* DELETE /reservations/:id */
-export function deleteReservation(req: Request, res: Response) {
-  res.status(204).send();
+export async function deleteReservation(req: Request, res: Response) {
+  try {
+    const deleted = await Reservation.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: "Reserva no encontrada" });
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al eliminar reserva" });
+  }
 }

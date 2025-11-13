@@ -4,7 +4,6 @@ import {
   getReservationById,
   createReservation,
   updateReservation,
-  updateReservationStatus,
   deleteReservation,
 } from "./reservation.controller";
 import { authMiddleware } from "../middlewares/auth";
@@ -73,10 +72,10 @@ router.get("/:id", getReservationById);
  *             properties:
  *               experienceId:
  *                 type: string
- *                 example: "exp1"
+ *                 example: "69151fdb25a16fe4e4157ccc"
  *               userId:
  *                 type: string
- *                 example: "user1"
+ *                 example: "69151fa525a16fe4e4157ccb"
  *               seats:
  *                 type: number
  *                 example: 2
@@ -99,7 +98,7 @@ router.post("/", authMiddleware, createReservation);
  *   patch:
  *     tags: [Reservations]
  *     summary: Actualizar una reserva existente
- *     description: Permite modificar campos de la reserva (por ejemplo seats o total). Requiere autenticación.
+ *     description: Permite modificar cualquier campo de la reserva (por ejemplo seats, total o status). Requiere autenticación.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -117,45 +116,12 @@ router.post("/", authMiddleware, createReservation);
  *             example:
  *               seats: 3
  *               total: 25500
+ *               status: "confirmed"
  *     responses:
  *       200:
  *         description: Reserva actualizada
  */
 router.patch("/:id", authMiddleware, updateReservation);
-
-/**
- * @swagger
- * /reservations/{id}/status:
- *   patch:
- *     tags: [Reservations]
- *     summary: Actualizar el estado de una reserva
- *     description: Cambia únicamente el campo status de la reserva. Requiere autenticación.
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - status
- *             properties:
- *               status:
- *                 type: string
- *                 enum: ["pending", "confirmed", "cancelled"]
- *                 example: "confirmed"
- *     responses:
- *       200:
- *         description: Estado actualizado
- */
-router.patch("/:id/status", authMiddleware, updateReservationStatus);
 
 /**
  * @swagger
