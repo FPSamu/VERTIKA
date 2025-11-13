@@ -10,6 +10,7 @@ import {
   deleteExperience,
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
+import { guideVerificationMiddleware } from "../middlewares/guideVerification";
 
 const router = Router();
 
@@ -120,7 +121,7 @@ router.get("/:id", getExperienceById);
  *       201:
  *         description: Experiencia creada correctamente
  */
-router.post("/", authMiddleware, createExperience);
+router.post("/", authMiddleware, guideVerificationMiddleware,createExperience);
 
 /**
  * @swagger
@@ -149,7 +150,7 @@ router.post("/", authMiddleware, createExperience);
  *       200:
  *         description: Experiencia actualizada
  */
-router.patch("/:id", authMiddleware, updateExperience);
+router.patch("/:id", authMiddleware, guideVerificationMiddleware, updateExperience);
 
 /**
  * @swagger
@@ -168,7 +169,7 @@ router.patch("/:id", authMiddleware, updateExperience);
  *       200:
  *         description: Experiencia publicada
  */
-router.patch("/:id/publish", authMiddleware, publishExperience);
+router.patch("/:id/publish", authMiddleware,guideVerificationMiddleware ,publishExperience);
 
 /**
  * @swagger
@@ -187,7 +188,7 @@ router.patch("/:id/publish", authMiddleware, publishExperience);
  *       201:
  *         description: Nueva experiencia clonada en estado draft
  */
-router.post("/:id/republish", authMiddleware, republishExperience);
+router.post("/:id/republish", authMiddleware,guideVerificationMiddleware ,republishExperience);
 
 /**
  * @swagger
@@ -206,7 +207,7 @@ router.post("/:id/republish", authMiddleware, republishExperience);
  *       200:
  *         description: Experiencia archivada correctamente
  */
-router.patch("/:id/archive", authMiddleware, archiveExperience);
+router.patch("/:id/archive", authMiddleware,guideVerificationMiddleware ,archiveExperience);
 
 /**
  * @swagger
@@ -225,6 +226,6 @@ router.patch("/:id/archive", authMiddleware, archiveExperience);
  *       204:
  *         description: Eliminada correctamente
  */
-router.delete("/:id", authMiddleware, deleteExperience);
+router.delete("/:id", authMiddleware,guideVerificationMiddleware, deleteExperience);
 
 export default router;
