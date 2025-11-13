@@ -21,6 +21,7 @@ Para habilitar el envío de emails en VERTIKA, debes configurar un servidor SMTP
    - Copia la contraseña de 16 caracteres
 
 3. **Configurar `.env`:**
+
    ```bash
    SMTP_HOST=smtp.gmail.com
    SMTP_PORT=587
@@ -67,7 +68,7 @@ Yahoo también requiere contraseñas de aplicación.
 
 SendGrid es un servicio especializado en envío de emails transaccionales.
 
-1. **Crear cuenta:** https://sendgrid.com (Gratis hasta 100 emails/día)
+1. **Crear cuenta:** `https://sendgrid.com` (Gratis hasta 100 emails/día)
 2. **Obtener API Key:** Settings → API Keys → Create API Key
 3. **Configurar `.env`:**
 
@@ -80,6 +81,7 @@ SMTP_PASSWORD=SG.tu_api_key_aqui
 ```
 
 **Ventajas:**
+
 - Mejor deliverability
 - Analytics detallados
 - No necesitas tu email personal
@@ -107,7 +109,7 @@ SMTP_PASSWORD=tu_secret_key
 
 **Perfecto para probar sin enviar emails reales.**
 
-1. **Crear cuenta:** https://mailtrap.io (Gratis)
+1. **Crear cuenta:** `https://mailtrap.io` (Gratis)
 2. **Obtener credenciales** de tu inbox
 3. **Configurar `.env`:**
 
@@ -120,6 +122,7 @@ SMTP_PASSWORD=tu_contraseña_mailtrap
 ```
 
 **Ventajas:**
+
 - Captura emails sin enviarlos
 - Interfaz web para ver emails
 - Prueba HTML y texto plano
@@ -198,11 +201,13 @@ console.log('Email enviado:', testEmail.messageId);
 ### Error: "Invalid login"
 
 **Causas comunes:**
+
 - Credenciales incorrectas
 - Necesitas contraseña de aplicación
 - Verificación en 2 pasos no configurada
 
 **Solución:**
+
 1. Verifica usuario y contraseña
 2. Para Gmail/Yahoo: genera contraseña de aplicación
 3. Revisa que no haya espacios extra en `.env`
@@ -212,10 +217,12 @@ console.log('Email enviado:', testEmail.messageId);
 ### Error: "Connection timeout"
 
 **Causas:**
+
 - Puerto bloqueado por firewall
 - ISP bloquea puerto 25/587
 
 **Solución:**
+
 1. Prueba puerto alternativo (2525)
 2. Verifica firewall/antivirus
 3. Prueba desde otra red
@@ -227,6 +234,7 @@ console.log('Email enviado:', testEmail.messageId);
 **Causa:** Problemas con certificados SSL
 
 **Solución temporal (solo desarrollo):**
+
 ```javascript
 const transporter = nodemailer.createTransport({
   // ... otras opciones
@@ -241,6 +249,7 @@ const transporter = nodemailer.createTransport({
 ### Emails van a spam
 
 **Soluciones:**
+
 1. **SPF Record:** Configura registro SPF en tu dominio
 2. **DKIM:** Habilita DKIM en tu proveedor
 3. **Usa servicio especializado:** SendGrid, AWS SES
@@ -266,6 +275,7 @@ FRONTEND_URL=http://localhost:5173
 ```
 
 **En producción:**
+
 ```bash
 FRONTEND_URL=https://vertika.com
 ```
@@ -275,11 +285,13 @@ FRONTEND_URL=https://vertika.com
 ## 📊 Mejores Prácticas
 
 ### Desarrollo
+
 ✅ Usa Mailtrap para capturar emails
 ✅ Prueba todas las plantillas
 ✅ Verifica enlaces en emails
 
 ### Producción
+
 ✅ Usa SendGrid o AWS SES
 ✅ Monitorea tasas de entrega
 ✅ Implementa manejo de rebotes
@@ -299,14 +311,14 @@ FRONTEND_URL=https://vertika.com
 
 ## 🔐 Seguridad
 
-### ⚠️ Nunca hagas esto:
+### ⚠️ Nunca hagas esto
 
 ❌ Subir `.env` a Git
 ❌ Compartir contraseñas de aplicación
 ❌ Usar tu email personal en producción
 ❌ Desactivar verificación SSL en producción
 
-### ✅ Haz esto:
+### ✅ Haz esto
 
 ✅ Usa variables de entorno
 ✅ Usa servicios dedicados (SendGrid, SES)
@@ -319,6 +331,7 @@ FRONTEND_URL=https://vertika.com
 ## 🎯 Recomendación Final
 
 **Para Desarrollo:**
+
 ```bash
 # Opción 1: Mailtrap (sin enviar emails reales)
 SMTP_HOST=smtp.mailtrap.io
@@ -328,6 +341,7 @@ SMTP_HOST=smtp.gmail.com
 ```
 
 **Para Producción:**
+
 ```bash
 # Opción 1: SendGrid (hasta 100/día gratis)
 SMTP_HOST=smtp.sendgrid.net
