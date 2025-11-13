@@ -4,7 +4,7 @@ import {
   getReviewById,
   createReview,
   updateReview,
-  deleteReview,
+  deleteReview
 } from "./review.controller";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -90,35 +90,27 @@ router.get("/:id", getReviewById);
  *             properties:
  *               reservationId:
  *                 type: string
- *                 example: "res1"
  *               userId:
  *                 type: string
- *                 example: "user1"
  *               experienceId:
  *                 type: string
- *                 example: "exp1"
  *               guideId:
  *                 type: string
- *                 example: "g1"
  *               experienceRating:
  *                 type: number
  *                 minimum: 1
  *                 maximum: 5
- *                 example: 5
  *               guideRating:
  *                 type: number
  *                 minimum: 1
  *                 maximum: 5
- *                 example: 5
  *               comment:
  *                 type: string
- *                 example: "Excelente experiencia."
  *               photos:
  *                 type: array
  *                 items:
  *                   type: string
  *                   format: uri
- *                 example: ["https://example.com/photo1.jpg"]
  *     responses:
  *       201:
  *         description: Reseña creada correctamente
