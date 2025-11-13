@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authRoutes from "./auth/auth.routes";
 import userRoutes from "./users/user.routes";
 import guideRoutes from "./guides/guide.routes";
 import experienceRoutes from "./experiences/experience.routes";
@@ -7,6 +8,7 @@ import reviewRoutes from "./reviews/review.routes";
 
 const router = Router();
 
+router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/guides", guideRoutes);
 router.use("/experiences", experienceRoutes);

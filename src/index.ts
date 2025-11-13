@@ -13,19 +13,23 @@ import routes from './app/routes'
 const port = process.env.PORT || 3000;
 const app = express();
 
-app.use(express.json()); 
-app.use(routes);
+// Middleware para parsear JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Rutas principales
+app.use('/api', routes);
 
 app.get('', (req, res)=> {
-
     res.send("Api funciona")
 })
+
 //Swagger
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/swagger', serve, setup(swaggerDocs))
+
 //Base de datos y listen 
 dbConnect().then(() => {
-
      app.listen(port, ()=>{
          console.log(`API corriendo en puerto ${port}`)
     })

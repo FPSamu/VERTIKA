@@ -47,11 +47,13 @@ class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crear nuevo usuario
-    const newUser = new User(name, email, hashedPassword, dateOfBirth, ['user']);
+    const newUser = new User(name, email, hashedPassword, dateOfBirth, ['customer']);
 
     // Generar token de verificación
     const verificationToken = emailService.generateVerificationToken();
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+
+    console.log(`🔐 Token de verificación generado para: ${email}`);
 
     // Agregar token al usuario
     (newUser as any).verificationToken = verificationToken;
@@ -59,13 +61,21 @@ class AuthService {
 
     // Insertar en la base de datos
     const result = await usersCollection.insertOne(newUser as any);
+    console.log(`💾 Usuario creado en BD con ID: ${result.insertedId}`);
 
     // Enviar email de verificación
-    await emailService.sendVerificationEmail(
+    console.log(`📧 Intentando enviar email de verificación a: ${newUser.email}`);
+    const emailSent = await emailService.sendVerificationEmail(
       newUser.email,
       newUser.name,
       verificationToken
     );
+    
+    if (emailSent) {
+      console.log(`✅ Email de verificación enviado correctamente a: ${newUser.email}`);
+    } else {
+      console.error(`❌ No se pudo enviar el email de verificación a: ${newUser.email}`);
+    }
 
     // Generar tokens JWT
     const tokens = this.generateTokens({

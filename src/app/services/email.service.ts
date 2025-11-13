@@ -11,16 +11,20 @@ class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    // Configurar el transporter
+    console.log('Inicializando EmailService...');
+    console.log('EMAIL_ADDRESS:', process.env.EMAIL_ADDRESS || 'NO CONFIGURADO');
+    console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'Configurado' : 'NO CONFIGURADO');
+    
+    // Configurar el transporter con Gmail
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true', // true para 465, false para otros puertos
+      service: 'gmail',
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASS,
       },
     });
+    
+    console.log('EmailService inicializado correctamente\n');
   }
 
   /**
@@ -28,15 +32,19 @@ class EmailService {
    */
   async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
+      console.log(`Preparando email para: ${options.to}`);
+      console.log(`Asunto: ${options.subject}`);
+      
       const mailOptions = {
-        from: `"VERTIKA" <${process.env.SMTP_USER}>`,
+        from: `"VERTIKA" <${process.env.EMAIL_ADDRESS}>`,
         to: options.to,
         subject: options.subject,
         html: options.html,
       };
 
-      await this.transporter.sendMail(mailOptions);
-      console.log(`Email enviado a ${options.to}`);
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log(`Email enviado exitosamente a ${options.to}`);
+      console.log(`Message ID: ${info.messageId}`);
       return true;
     } catch (error) {
       console.error('Error al enviar email:', error);
@@ -55,7 +63,9 @@ class EmailService {
    * Envía email de verificación
    */
   async sendVerificationEmail(email: string, name: string, token: string): Promise<boolean> {
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    // URL del backend para verificación directa
+    const backendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+    const verificationUrl = `${backendUrl}/api/auth/verify-email/${token}`;
 
     const html = `
       <!DOCTYPE html>
