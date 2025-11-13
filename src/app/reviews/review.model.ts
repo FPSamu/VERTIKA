@@ -1,39 +1,24 @@
-import { ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-class Review {
-    _id?: ObjectId;
-    reservationId: ObjectId;
-    userId: ObjectId;
-    experienceId: ObjectId;
-    guideId: ObjectId;
-    experienceRating?: number;
-    guideRating?: number;
-    comment?: string;
-    photos?: string[];
-    createdAt: Date;
-    updatedAt: Date;
+const ReviewSchema: Schema = new Schema({
+  reservationId: { type: mongoose.Types.ObjectId, required: true, ref: "Reservation" },
+  userId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  experienceId: { type: mongoose.Types.ObjectId, required: true, ref: "Experience" },
+  guideId: { type: mongoose.Types.ObjectId, required: true, ref: "Guide" },
+  experienceRating: { type: Number, min: 0, max: 5 },
+  guideRating: { type: Number, min: 0, max: 5 },
+  comment: { type: String },
+  photos: { type: [String], default: [] },
+  createdAt: { type: Date, default: () => new Date() },
+  updatedAt: { type: Date, default: () => new Date() },
+});
 
-    constructor(
-        reservationId: ObjectId,
-        userId: ObjectId,
-        experienceId: ObjectId,
-        guideId: ObjectId,
-        rating?: number,
-        guideRating?: number,
-        comment?: string,
-        photos: string[] = []
-    ) {
-        this.reservationId = reservationId;
-        this.userId = userId;
-        this.experienceId = experienceId;
-        this.guideId = guideId;
-        this.experienceRating = rating;
-        this.guideRating = guideRating;
-        this.comment = comment;
-        this.photos = photos;
-        this.createdAt = new Date();
-        this.updatedAt = this.createdAt;
-    }
-}
+// Actualizar updatedAt antes de guardar
+ReviewSchema.pre("save", function (next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+const Review = mongoose.model("Review", ReviewSchema);
 
 export default Review;
