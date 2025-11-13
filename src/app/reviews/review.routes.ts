@@ -19,7 +19,7 @@ const router = Router();
 
 /**
  * @swagger
- * /reviews:
+ * /api/reviews:
  *   get:
  *     tags: [Reviews]
  *     summary: Listar reseñas
@@ -49,7 +49,7 @@ router.get("/", listReviews);
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /api/reviews/{id}:
  *   get:
  *     tags: [Reviews]
  *     summary: Obtener una reseña por ID
@@ -69,7 +69,7 @@ router.get("/:id", getReviewById);
 
 /**
  * @swagger
- * /reviews:
+ * /api/reviews:
  *   post:
  *     tags: [Reviews]
  *     summary: Crear una nueva reseña
@@ -119,7 +119,7 @@ router.post("/", authMiddleware, createReview);
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /api/reviews/{id}:
  *   patch:
  *     tags: [Reviews]
  *     summary: Actualizar una reseña existente
@@ -151,7 +151,7 @@ router.patch("/:id", authMiddleware, updateReview);
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /api/reviews/{id}:
  *   delete:
  *     tags: [Reviews]
  *     summary: Eliminar una reseña

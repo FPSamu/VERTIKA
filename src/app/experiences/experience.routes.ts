@@ -23,7 +23,7 @@ const router = Router();
 
 /**
  * @swagger
- * /experiences:
+ * /api/experiences:
  *   get:
  *     tags: [Experiences]
  *     summary: Listar experiencias 
@@ -35,7 +35,7 @@ router.get("/", listExperiences);
 
 /**
  * @swagger
- * /experiences/{id}:
+ * /api/experiences/{id}:
  *   get:
  *     tags: [Experiences]
  *     summary: Obtener una experiencia por ID
@@ -55,7 +55,7 @@ router.get("/:id", getExperienceById);
 
 /**
  * @swagger
- * /experiences:
+ * /api/experiences:
  *   post:
  *     tags: [Experiences]
  *     summary: Crear una nueva experiencia (borrador)
@@ -125,7 +125,7 @@ router.post("/", authMiddleware, guideVerificationMiddleware,createExperience);
 
 /**
  * @swagger
- * /experiences/{id}:
+ * /api/experiences/{id}:
  *   patch:
  *     tags: [Experiences]
  *     summary: Actualizar una experiencia existente
@@ -154,7 +154,7 @@ router.patch("/:id", authMiddleware, guideVerificationMiddleware, updateExperien
 
 /**
  * @swagger
- * /experiences/{id}/publish:
+ * /api/experiences/{id}/publish:
  *   patch:
  *     tags: [Experiences]
  *     summary: Publicar una experiencia
@@ -173,7 +173,7 @@ router.patch("/:id/publish", authMiddleware,guideVerificationMiddleware ,publish
 
 /**
  * @swagger
- * /experiences/{id}/republish:
+ * /api/experiences/{id}/republish:
  *   post:
  *     tags: [Experiences]
  *     summary: Clonar y crear una nueva experiencia como borrador
@@ -192,7 +192,7 @@ router.post("/:id/republish", authMiddleware,guideVerificationMiddleware ,republ
 
 /**
  * @swagger
- * /experiences/{id}/archive:
+ * /api/experiences/{id}/archive:
  *   patch:
  *     tags: [Experiences]
  *     summary: Archivar una experiencia
@@ -211,7 +211,7 @@ router.patch("/:id/archive", authMiddleware,guideVerificationMiddleware ,archive
 
 /**
  * @swagger
- * /experiences/{id}:
+ * /api/experiences/{id}:
  *   delete:
  *     tags: [Experiences]
  *     summary: Eliminar una experiencia

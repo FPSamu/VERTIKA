@@ -2,21 +2,35 @@ import { SwaggerOptions } from "swagger-ui-express";
 const port = process.env.PORT || 3000
 
 const options: SwaggerOptions = {
-    swaggerDefinition: {
-       openapi: '3.1.0',
-       info: {
-            title: 'API VERTIKA',
-            description: 'API de Vertika',
-            version: '0.1.0'
-       },
-       servers: [
-            { url: 'http://localhost:' + port}
-        ]
-
+  swaggerDefinition: {
+    openapi: '3.1.0',
+    info: {
+      title: 'API VERTIKA',
+      description: 'API de Vertika',
+      version: '0.1.0'
     },
-    apis: [
-        './src/**/*.ts'
+    servers: [
+      { url: 'http://localhost:' + port }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Ingresa tu token JWT aquí'
+        }
+      }
+    },
+    security: [
+      {
+        bearerAuth: []
+      }
     ]
+  },
+  apis: [
+    './src/**/*.ts'
+  ]
 }
 
 export default options;

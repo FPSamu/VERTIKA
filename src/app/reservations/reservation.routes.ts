@@ -19,7 +19,7 @@ const router = Router();
 
 /**
  * @swagger
- * /reservations:
+ * /api/reservations:
  *   get:
  *     tags: [Reservations]
  *     summary: Listar reservas
@@ -31,7 +31,7 @@ router.get("/", listReservations);
 
 /**
  * @swagger
- * /reservations/{id}:
+ * /api/reservations/{id}:
  *   get:
  *     tags: [Reservations]
  *     summary: Obtener una reserva por ID
@@ -51,7 +51,7 @@ router.get("/:id", getReservationById);
 
 /**
  * @swagger
- * /reservations:
+ * /api/reservations:
  *   post:
  *     tags: [Reservations]
  *     summary: Crear una nueva reserva
@@ -94,7 +94,7 @@ router.post("/", authMiddleware, createReservation);
 
 /**
  * @swagger
- * /reservations/{id}:
+ * /api/reservations/{id}:
  *   patch:
  *     tags: [Reservations]
  *     summary: Actualizar una reserva existente
@@ -125,7 +125,7 @@ router.patch("/:id", authMiddleware, updateReservation);
 
 /**
  * @swagger
- * /reservations/{id}:
+ * /api/reservations/{id}:
  *   delete:
  *     tags: [Reservations]
  *     summary: Eliminar una reserva

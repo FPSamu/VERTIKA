@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     tags: [Users]
  *     summary: Listar usuarios
@@ -25,7 +25,7 @@ router.get("/", authMiddleware, getUsers);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     tags: [Users]
  *     summary: Obtener usuario por ID
@@ -44,7 +44,7 @@ router.get("/:id", authMiddleware, getUserById);
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   post:
  *     tags: [Users]
  *     summary: Crear usuario
@@ -60,7 +60,7 @@ router.post("/", createUser);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   patch:
  *     tags: [Users]
  *     summary: Actualizar usuario 
@@ -81,7 +81,7 @@ router.patch("/:id", authMiddleware, updateUser);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   delete:
  *     tags: [Users]
  *     summary: Eliminar usuario 

@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /guides:
+ * /api/guides:
  *   get:
  *     tags: [Guides]
  *     summary: Listar todos los guías
@@ -26,7 +26,7 @@ router.get("/", listGuides);
 
 /**
  * @swagger
- * /guides/{id}:
+ * /api/guides/{id}:
  *   get:
  *     tags: [Guides]
  *     summary: Obtener un guía por su ID
@@ -46,7 +46,7 @@ router.get("/:id", getGuideById);
 
 /**
  * @swagger
- * /guides:
+ * /api/guides:
  *   post:
  *     tags: [Guides]
  *     summary: Crear un nuevo guía
@@ -92,11 +92,11 @@ router.get("/:id", getGuideById);
  *       201:
  *         description: Guía creado correctamente
  */
-router.post("/", authMiddleware, createGuide);
+router.post("/", authMiddleware,createGuide);
 
 /**
  * @swagger
- * /guides/{id}:
+ * /api/guides/{id}:
  *   patch:
  *     tags: [Guides]
  *     summary: Actualizar información de un guía existente
@@ -127,7 +127,7 @@ router.patch("/:id", authMiddleware, updateGuide);
 
 /**
  * @swagger
- * /guides/{id}:
+ * /api/guides/{id}:
  *   delete:
  *     tags: [Guides]
  *     summary: Eliminar un guía por ID
