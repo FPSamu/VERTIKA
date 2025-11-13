@@ -47,7 +47,7 @@ router.get("/:id", authMiddleware, getUserById);
  * /users:
  *   post:
  *     tags: [Users]
- *     summary: Crear usuario (dummy)
+ *     summary: Crear usuario
  *     requestBody:
  *       required: true
  *       content:
@@ -63,7 +63,7 @@ router.post("/", createUser);
  * /users/{id}:
  *   patch:
  *     tags: [Users]
- *     summary: Actualizar usuario (dummy)
+ *     summary: Actualizar usuario 
  *     parameters:
  *       - in: path
  *         name: id
@@ -84,7 +84,7 @@ router.patch("/:id", authMiddleware, updateUser);
  * /users/{id}:
  *   delete:
  *     tags: [Users]
- *     summary: Eliminar usuario (dummy)
+ *     summary: Eliminar usuario 
  *     parameters:
  *       - in: path
  *         name: id

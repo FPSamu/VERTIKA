@@ -8,7 +8,7 @@ const router = Router();
  * @swagger
  * tags:
  *   name: Guides
- *   description: Endpoints de guías
+ *   description: Endpoints para gestionar guías
  */
 
 /**
@@ -16,10 +16,11 @@ const router = Router();
  * /guides:
  *   get:
  *     tags: [Guides]
- *     summary: Listar guías
+ *     summary: Listar todos los guías
  *     responses:
  *       200:
  *         description: Lista de guías obtenida correctamente
+ * 
  */
 router.get("/", listGuides);
 
@@ -28,7 +29,7 @@ router.get("/", listGuides);
  * /guides/{id}:
  *   get:
  *     tags: [Guides]
- *     summary: Obtener un guía por ID
+ *     summary: Obtener un guía por su ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -39,7 +40,7 @@ router.get("/", listGuides);
  *       200:
  *         description: Guía encontrado
  *       404:
- *         description: Guía no encontrado
+ *         description: Guía no encontrada
  */
 router.get("/:id", getGuideById);
 
@@ -49,35 +50,47 @@ router.get("/:id", getGuideById);
  *   post:
  *     tags: [Guides]
  *     summary: Crear un nuevo guía
- *     description: Crea un perfil de guía.
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
+ *               - bio
+ *               - experienceYears
+ *               - languages
  *             properties:
  *               userId:
  *                 type: string
+ *                 example: "69151fa525a16fe4e4157cc9"
  *               bio:
  *                 type: string
+ *                 example: "Guía experto en montañismo y senderismo"
  *               experienceYears:
  *                 type: number
+ *                 example: 5
  *               languages:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: ["es","en"]
  *               certifications:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: ["Wilderness First Aid","Guía de Montaña"]
  *               specialties:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: ["Alpinismo","Camping"]
  *     responses:
  *       201:
- *         description: Guia creado correctamente
+ *         description: Guía creado correctamente
  */
 router.post("/", authMiddleware, createGuide);
 
@@ -86,7 +99,9 @@ router.post("/", authMiddleware, createGuide);
  * /guides/{id}:
  *   patch:
  *     tags: [Guides]
- *     summary: Actualizar información de un guía
+ *     summary: Actualizar información de un guía existente
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -104,7 +119,9 @@ router.post("/", authMiddleware, createGuide);
  *               experienceYears: 5
  *     responses:
  *       200:
- *         description: Guía actualizado
+ *         description: Guía actualizado correctamente
+ *       404:
+ *         description: Guía no encontrada
  */
 router.patch("/:id", authMiddleware, updateGuide);
 
@@ -113,7 +130,9 @@ router.patch("/:id", authMiddleware, updateGuide);
  * /guides/{id}:
  *   delete:
  *     tags: [Guides]
- *     summary: Eliminar un guía
+ *     summary: Eliminar un guía por ID
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -123,6 +142,8 @@ router.patch("/:id", authMiddleware, updateGuide);
  *     responses:
  *       204:
  *         description: Guía eliminado correctamente
+ *       404:
+ *         description: Guía no encontrada
  */
 router.delete("/:id", authMiddleware, deleteGuide);
 

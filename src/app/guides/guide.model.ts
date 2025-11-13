@@ -1,37 +1,22 @@
-import { ObjectId } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-class Guides {
-    _id?: ObjectId;
-    userId: ObjectId;
-    bio: string;
-    certifications?: string[];
-    experienceYears: number;
-    specialties?: string[];
-    languages: string[];
-    verified: boolean;
-    rating: number;
-    createdAt: Date;
-    updatedAt: Date
+const GuideSchema = new Schema({
+    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    bio: { type: String, required: true },
+    certifications: { type: [String], default: [] },
+    experienceYears: { type: Number, required: true },
+    specialties: { type: [String], default: [] },
+    languages: { type: [String], required: true },
+    verified: { type: Boolean, default: false },
+    rating: { type: Number, default: 0 },
+    createdAt: { type: Date, default: () => new Date() },
+    updatedAt: { type: Date, default: () => new Date() },
+});
 
-    constructor(
-        userId: ObjectId,
-        bio: string,
-        experienceYears: number,
-        languages: string[],
-        certifications: string[] = [],
-        specialties: string[] = []
-    ) {
-        this.userId = userId;
-        this.bio = bio;
-        this.certifications = certifications;
-        this.experienceYears = experienceYears;
-        this.specialties = specialties;
-        this.languages = languages;
-        this.verified = false;
-        this.rating = 0;
-        this.createdAt = new Date();
-        this.updatedAt = this.createdAt;
-    }
-}
+// Middleware para actualizar updatedAt automaticamente
+GuideSchema.pre('save', function (next) {
+    this.updatedAt = new Date();
+    next();
+});
 
-export default Guides;
+export default mongoose.model('Guide', GuideSchema);
