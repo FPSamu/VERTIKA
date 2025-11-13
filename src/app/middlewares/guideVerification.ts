@@ -1,24 +1,36 @@
+// guideVerification.middleware.ts
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import Guide from "../guides/guide.model";
 
-export async function guideVerificationMiddleware(req: Request,res: Response,next: NextFunction
+// Extendemos Request para tener tipado del user del authMiddleware
+interface AuthRequestWithUser extends Request {
+  user?: {
+    _id: string;
+    roles: string[];
+    emailVerified: boolean;
+  };
+}
+
+export async function guideVerificationMiddleware(
+  req: AuthRequestWithUser,
+  res: Response,
+  next: NextFunction
 ) {
   try {
-    const userId = req.userId;
-    const userRoles = req.userRoles;
+    const user = req.user;
 
-    if (!userId) {
+    if (!user) {
       return res.status(401).json({ error: "No autenticado" });
     }
 
     // Checar que tenga rol de guía
-    if (!userRoles?.includes("guide")) {
+    if (!user.roles.includes("guide")) {
       return res.status(403).json({ error: "No tienes permisos de guía" });
     }
 
     // Buscar el registro del guía y verificar que esté aprobado
-    const guide = await Guide.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+    const guide = await Guide.findOne({ userId: new mongoose.Types.ObjectId(user._id) });
     if (!guide) {
       return res.status(404).json({ error: "Guía no encontrado" });
     }
@@ -27,7 +39,7 @@ export async function guideVerificationMiddleware(req: Request,res: Response,nex
       return res.status(403).json({ error: "Guía no verificado" });
     }
 
-    // Todo bien, seguimos al controlador
+    // Todo bien, podemos continuar
     next();
   } catch (err) {
     console.error(err);
