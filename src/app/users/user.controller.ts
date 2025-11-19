@@ -4,6 +4,7 @@ import { deleteS3Object, getPresignedUrl } from "../utils/s3.helper";
 
 
 
+
 export async function getUsers(req: Request, res: Response) {
   try {
     const users = await UserModel.find().select("-passwordHash -refreshToken -verificationToken");
@@ -13,16 +14,25 @@ export async function getUsers(req: Request, res: Response) {
   }
 }
 
-export async function getUserById(req: Request, res: Response) {
+export const getUserById = async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.findById(req.params.id).select("-passwordHash");
-    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+    const { id } = req.params;
+    console.log("ID recibido:", id);
 
-    res.json(user);
-  } catch (err) {
+    const user = await UserModel.findById(id).lean();
+    console.log("Usuario encontrado:", user);
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.render("users/profile", { user, title: `Perfil — ${user.name}`});
+
+  } catch (error) {
+    console.error("Error en getUserById:", error);
     res.status(500).json({ error: "Error obteniendo usuario" });
   }
-}
+};
 
 export async function updateUser(req: Request, res: Response) {
   try {
@@ -61,6 +71,38 @@ export async function deleteUser(req: Request, res: Response) {
     res.status(500).json({ error: "Error eliminando usuario" });
   }
 }
+
+// Renderiza la vista de "mi perfil"
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    console.log(">>> getMe - req.user:", (req as any).user);
+
+    const payload = (req as any).user || {};
+    const userId = payload._id || payload.userId || payload.id;
+    if (!userId) {
+      console.warn(">>> getMe - no userId in token payload");
+      return res.status(401).send("No autenticado");
+    }
+
+    const user = await UserModel.findById(userId).select("-passwordHash -refreshToken").lean();
+    if (!user) {
+      console.warn(">>> getMe - usuario no encontrado:", userId);
+      return res.status(404).send("Usuario no encontrado");
+    }
+
+    // renderiza la vista con el usuario; atrapamos errores de render por separado
+    try {
+      return res.render("users/me", { user, title: "Mi perfil" });
+    } catch (renderErr) {
+      console.error(">>> getMe - render error:", renderErr);
+      // en producción devuelve una página de error genérica
+      return res.status(500).send("<pre>Error renderizando la vista. Revisa logs del servidor.</pre>");
+    }
+  } catch (err) {
+    console.error(">>> getMe - unexpected error:", err);
+    return res.status(500).json({ error: "Error obteniendo usuario" });
+  }
+};
 
 
 export async function updateAvatar(req: Request, res: Response) {

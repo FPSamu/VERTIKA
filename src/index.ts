@@ -9,9 +9,17 @@ import dbConnect from './database/index'
 
 import routes from './app/routes'
 
+import { engine } from 'express-handlebars';
+
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+
+//Handlebars
+app.engine('handlebars',engine());
+app.set('view engine','handlebars');
+app.set('views','./src/views')
 
 // Middleware para parsear JSON
 app.use(express.json());

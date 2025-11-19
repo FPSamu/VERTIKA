@@ -1,0 +1,266 @@
+{{!-- src/views/users/profile.handlebars --}}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{title}}</title>
+
+  <style>
+    :root{
+      --bg:#f6f8fa; --card:#fff; --muted:#6b7280; --accent:#2563eb; --radius:14px; --shadow:0 8px 30px rgba(16,24,40,0.06);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:#0f172a;background:var(--bg)}
+    .container{max-width:1100px;margin:28px auto;padding:20px}
+    .card{display:grid;grid-template-columns:240px 1fr;gap:28px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+    @media (max-width:820px){ .card{grid-template-columns:1fr} .left,.meta{text-align:center} }
+
+    /* avatar */
+    .avatar-wrap{position:relative;width:200px;height:200px;border-radius:50%;overflow:hidden;margin:auto;background:linear-gradient(180deg,#f3f4f6,#fff);display:flex;align-items:center;justify-content:center;border:1px solid rgba(15,23,42,0.04)}
+    .avatar-img{width:100%;height:100%;object-fit:cover;display:block}
+    .avatar-overlay{position:absolute;right:10px;bottom:10px;display:flex;gap:8px}
+    .icon-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:rgba(2,6,23,0.6);color:white;border:none;cursor:pointer;font-weight:600}
+    .icon-btn svg{width:18px;height:18px}
+
+    /* dropzone */
+    .dropzone{margin-top:14px;border-radius:12px;padding:8px;border:1px dashed #e6eefc;background:#f8fbff;font-size:.95rem;color:var(--muted);display:flex;align-items:center;justify-content:center}
+    .dropzone.dragover{background:#eef6ff;border-color:#cfe3ff}
+
+    /* meta */
+    .meta h1{margin:0;font-size:20px}
+    .muted{color:var(--muted);margin-top:6px}
+    .badges{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .badge{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-weight:700;color:#0f172a}
+
+    .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+    @media (max-width:720px){ .info-grid{grid-template-columns:1fr} }
+    .info{background:#fbfdff;padding:12px;border-radius:10px;border:1px solid #eef2ff}
+    .info b{display:block;margin-bottom:6px}
+
+    /* actions */
+    .actions{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn.ghost{background:#fff;color:var(--accent);border:1px solid #e6eefc}
+
+    /* progress */
+    .progress{height:8px;background:#eef2ff;border-radius:999px;overflow:hidden;margin-top:10px;display:none}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#06b6d4);width:0%}
+
+    /* debug small */
+    .small{font-size:.92rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="region" aria-label="Perfil de usuario">
+      <div class="left">
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+          <div class="avatar-wrap" id="avatarWrap" aria-hidden="false">
+            {{#if user.avatarUrl}}
+              <img id="avatarImg" class="avatar-img" src="{{user.avatarUrl}}" alt="Avatar de {{user.name}}">
+            {{else}}
+              <img id="avatarImg" class="avatar-img" src="/images/default-avatar.png" alt="Avatar por defecto">
+            {{/if}}
+
+            <div class="avatar-overlay" role="group" aria-label="Acciones de avatar">
+              <button id="changeBtn" class="icon-btn" title="Cambiar foto de perfil" aria-haspopup="true">
+                <!-- camera -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.2"></circle></svg>
+                Cambiar
+              </button>
+              <button id="removeBtn" class="icon-btn" title="Quitar foto" aria-label="Quitar foto">
+                <!-- trash -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 6h18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                Quitar
+              </button>
+            </div>
+          </div>
+
+          <div class="dropzone small" id="dropzone">Arrastra una imagen aquí o presiona "Cambiar"</div>
+
+          <div style="width:100%;max-width:240px;text-align:center">
+            <div class="progress" id="progress"><i></i></div>
+            <div id="status" class="small" style="margin-top:8px"></div>
+          </div>
+
+          <input id="fileInput" type="file" accept="image/*" style="display:none" />
+        </div>
+      </div>
+
+      <div class="meta">
+        <h1>{{user.name}}</h1>
+        <div class="muted">{{user.email}}</div>
+
+        <div class="badges">
+          <div class="badge">ID: {{user._id}}</div>
+          <div class="badge">Roles: {{#each user.roles}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</div>
+          <div class="badge small">{{#if user.emailVerified}}Email verificado✅{{else}}No verificado❌{{/if}}</div>
+        </div>
+
+        <div class="info-grid" role="list">
+          <div class="info" role="listitem">
+            <b>Fecha de nacimiento</b>
+            <div id="dobText" class="small">--</div>
+          </div>
+          <div class="info" role="listitem">
+            <b>Edad</b>
+            <div id="ageText" class="small">--</div>
+          </div>
+          <div class="info" role="listitem">
+            <b>Miembro desde</b>
+            <div id="createdText" class="small">--</div>
+          </div>
+          <div class="info" role="listitem">
+            <b>Contacto</b>
+            <div class="small">Email: {{user.email}}</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="editBtn" class="btn ghost">Editar perfil</button>
+          <button id="logoutBtn" class="btn">Cerrar sesión</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- util ---------- */
+    const formatDate = iso => {
+      if (!iso) return '--';
+      try {
+        const d = new Date(iso);
+        return new Intl.DateTimeFormat('es-MX',{ day:'2-digit', month:'short', year:'numeric' }).format(d);
+      } catch(e){ return iso; }
+    };
+    const calcAge = iso => {
+      if (!iso) return '--';
+      const b = new Date(iso);
+      const diff = Date.now() - b.getTime();
+      return Math.abs(new Date(diff).getUTCFullYear() - 1970);
+    };
+
+    /* ---------- get user data embedded server-side ---------- */
+    // IMPORTANT: server must pass "user" context with plain JS-friendly fields (ISO dates or strings).
+    // We avoid needing any Handlebars helper by inlining a safe JSON inside a script tag.
+    // Create a safe JSON string by escaping </ to avoid XSS issues.
+    (function(){
+      // build safe JSON string on server side: recommended approach is to JSON.stringify(user) in controller
+      // and inject into template as {{{safeUserJson}}} where safeUserJson = JSON.stringify(user).replace(/</g, '\\u003c')
+      // But if you don't precompute, we'll try to read values directly from DOM rendered by Handlebars fields.
+
+      // read values rendered by server
+      const email = "{{user.email}}";
+      const name = "{{user.name}}";
+      const dob = "{{user.dateOfBirth}}";
+      const created = "{{user.createdAt}}";
+      const avatarUrl = "{{user.avatarUrl}}";
+
+      // fill displays
+      document.getElementById('dobText').textContent = dob ? formatDate(dob) : '--';
+      document.getElementById('ageText').textContent = dob ? calcAge(dob) + ' años' : '--';
+      document.getElementById('createdText').textContent = created ? formatDate(created) : '--';
+
+      // elements
+      const fileInput = document.getElementById('fileInput');
+      const changeBtn = document.getElementById('changeBtn');
+      const removeBtn = document.getElementById('removeBtn');
+      const dropzone = document.getElementById('dropzone');
+      const avatarImg = document.getElementById('avatarImg');
+      const status = document.getElementById('status');
+      const progress = document.getElementById('progress');
+      const progressBar = progress.querySelector('i');
+
+      // handlers
+      changeBtn.addEventListener('click', ()=> fileInput.click());
+      removeBtn.addEventListener('click', async ()=> {
+        if (!confirm('¿Quitar la foto de perfil?')) return;
+        try {
+          const token = localStorage.getItem('token') || '';
+          const res = await fetch('/api/users/me/avatar', {
+            method: 'DELETE',
+            headers: { 'Authorization': token ? 'Bearer '+token : '' }
+          });
+          if (res.ok) {
+            avatarImg.src = '/images/default-avatar.png';
+            status.textContent = 'Avatar eliminado';
+          } else {
+            status.textContent = 'No se pudo eliminar';
+          }
+        } catch (e) {
+          console.error(e); status.textContent = 'Error de red';
+        }
+      });
+
+      // drag & drop
+      dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+      dropzone.addEventListener('dragleave', e => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+      dropzone.addEventListener('drop', e => {
+        e.preventDefault(); dropzone.classList.remove('dragover');
+        const f = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) handleFile(f);
+      });
+
+      fileInput.addEventListener('change', ()=> {
+        const f = fileInput.files && fileInput.files[0];
+        if (!f) return;
+        handleFile(f);
+      });
+
+      function handleFile(f){
+        if (!f.type.startsWith('image/')) { status.textContent = 'Selecciona una imagen válida'; return; }
+        // preview
+        avatarImg.src = URL.createObjectURL(f);
+        // upload
+        uploadFile(f);
+      }
+
+      function uploadFile(file){
+        status.textContent = 'Subiendo...';
+        progress.style.display = 'block';
+        progressBar.style.width = '0%';
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('PATCH','/api/users/me/avatar', true);
+        const token = localStorage.getItem('token') || '';
+        if (token) xhr.setRequestHeader('Authorization','Bearer '+token);
+
+        xhr.upload.onprogress = (e)=>{
+          if (!e.lengthComputable) return;
+          const pct = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = pct + '%';
+          status.textContent = `Subiendo ${pct}%`;
+        };
+
+        xhr.onload = ()=>{
+          if (xhr.status >=200 && xhr.status <300){
+            try {
+              const j = JSON.parse(xhr.responseText);
+              if (j.avatarUrl) {
+                avatarImg.src = j.avatarUrl + '?t=' + Date.now();
+                status.textContent = 'Subida completa';
+              } else {
+                status.textContent = 'Subida completada (sin URL)';
+              }
+            } catch(e){ status.textContent = 'Respuesta inválida'; console.error(e); }
+            setTimeout(()=> progress.style.display='none',1000);
+          } else {
+            status.textContent = 'Error al subir: ' + xhr.statusText;
+            progress.style.display='none';
+          }
+        };
+
+        xhr.onerror = ()=> { status.textContent='Error de red'; progress.style.display='none'; };
+        const fd = new FormData(); fd.append('avatar', file);
+        xhr.send(fd);
+      }
+
+      // quick actions
+      document.getElementById('logoutBtn').addEventListener('click', ()=> { localStorage.removeItem('token'); window.location.href='/'; });
+      document.getElementById('editBtn').addEventListener('click', ()=> { window.location.href='/profile/edit'; });
+
+    })();
+  </script>
+</body>
+</html>
