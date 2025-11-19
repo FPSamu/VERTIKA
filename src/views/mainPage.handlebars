@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vertika - Encuentra tu experiencia</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    /* Fondo de montaña */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+      opacity: 0.2;
+      z-index: -1;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(102,126,234,0.9), rgba(118,75,162,0.9));
+      padding: 40px 20px 80px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    header .top-nav {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    header .top-nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s;
+    }
+
+    header .top-nav a:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    header img {
+      height: 120px;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: bold;
+    }
+
+    header p {
+      margin: 10px 0 30px;
+      font-size: 18px;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+
+    .search-container input[type="text"] {
+      width: 50%;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s;
+    }
+
+    .search-container input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: -60px auto 50px;
+      padding: 0 20px;
+    }
+
+    .experiences {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .experience-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .experience-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    .experience-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .experience-card .content {
+      padding: 15px;
+    }
+
+    .experience-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    .experience-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      .search-container input[type="text"] {
+        width: 90%;
+      }
+      header .top-nav {
+        position: static;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-nav">
+      <a href="/api/auth/login">Iniciar Sesión</a>
+      <a href="/api/auth/register">Registrarse</a>
+    </div>
+    <img src="https://i.imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
+    <h1>Vertika</h1>
+    <p>Encuentra la experiencia perfecta en la montaña</p>
+
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Busca tu experiencia...">
+    </div>
+  </header>
+
+  <main>
+    <div class="experiences" id="experiencesContainer">
+      <!-- Las experiencias se cargarán aquí -->
+    </div>
+  </main>
+
+  <script>
+    async function fetchExperiences(query = '') {
+      try {
+        const res = await fetch(`/api/experiences?search=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        const container = document.getElementById('experiencesContainer');
+        container.innerHTML = '';
+
+        if (!data.length) {
+          container.innerHTML = '<p>No se encontraron experiencias</p>';
+          return;
+        }
+
+        data.forEach(exp => {
+          const card = document.createElement('div');
+          card.className = 'experience-card';
+          card.innerHTML = `
+            <img src="${exp.image || 'https://via.placeholder.com/250x180'}" alt="${exp.title}">
+            <div class="content">
+              <h3>${exp.title}</h3>
+              <p>${exp.description || ''}</p>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Carga inicial
+    fetchExperiences();
+
+    // Filtrado por buscador
+    document.getElementById('searchInput').addEventListener('input', e => {
+      fetchExperiences(e.target.value);
+    });
+  </script>
+
+</body>
+</html>

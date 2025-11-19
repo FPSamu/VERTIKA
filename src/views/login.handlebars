@@ -1,9 +1,120 @@
-<h1>Iniciar Sesión</h1>
-{{#if error}}
-<p style="color:red">{{error}}</p>
-{{/if}}
-<form action="/api/auth/login" method="POST">
-  <input type="email" name="email" placeholder="Correo" required>
-  <input type="password" name="password" placeholder="Contraseña" required>
-  <button type="submit">Entrar</button>
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión - VERTIKA</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #4e7ed0, #2a3e8c);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    /* Efecto de montaña suave */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+      opacity: 0.2;
+      z-index: -1;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 360px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #2c3e50;
+      font-size: 28px;
+    }
+
+    form input {
+      width: 100%;
+      padding: 14px 4px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    form input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+      outline: none;
+    }
+
+    form button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background 0.3s;
+    }
+
+    form button:hover {
+      background: linear-gradient(135deg, #5a67d8, #613abf);
+    }
+
+    p.error {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .signup {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .signup a {
+      color: #667eea;
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .signup a:hover {
+      color: #5a67d8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Iniciar Sesión</h1>
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
+    <form action="/api/auth/login" method="POST">
+      <input type="email" name="email" placeholder="Correo electrónico" required>
+      <input type="password" name="password" placeholder="Contraseña" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <div class="signup">
+      ¿No tienes cuenta? <a href="/api/auth/register">Regístrate aquí</a>
+    </div>
+  </div>
+</body>
+</html>

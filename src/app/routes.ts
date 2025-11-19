@@ -14,5 +14,8 @@ router.use("/guides", guideRoutes);
 router.use("/experiences", experienceRoutes);
 router.use("/reservations", reservationRoutes);
 router.use("/reviews", reviewRoutes);
+router.get("/", (req, res) => {
+  res.render("mainPage"); // solo renderiza el template, sin pasar experiencias
+});
 
 export default router;
