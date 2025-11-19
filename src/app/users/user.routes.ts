@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { getUsers, getUserById, createUser, updateUser, deleteUser } from "./user.controller";
+import { getUsers, getUserById, updateUser, deleteUser, updateAvatar } from "./user.controller";
+import { uploadS3Profile } from "../middlewares/upload/upload_s3_image";
 import { authMiddleware } from "../middlewares/auth";
 
 const router = Router();
@@ -21,7 +22,7 @@ const router = Router();
  *       200:
  *         description: OK
  */
-router.get("/", authMiddleware, getUsers);
+router.get("/", getUsers);
 
 /**
  * @swagger
@@ -42,21 +43,6 @@ router.get("/", authMiddleware, getUsers);
  */
 router.get("/:id", authMiddleware, getUserById);
 
-/**
- * @swagger
- * /api/users:
- *   post:
- *     tags: [Users]
- *     summary: Crear usuario
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema: { type: object, properties: { name: {type: string}, email: {type: string} } }
- *     responses:
- *       201: { description: Creado }
- */
-router.post("/", createUser);
 
 /**
  * @swagger
@@ -94,5 +80,50 @@ router.patch("/:id", authMiddleware, updateUser);
  *       204: { description: No Content }
  */
 router.delete("/:id", authMiddleware, deleteUser);
+
+
+
+/**
+ * @swagger
+ * /api/users/me/avatar:
+ *   patch:
+ *     tags: [Users]
+ *     summary: Actualizar avatar del usuario autenticado
+ *     security:
+ *       - bearerAuth: []   # usa el esquema de token JWT
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: Imagen del avatar a subir
+ *     responses:
+ *       200:
+ *         description: Avatar actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 avatarUrl:
+ *                   type: string
+ *                   description: URL pública del nuevo avatar
+ *       401:
+ *         description: No autorizado, token faltante o inválido
+ *       400:
+ *         description: Error en la subida del archivo o formato inválido
+ */
+router.patch("/me/avatar", authMiddleware, uploadS3Profile.single("avatar"), updateAvatar);
+
+
 
 export default router;

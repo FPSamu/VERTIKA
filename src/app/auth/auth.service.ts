@@ -47,7 +47,13 @@ class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crear nuevo usuario
-    const newUser = new User(name, email, hashedPassword, dateOfBirth, ['customer']);
+    const newUser = new User({
+    name,
+    email,
+    password: hashedPassword,
+    dateOfBirth,
+    roles: ['customer']
+  });
 
     // Generar token de verificación
     const verificationToken = emailService.generateVerificationToken();
