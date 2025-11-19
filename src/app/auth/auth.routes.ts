@@ -5,6 +5,7 @@ import { authMiddleware } from '../middlewares/auth';
 
 const router = Router();
 
+router.get('/register', authController.showRegisterPage);
 /**
  * @swagger
  * /api/auth/register:
@@ -48,6 +49,9 @@ const router = Router();
  */
 router.post('/register', registerValidators, authController.register);
 
+
+
+router.get('/login', authController.showLoginPage);
 /**
  * @swagger
  * /api/auth/login:

@@ -7,6 +7,10 @@ const authService = new AuthService();
 /**
  * Registra un nuevo usuario
  */
+export const showRegisterPage = (req: Request, res: Response) => {
+  res.render('register'); 
+};
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     // Validar errores de entrada
@@ -30,7 +34,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       password,
       new Date(dateOfBirth)
     );
-
+    //Render
+    //res.render('success', { message: 'Usuario registrado correctamente', user: result.user });
     console.log(`✅ REGISTRO COMPLETADO - User ID: ${result.user._id}`);
 
     res.status(201).json({
@@ -43,6 +48,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       },
     });
   } catch (error: any) {
+    //Render
+    res.render('register', { error: error.message });
     if (error.message === 'El usuario ya existe') {
       res.status(409).json({
         success: false,
@@ -64,6 +71,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 /**
  * Inicia sesión de un usuario
  */
+export const showLoginPage = (req: Request, res: Response) => {
+  res.render('login');
+};
+
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     // Validar errores de entrada
@@ -79,7 +90,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     const result = await authService.login(email, password);
-
+    //Render
+   //res.render('success', { message: 'Inicio de sesión exitoso', user: result.user });
     res.status(200).json({
       success: true,
       message: 'Inicio de sesión exitoso',
@@ -90,6 +102,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       },
     });
   } catch (error: any) {
+    //Render
+    res.render('login', { error: error.message });
     if (error.message === 'Credenciales inválidas') {
       res.status(401).json({
         success: false,
