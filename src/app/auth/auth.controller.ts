@@ -175,7 +175,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
  */
 export const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       res.status(401).json({
@@ -333,7 +333,7 @@ export const verifyEmailWithToken = async (req: Request, res: Response): Promise
  */
 export const requestToBecomeGuide = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       res.status(401).json({
