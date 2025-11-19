@@ -49,7 +49,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error: any) {
     //Render
-    res.render('register', { error: error.message });
+    //res.render('register', { error: error.message });
     if (error.message === 'El usuario ya existe') {
       res.status(409).json({
         success: false,
@@ -103,7 +103,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error: any) {
     //Render
-    res.render('login', { error: error.message });
+    //res.render('login', { error: error.message });
     if (error.message === 'Credenciales inválidas') {
       res.status(401).json({
         success: false,
@@ -159,7 +159,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
  */
 export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       res.status(401).json({

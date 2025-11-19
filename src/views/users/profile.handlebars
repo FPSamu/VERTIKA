@@ -1,266 +1,319 @@
-{{!-- src/views/users/profile.handlebars --}}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{{title}}</title>
-
+  <meta charset="UTF-8">
+  <title>{{title}} | Vertika</title>
   <style>
-    :root{
-      --bg:#f6f8fa; --card:#fff; --muted:#6b7280; --accent:#2563eb; --radius:14px; --shadow:0 8px 30px rgba(16,24,40,0.06);
+    /* === ESTILOS GENERALES === */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      color: #333;
     }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:#0f172a;background:var(--bg)}
-    .container{max-width:1100px;margin:28px auto;padding:20px}
-    .card{display:grid;grid-template-columns:240px 1fr;gap:28px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-    @media (max-width:820px){ .card{grid-template-columns:1fr} .left,.meta{text-align:center} }
 
-    /* avatar */
-    .avatar-wrap{position:relative;width:200px;height:200px;border-radius:50%;overflow:hidden;margin:auto;background:linear-gradient(180deg,#f3f4f6,#fff);display:flex;align-items:center;justify-content:center;border:1px solid rgba(15,23,42,0.04)}
-    .avatar-img{width:100%;height:100%;object-fit:cover;display:block}
-    .avatar-overlay{position:absolute;right:10px;bottom:10px;display:flex;gap:8px}
-    .icon-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:rgba(2,6,23,0.6);color:white;border:none;cursor:pointer;font-weight:600}
-    .icon-btn svg{width:18px;height:18px}
+    /* === HEADER === */
+    header {
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    /* dropzone */
-    .dropzone{margin-top:14px;border-radius:12px;padding:8px;border:1px dashed #e6eefc;background:#f8fbff;font-size:.95rem;color:var(--muted);display:flex;align-items:center;justify-content:center}
-    .dropzone.dragover{background:#eef6ff;border-color:#cfe3ff}
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
 
-    /* meta */
-    .meta h1{margin:0;font-size:20px}
-    .muted{color:var(--muted);margin-top:6px}
-    .badges{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-    .badge{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-weight:700;color:#0f172a}
+    header .logo img { height: 40px; }
+    header .logo h1 { font-size: 22px; margin: 0; color: #2c3e50; }
 
-    .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
-    @media (max-width:720px){ .info-grid{grid-template-columns:1fr} }
-    .info{background:#fbfdff;padding:12px;border-radius:10px;border:1px solid #eef2ff}
-    .info b{display:block;margin-bottom:6px}
+    /* === PERFIL CARD === */
+    .profile-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-    /* actions */
-    .actions{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
-    .btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-    .btn.ghost{background:#fff;color:var(--accent);border:1px solid #e6eefc}
+    .profile-card {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+    }
 
-    /* progress */
-    .progress{height:8px;background:#eef2ff;border-radius:999px;overflow:hidden;margin-top:10px;display:none}
-    .progress > i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#06b6d4);width:0%}
+    .card-header-bg {
+      height: 120px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+    }
 
-    /* debug small */
-    .small{font-size:.92rem;color:var(--muted)}
+    /* === AVATAR === */
+    .avatar-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: -70px auto 15px;
+      border-radius: 50%;
+      border: 5px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .avatar-wrapper:hover .avatar-overlay { opacity: 1; }
+
+    .avatar-overlay span {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* === DATOS === */
+    .user-info { padding: 20px 40px 40px; }
+    .user-info h2 { margin: 0; color: #2c3e50; font-size: 24px; }
+
+    .user-info .role-badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #4c51bf;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      text-align: left;
+      margin-top: 20px;
+      display: grid;
+      gap: 15px;
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .info-item label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+
+    .info-item p {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    /* === BOTONES === */
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    button {
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    .btn-back { background: #fff; border: 1px solid #ddd; color: #555; }
+    .btn-back:hover { background: #f0f0f0; }
+
+    .btn-logout { background: #e74c3c; color: white; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
+    .btn-logout:hover { background: #c0392b; }
+
+    .status-msg { font-size: 13px; margin-top: 10px; height: 20px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card" role="region" aria-label="Perfil de usuario">
-      <div class="left">
-        <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
-          <div class="avatar-wrap" id="avatarWrap" aria-hidden="false">
-            {{#if user.avatarUrl}}
-              <img id="avatarImg" class="avatar-img" src="{{user.avatarUrl}}" alt="Avatar de {{user.name}}">
-            {{else}}
-              <img id="avatarImg" class="avatar-img" src="/images/default-avatar.png" alt="Avatar por defecto">
-            {{/if}}
 
-            <div class="avatar-overlay" role="group" aria-label="Acciones de avatar">
-              <button id="changeBtn" class="icon-btn" title="Cambiar foto de perfil" aria-haspopup="true">
-                <!-- camera -->
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.2"></circle></svg>
-                Cambiar
-              </button>
-              <button id="removeBtn" class="icon-btn" title="Quitar foto" aria-label="Quitar foto">
-                <!-- trash -->
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 6h18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-                Quitar
-              </button>
-            </div>
-          </div>
+  <header>
+    <div class="logo" onclick="window.location.href='/api'">
+      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
+      <h1>Vertika</h1>
+    </div>
+    <nav>
+      <a href="/api" style="text-decoration: none; color: #667eea; font-weight: bold;">Volver al Inicio</a>
+    </nav>
+  </header>
 
-          <div class="dropzone small" id="dropzone">Arrastra una imagen aquí o presiona "Cambiar"</div>
+  <div class="profile-container">
+    <div class="profile-card">
+      
+      <div class="card-header-bg"></div>
 
-          <div style="width:100%;max-width:240px;text-align:center">
-            <div class="progress" id="progress"><i></i></div>
-            <div id="status" class="small" style="margin-top:8px"></div>
-          </div>
+      <input type="file" id="avatarInput" accept="image/*" class="hidden">
 
-          <input id="fileInput" type="file" accept="image/*" style="display:none" />
+      <div class="avatar-wrapper" id="avatarWrapper">
+        <img 
+          src="{{#if user.avatarUrl}}{{user.avatarUrl}}{{else}}https://via.placeholder.com/150{{/if}}" 
+          alt="Foto de perfil" 
+          class="avatar-img" 
+          id="profileImage"
+        >
+        <div class="avatar-overlay">
+          <span>Cambiar Foto</span>
         </div>
       </div>
 
-      <div class="meta">
-        <h1>{{user.name}}</h1>
-        <div class="muted">{{user.email}}</div>
+      <div class="status-msg" id="uploadStatus"></div>
 
-        <div class="badges">
-          <div class="badge">ID: {{user._id}}</div>
-          <div class="badge">Roles: {{#each user.roles}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</div>
-          <div class="badge small">{{#if user.emailVerified}}Email verificado✅{{else}}No verificado❌{{/if}}</div>
-        </div>
+      <div class="user-info">
+        <h2>{{user.name}}</h2>
+        
+        <span class="role-badge">
+          {{#if user.roles}}{{user.roles}}{{else}}Explorador{{/if}}
+        </span>
 
-        <div class="info-grid" role="list">
-          <div class="info" role="listitem">
-            <b>Fecha de nacimiento</b>
-            <div id="dobText" class="small">--</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Correo Electrónico</label>
+            <p>{{user.email}}</p>
           </div>
-          <div class="info" role="listitem">
-            <b>Edad</b>
-            <div id="ageText" class="small">--</div>
+          <div class="info-item">
+            <label>ID de Usuario</label>
+            <p style="font-family: monospace; color: #666;">{{user._id}}</p>
           </div>
-          <div class="info" role="listitem">
-            <b>Miembro desde</b>
-            <div id="createdText" class="small">--</div>
-          </div>
-          <div class="info" role="listitem">
-            <b>Contacto</b>
-            <div class="small">Email: {{user.email}}</div>
+          <div class="info-item">
+            <label>Miembro Desde</label>
+            <p id="memberSinceDate">{{user.createdAt}}</p>
           </div>
         </div>
 
         <div class="actions">
-          <button id="editBtn" class="btn ghost">Editar perfil</button>
-          <button id="logoutBtn" class="btn">Cerrar sesión</button>
+          <button class="btn-back" onclick="window.location.href='/api'">Editar</button>
         </div>
-
       </div>
+
     </div>
   </div>
 
   <script>
-    /* ---------- util ---------- */
-    const formatDate = iso => {
-      if (!iso) return '--';
-      try {
-        const d = new Date(iso);
-        return new Intl.DateTimeFormat('es-MX',{ day:'2-digit', month:'short', year:'numeric' }).format(d);
-      } catch(e){ return iso; }
-    };
-    const calcAge = iso => {
-      if (!iso) return '--';
-      const b = new Date(iso);
-      const diff = Date.now() - b.getTime();
-      return Math.abs(new Date(diff).getUTCFullYear() - 1970);
-    };
-
-    /* ---------- get user data embedded server-side ---------- */
-    // IMPORTANT: server must pass "user" context with plain JS-friendly fields (ISO dates or strings).
-    // We avoid needing any Handlebars helper by inlining a safe JSON inside a script tag.
-    // Create a safe JSON string by escaping </ to avoid XSS issues.
-    (function(){
-      // build safe JSON string on server side: recommended approach is to JSON.stringify(user) in controller
-      // and inject into template as {{{safeUserJson}}} where safeUserJson = JSON.stringify(user).replace(/</g, '\\u003c')
-      // But if you don't precompute, we'll try to read values directly from DOM rendered by Handlebars fields.
-
-      // read values rendered by server
-      const email = "{{user.email}}";
-      const name = "{{user.name}}";
-      const dob = "{{user.dateOfBirth}}";
-      const created = "{{user.createdAt}}";
-      const avatarUrl = "{{user.avatarUrl}}";
-
-      // fill displays
-      document.getElementById('dobText').textContent = dob ? formatDate(dob) : '--';
-      document.getElementById('ageText').textContent = dob ? calcAge(dob) + ' años' : '--';
-      document.getElementById('createdText').textContent = created ? formatDate(created) : '--';
-
-      // elements
-      const fileInput = document.getElementById('fileInput');
-      const changeBtn = document.getElementById('changeBtn');
-      const removeBtn = document.getElementById('removeBtn');
-      const dropzone = document.getElementById('dropzone');
-      const avatarImg = document.getElementById('avatarImg');
-      const status = document.getElementById('status');
-      const progress = document.getElementById('progress');
-      const progressBar = progress.querySelector('i');
-
-      // handlers
-      changeBtn.addEventListener('click', ()=> fileInput.click());
-      removeBtn.addEventListener('click', async ()=> {
-        if (!confirm('¿Quitar la foto de perfil?')) return;
-        try {
-          const token = localStorage.getItem('token') || '';
-          const res = await fetch('/api/users/me/avatar', {
-            method: 'DELETE',
-            headers: { 'Authorization': token ? 'Bearer '+token : '' }
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // === 1. Formatear fecha visualmente (Porque Handlebars no tiene formateador nativo simple) ===
+      const dateElement = document.getElementById('memberSinceDate');
+      if (dateElement && dateElement.innerText) {
+        const rawDate = new Date(dateElement.innerText);
+        if (!isNaN(rawDate)) {
+          dateElement.innerText = rawDate.toLocaleDateString('es-ES', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
           });
-          if (res.ok) {
-            avatarImg.src = '/images/default-avatar.png';
-            status.textContent = 'Avatar eliminado';
+        }
+      }
+
+      // === 2. Lógica de Avatar ===
+      const avatarWrapper = document.getElementById('avatarWrapper');
+      const avatarInput = document.getElementById('avatarInput');
+      const profileImage = document.getElementById('profileImage');
+      const uploadStatus = document.getElementById('uploadStatus');
+
+      avatarWrapper.addEventListener('click', () => {
+        avatarInput.click();
+      });
+
+      avatarInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          alert('Tu sesión ha expirado. Por favor ingresa nuevamente.');
+          window.location.href = '/api/auth/login'; 
+          return;
+        }
+
+        // Feedback visual
+        uploadStatus.innerText = "Subiendo imagen...";
+        uploadStatus.style.color = "#667eea";
+        avatarWrapper.style.opacity = "0.7";
+        avatarWrapper.style.pointerEvents = "none";
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        try {
+          const response = await fetch('/api/users/me/avatar', {
+            method: 'PATCH',
+            headers: {
+              'Authorization': 'Bearer ' + token
+            },
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            profileImage.src = data.avatarUrl + '?t=' + new Date().getTime();
+            
+            // Actualizar localStorage
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            localUser.avatarUrl = data.avatarUrl + '?t=' + new Date().getTime();
+            localStorage.setItem('user', JSON.stringify(localUser));
+
+            uploadStatus.innerText = "¡Foto actualizada!";
+            uploadStatus.style.color = "green";
+            setTimeout(() => { uploadStatus.innerText = ""; }, 3000);
           } else {
-            status.textContent = 'No se pudo eliminar';
+            throw new Error(data.error || 'Error al subir');
           }
-        } catch (e) {
-          console.error(e); status.textContent = 'Error de red';
+        } catch (error) {
+          console.error(error);
+          uploadStatus.innerText = "Error al actualizar.";
+          uploadStatus.style.color = "red";
+        } finally {
+          avatarWrapper.style.opacity = "1";
+          avatarWrapper.style.pointerEvents = "auto";
+          avatarInput.value = '';
         }
       });
-
-      // drag & drop
-      dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
-      dropzone.addEventListener('dragleave', e => { e.preventDefault(); dropzone.classList.remove('dragover'); });
-      dropzone.addEventListener('drop', e => {
-        e.preventDefault(); dropzone.classList.remove('dragover');
-        const f = e.dataTransfer.files && e.dataTransfer.files[0];
-        if (f) handleFile(f);
-      });
-
-      fileInput.addEventListener('change', ()=> {
-        const f = fileInput.files && fileInput.files[0];
-        if (!f) return;
-        handleFile(f);
-      });
-
-      function handleFile(f){
-        if (!f.type.startsWith('image/')) { status.textContent = 'Selecciona una imagen válida'; return; }
-        // preview
-        avatarImg.src = URL.createObjectURL(f);
-        // upload
-        uploadFile(f);
-      }
-
-      function uploadFile(file){
-        status.textContent = 'Subiendo...';
-        progress.style.display = 'block';
-        progressBar.style.width = '0%';
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('PATCH','/api/users/me/avatar', true);
-        const token = localStorage.getItem('token') || '';
-        if (token) xhr.setRequestHeader('Authorization','Bearer '+token);
-
-        xhr.upload.onprogress = (e)=>{
-          if (!e.lengthComputable) return;
-          const pct = Math.round((e.loaded / e.total) * 100);
-          progressBar.style.width = pct + '%';
-          status.textContent = `Subiendo ${pct}%`;
-        };
-
-        xhr.onload = ()=>{
-          if (xhr.status >=200 && xhr.status <300){
-            try {
-              const j = JSON.parse(xhr.responseText);
-              if (j.avatarUrl) {
-                avatarImg.src = j.avatarUrl + '?t=' + Date.now();
-                status.textContent = 'Subida completa';
-              } else {
-                status.textContent = 'Subida completada (sin URL)';
-              }
-            } catch(e){ status.textContent = 'Respuesta inválida'; console.error(e); }
-            setTimeout(()=> progress.style.display='none',1000);
-          } else {
-            status.textContent = 'Error al subir: ' + xhr.statusText;
-            progress.style.display='none';
-          }
-        };
-
-        xhr.onerror = ()=> { status.textContent='Error de red'; progress.style.display='none'; };
-        const fd = new FormData(); fd.append('avatar', file);
-        xhr.send(fd);
-      }
-
-      // quick actions
-      document.getElementById('logoutBtn').addEventListener('click', ()=> { localStorage.removeItem('token'); window.location.href='/'; });
-      document.getElementById('editBtn').addEventListener('click', ()=> { window.location.href='/profile/edit'; });
-
-    })();
+    });
   </script>
+
 </body>
 </html>

@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import UserModel from "./user.model"
-import { deleteS3Object, getPresignedUrl } from "../utils/s3.helper";
+import { deleteS3Object} from "../utils/s3.helper";
 
+interface S3File extends Express.Multer.File {
+  location: string;
+  key: string;
+}
 
 
 
@@ -20,7 +24,7 @@ export const getUserById = async (req: Request, res: Response) => {
     console.log("ID recibido:", id);
 
     const user = await UserModel.findById(id).lean();
-    console.log("Usuario encontrado:", user);
+    //console.log("Usuario encontrado:", user);
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
@@ -72,42 +76,11 @@ export async function deleteUser(req: Request, res: Response) {
   }
 }
 
-// Renderiza la vista de "mi perfil"
-export const getMe = async (req: Request, res: Response) => {
-  try {
-    console.log(">>> getMe - req.user:", (req as any).user);
-
-    const payload = (req as any).user || {};
-    const userId = payload._id || payload.userId || payload.id;
-    if (!userId) {
-      console.warn(">>> getMe - no userId in token payload");
-      return res.status(401).send("No autenticado");
-    }
-
-    const user = await UserModel.findById(userId).select("-passwordHash -refreshToken").lean();
-    if (!user) {
-      console.warn(">>> getMe - usuario no encontrado:", userId);
-      return res.status(404).send("Usuario no encontrado");
-    }
-
-    // renderiza la vista con el usuario; atrapamos errores de render por separado
-    try {
-      return res.render("users/me", { user, title: "Mi perfil" });
-    } catch (renderErr) {
-      console.error(">>> getMe - render error:", renderErr);
-      // en producción devuelve una página de error genérica
-      return res.status(500).send("<pre>Error renderizando la vista. Revisa logs del servidor.</pre>");
-    }
-  } catch (err) {
-    console.error(">>> getMe - unexpected error:", err);
-    return res.status(500).json({ error: "Error obteniendo usuario" });
-  }
-};
-
 
 export async function updateAvatar(req: Request, res: Response) {
   try {
-    const userId = (req as any).user?._id;
+    const file = req.file as S3File | undefined;
+    const userId = (req as any).user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: "Update Avatar: No autenticado" });
@@ -120,11 +93,6 @@ export async function updateAvatar(req: Request, res: Response) {
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
-    }
-
-    // Si ya tenía un avatar anterior → eliminarlo de S3
-    if (user.avatarKey) {
-      await deleteS3Object(user.avatarKey);
     }
 
     // Guardar nuevo avatar

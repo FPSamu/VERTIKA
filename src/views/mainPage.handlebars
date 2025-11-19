@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Vertika - Encuentra tu experiencia</title>
+  <title>Vertika - Explora Experiencias</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -12,71 +12,107 @@
       color: #333;
     }
 
-    /* Fondo de montaña */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
-      opacity: 0.2;
-      z-index: -1;
-    }
-
     header {
-      background: linear-gradient(135deg, rgba(102,126,234,0.9), rgba(118,75,162,0.9));
-      padding: 40px 20px 80px;
-      text-align: center;
-      color: white;
-      position: relative;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
-    header .top-nav {
-      position: absolute;
-      top: 20px;
-      right: 30px;
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    header .top-nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-weight: bold;
+    header .logo img {
+      height: 50px;
+    }
+
+    header .logo h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    header .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    header .user-actions button {
       padding: 8px 16px;
       border-radius: 25px;
-      background: rgba(255,255,255,0.2);
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
       transition: background 0.3s;
     }
 
-    header .top-nav a:hover {
-      background: rgba(255,255,255,0.4);
+    header .user-actions button.login {
+      background: #667eea;
+      color: white;
     }
 
-    header img {
-      height: 120px;
-      margin-bottom: 15px;
+    header .user-actions button.login:hover {
+      background: #5a67d8;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 42px;
+    header .user-actions button.register {
+      background: #764ba2;
+      color: white;
+    }
+
+    header .user-actions button.register:hover {
+      background: #613abf;
+    }
+
+    header .user-actions .username {
       font-weight: bold;
+      color: #2c3e50;
     }
 
-    header p {
-      margin: 10px 0 30px;
+    header .user-actions button.logout {
+      background: #e74c3c;
+      color: white;
+    }
+
+    header .user-actions button.logout:hover {
+      background: #c0392b;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px 30px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
       font-size: 18px;
+      margin: 0;
     }
 
     .search-container {
+      margin-top: 30px;
       display: flex;
       justify-content: center;
-      margin-bottom: 50px;
     }
 
-    .search-container input[type="text"] {
+    .search-container input {
       width: 50%;
-      padding: 14px 20px;
+      padding: 12px 20px;
       border-radius: 50px;
       border: none;
       font-size: 16px;
@@ -84,20 +120,20 @@
       transition: box-shadow 0.3s;
     }
 
-    .search-container input[type="text"]:focus {
+    .search-container input:focus {
       outline: none;
       box-shadow: 0 4px 20px rgba(102,126,234,0.4);
     }
 
     main {
       max-width: 1200px;
-      margin: -60px auto 50px;
+      margin: 40px auto;
       padding: 0 20px;
     }
 
     .experiences {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
 
@@ -107,6 +143,7 @@
       overflow: hidden;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
     }
 
     .experience-card:hover {
@@ -136,40 +173,88 @@
       color: #555;
     }
 
-    @media (max-width: 600px) {
-      .search-container input[type="text"] {
-        width: 90%;
+    @media (max-width: 768px) {
+      .search-container input {
+        width: 80%;
       }
-      header .top-nav {
-        position: static;
-        margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      header .user-actions {
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <div class="top-nav">
-      <a href="/api/auth/login">Iniciar Sesión</a>
-      <a href="/api/auth/register">Registrarse</a>
+    <div class="logo">
+      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
+      <h1>Vertika</h1>
     </div>
-    <img src="https://i.imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
-    <h1>Vertika</h1>
-    <p>Encuentra la experiencia perfecta en la montaña</p>
-
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Busca tu experiencia...">
+    <div class="user-actions" id="userActions">
+      <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
+      <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
     </div>
   </header>
 
+  <section class="hero">
+    <h2>Explora Experiencias en la Montaña</h2>
+    <p>Encuentra, comparte y disfruta aventuras únicas.</p>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Buscar experiencia...">
+    </div>
+  </section>
+
   <main>
     <div class="experiences" id="experiencesContainer">
-      <!-- Las experiencias se cargarán aquí -->
+      <!-- Experiencias se cargan aquí -->
     </div>
   </main>
 
   <script>
+    // Mostrar botones según usuario logueado
+    document.addEventListener('DOMContentLoaded', () => {
+      const userActions = document.getElementById('userActions');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+      if (user) {
+        userActions.innerHTML = `
+          <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
+          <button class="logout" id="logoutBtn">Cerrar Sesión</button>
+        `;
+
+        // Redirigir al perfil al hacer click en el nombre
+        document.getElementById('userName').addEventListener('click', () => {
+          window.location.href = `/api/users/${user._id}`;
+        });
+
+        //Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+          const token = localStorage.getItem('accessToken');
+          if (token) {
+            try {
+              await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          }
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('user');
+          window.location.href = '/api'; // redirige a landing page
+        });
+      }
+    });
+
+    // Carga de experiencias
     async function fetchExperiences(query = '') {
       try {
         const res = await fetch(`/api/experiences?search=${encodeURIComponent(query)}`);
@@ -187,12 +272,18 @@
           const card = document.createElement('div');
           card.className = 'experience-card';
           card.innerHTML = `
-            <img src="${exp.image || 'https://via.placeholder.com/250x180'}" alt="${exp.title}">
+            <img src="${exp.image || 'https://via.placeholder.com/280x180'}" alt="${exp.title}">
             <div class="content">
               <h3>${exp.title}</h3>
               <p>${exp.description || ''}</p>
             </div>
           `;
+
+          // Redirigir al hacer click
+          card.addEventListener('click', () => {
+            window.location.href = `/api/experiences/${exp._id}`;
+          });
+
           container.appendChild(card);
         });
       } catch (err) {
@@ -200,14 +291,11 @@
       }
     }
 
-    // Carga inicial
     fetchExperiences();
 
-    // Filtrado por buscador
     document.getElementById('searchInput').addEventListener('input', e => {
       fetchExperiences(e.target.value);
     });
   </script>
-
 </body>
 </html>

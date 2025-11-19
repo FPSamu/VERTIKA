@@ -120,4 +120,38 @@
     </div>
   </div>
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // prevenir recarga
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        // Registro exitoso, redirigir a login
+        alert('Registro exitoso. Por favor, verifica tu correo antes de iniciar sesión.');
+        window.location.href = '/api/auth/login';
+      } else {
+        // Mostrar error en página
+        alert(result.message || 'Ocurrió un error al registrar.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al conectar con el servidor.');
+    }
+  });
+});
+</script>
 </html>

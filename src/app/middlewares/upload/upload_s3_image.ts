@@ -10,7 +10,7 @@ const s3 = new S3Client({
     secretAccessKey: process.env.S3_SECRET_KEY || ""
   }
 });
- 
+
 const BUCKET = process.env.S3_BUCKET || "iteso-deservidor2025";
 
 const s3Storage = multerS3({
@@ -21,10 +21,10 @@ const s3Storage = multerS3({
   },
   acl: "public-read",
   key: (req: Request, file, cb) => {
-    const userId = (req as any).user?._id;
+    const userId = (req as any).user?.userId;
     if (!userId) {
       // Si no está autenticado, rechazamos mediante cb con error para que multer lo capture
-      return cb(new Error("No autenticado"), "");
+      return cb(new Error("S3Storage: No autenticado"), "");
     }
     const key = `users/${userId}/profile.png`; // carpeta por user
     cb(null, key);
@@ -32,6 +32,7 @@ const s3Storage = multerS3({
 });
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+  console.log("multer-s3 -> fileFilter called", file.originalname, file.mimetype);
   cb(null, !!file.mimetype && file.mimetype.startsWith("image/"));
 };
 

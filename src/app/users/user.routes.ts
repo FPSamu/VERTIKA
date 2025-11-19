@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, getUserById, updateUser, deleteUser, updateAvatar,getMe } from "./user.controller";
+import { getUsers, getUserById, updateUser, deleteUser, updateAvatar } from "./user.controller";
 import { uploadS3Profile } from "../middlewares/upload/upload_s3_image";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -123,38 +123,5 @@ router.delete("/:id", authMiddleware, deleteUser);
  *         description: Error en la subida del archivo o formato inválido
  */
 router.patch("/me/avatar", authMiddleware, uploadS3Profile.single("avatar"), updateAvatar);
-
-/**
- * @swagger
- * /api/users/me:
- *   get:
- *     tags:
- *       - Users
- *     summary: Renderiza la vista HTML del perfil del usuario autenticado
- *     description: Devuelve la página HTML del perfil del usuario actualmente autenticado.
- *     security:
- *       - bearerAuth: []
- *     produces:
- *       - text/html
- *     responses:
- *       200:
- *         description: Página HTML del perfil del usuario
- *         content:
- *           text/html:
- *             schema:
- *               type: string
- *               example: "<!doctype html><html><head><title>Mi perfil</title></head><body>...</body></html>"
- *       401:
- *         description: No autenticado / Token faltante o inválido
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "No autenticado"
- */
-router.get("/me", authMiddleware, getMe);
 
 export default router;

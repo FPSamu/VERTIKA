@@ -6,7 +6,7 @@ dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET || 'clave_de_prueba';
 
 const userPayload = {
-  _id: '69151fa525a16fe4e4157cc9',
+  userId: '69151fa525a16fe4e4157cc9',
   roles: ['user'],
   emailVerified: true,
 };
