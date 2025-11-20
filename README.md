@@ -175,6 +175,55 @@ npm run dev
 
 El servidor estará disponible en: http://localhost:3000
 
+## Carga de Archivos
+Incorporacion de almacenamiento de archivos en **buckets de S3**
+
+
+Middleware para subir archivos a AWS S3, específicamente diseñado para subir imágenes de perfil de usuario. 
+```upload_s3_profileImage.ts
+const s3Storage = multerS3({
+  s3,
+  bucket: BUCKET,
+  metadata: (req, file, cb) => {
+    cb(null, { fieldName: file.fieldname });
+  },
+  acl: "public-read",
+  key: (req: Request, file, cb) => {
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      // Si no está autenticado, rechazamos mediante cb con error para que multer lo capture
+      return cb(new Error("S3Storage: No autenticado"), "");
+    }
+    const key = `users/${userId}/profile.png`; // carpeta por user
+    cb(null, key);
+  }
+});
+
+const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+  console.log("multer-s3 -> fileFilter called", file.originalname, file.mimetype);
+  cb(null, !!file.mimetype && file.mimetype.startsWith("image/"));
+};
+
+export const uploadS3Profile = multer({
+  storage: s3Storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+```
+Pantalla de cambio de imagen de perfil 
+
+<img src="https://imgur.com/E24kVW5.png" alt="Perfil" height="380">
+<img src="https://imgur.com/zaLtcu2.png" alt="Perfil Foto" height="400">
+
+Objetos en el bucket de S3
+
+<img src="https://imgur.com/ecyKsum.png" alt="S3" height="340">
+<img src="https://imgur.com/4ZUlMlG.png" alt="S3 profile" height="240">
+
+
+
+
+
 ## 📚 Uso de la API
 
 ### Endpoints Principales
