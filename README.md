@@ -201,8 +201,7 @@ npm run dev
 El servidor estará disponible en: http://localhost:3000
 
 ## Carga de Archivos
-Incorporacion de almacenamiento de archivos en **buckets de S3**
-
+Esta entrega implementa la funcionalidad de subida, almacenamiento y visualización de archivos en la nube usando buckets de **AWS S3**. Se ha integrado tanto en el backend (API) como en las vistas del frontend, considerando permisos y validaciones.
 
 Middleware para subir archivos a AWS S3, específicamente diseñado para subir imágenes de perfil de usuario. 
 ```upload_s3_profileImage.ts
@@ -246,8 +245,9 @@ Objetos en el bucket de S3
 <img src="https://imgur.com/4ZUlMlG.png" alt="S3 profile" height="240">
 
 
+Visualización de experiencias
 
-
+<img src="https://imgur.com/uOfvuWe.png" alt="S3" height="440">
 
 ## 📚 Uso de la API
 
