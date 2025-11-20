@@ -25,6 +25,17 @@ export async function showMyExperiencesPage(req: Request, res: Response) {
   }
 }
 
+/* GET /experiences/create (Vista para crear experiencia) */
+export async function showCreateExperiencePage(req: Request, res: Response) {
+  try {
+    // Renderizar la vista de creación de experiencia
+    res.render('experiences/create-experience');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al cargar página" });
+  }
+}
+
 /* GET /experiences/guide/:userId (API para obtener experiencias del guía) */
 export async function getGuideExperiences(req: Request, res: Response) {
   try {

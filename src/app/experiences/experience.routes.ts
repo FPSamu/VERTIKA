@@ -10,6 +10,7 @@ import {
   deleteExperience,
   uploadExperiencePhotos as uploadPhotosController,
   showMyExperiencesPage,
+  showCreateExperiencePage,
   getGuideExperiences,
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
@@ -38,6 +39,18 @@ const router = Router();
  *         description: Página HTML de mis experiencias
  */
 router.get("/my-experiences", showMyExperiencesPage);
+
+/**
+ * @swagger
+ * /api/experiences/create:
+ *   get:
+ *     tags: [Experiences]
+ *     summary: Página para crear una nueva experiencia
+ *     responses:
+ *       200:
+ *         description: Página HTML de formulario de creación
+ */
+router.get("/create", showCreateExperiencePage);
 
 /**
  * @swagger
@@ -159,7 +172,7 @@ router.get("/:id", getExperienceById);
  *       201:
  *         description: Experiencia creada correctamente
  */
-router.post("/", authMiddleware, guideVerificationByUserIdMiddleware, uploadExperiencePhotos.array("photos", 10), createExperience);
+router.post("/", authMiddleware, uploadExperiencePhotos.array("photos", 10), guideVerificationByUserIdMiddleware, createExperience);
 
 /**
  * @swagger
