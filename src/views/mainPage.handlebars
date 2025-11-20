@@ -38,6 +38,32 @@
       font-size: 24px;
       margin: 0;
       color: #2c3e50;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+
+    nav a:hover {
+      background: #f0f0f0;
+      color: #667eea;
+    }
+
+    nav a.active {
+      background: #667eea;
+      color: white;
     }
 
     header .user-actions {
@@ -189,14 +215,249 @@
         justify-content: center;
       }
     }
+
+    /* Estilos del Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    .close {
+      color: #aaa;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #667eea;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .language-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .language-tag {
+      background: #667eea;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .language-tag .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .add-item-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .add-item-container input {
+      flex: 1;
+    }
+
+    .add-item-container button {
+      padding: 12px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .add-item-container button:hover {
+      background: #5a67d8;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .modal-footer button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-submit {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+
+    .specialty-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .specialty-tag {
+      background: #764ba2;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .specialty-tag .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
-      <h1>Vertika</h1>
+      <img src="https://imgur.com/G39Rg8s.png" alt="Vertika Logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
+    
+    <nav id="mainNav" style="display: none;">
+      <a href="/api" class="nav-link" data-page="home">Inicio</a>
+      <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser Guía</a>
+    </nav>
+
     <div class="user-actions" id="userActions">
       <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
       <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
@@ -217,13 +478,105 @@
     </div>
   </main>
 
+  <!-- Modal para solicitar ser guía -->
+  <div id="guideModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Solicitar ser Guía</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      
+      <div class="modal-body">
+        <form id="guideForm">
+          <div class="form-group">
+            <label for="guideBio">Biografía *</label>
+            <textarea id="guideBio" name="bio" required 
+                      placeholder="Cuéntanos sobre ti, tu experiencia y qué te apasiona de las aventuras en la montaña..."></textarea>
+            <small>Comparte tu historia y experiencia como guía</small>
+          </div>
+
+          <div class="form-group">
+            <label for="guideExperienceYears">Años de Experiencia *</label>
+            <input type="number" id="guideExperienceYears" name="experienceYears" 
+                   min="0" max="50" required placeholder="0">
+            <small>¿Cuántos años de experiencia tienes como guía?</small>
+          </div>
+
+          <div class="form-group">
+            <label>Idiomas que hablas *</label>
+            <div class="add-item-container">
+              <input type="text" id="languageInput" placeholder="Ej: Español, Inglés, Francés">
+              <button type="button" id="addLanguageBtn">Agregar</button>
+            </div>
+            <div class="language-tags" id="languageTags"></div>
+            <small>Agrega los idiomas que hablas. Al menos uno es requerido.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Especialidades</label>
+            <div class="add-item-container">
+              <input type="text" id="specialtyInput" placeholder="Ej: Escalada, Senderismo, Rappel">
+              <button type="button" id="addSpecialtyBtn">Agregar</button>
+            </div>
+            <div class="specialty-tags" id="specialtyTags"></div>
+            <small>Agrega tus especialidades o áreas de expertise (opcional)</small>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+        <button type="button" class="btn-submit" id="submitGuideBtn">Enviar Solicitud</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Mostrar botones según usuario logueado
     document.addEventListener('DOMContentLoaded', () => {
       const userActions = document.getElementById('userActions');
+      const mainNav = document.getElementById('mainNav');
+      const navExperiences = document.getElementById('navExperiences');
+      const navRequestGuide = document.getElementById('navRequestGuide');
+      const navReservations = document.getElementById('navReservations');
+      
       const user = JSON.parse(localStorage.getItem('user') || 'null');
 
       if (user) {
+        // Mostrar navbar
+        mainNav.style.display = 'flex';
+
+        // Configurar opciones según roles
+        const isGuide = user.roles && user.roles.includes('guide');
+        
+        if (isGuide) {
+          navExperiences.style.display = 'block';
+          navRequestGuide.style.display = 'none';
+        } else {
+          navExperiences.style.display = 'none';
+          navRequestGuide.style.display = 'block';
+        }
+
+        // Event listeners para navegación
+        navReservations.addEventListener('click', (e) => {
+          e.preventDefault();
+          alert('Funcionalidad de Mis Reservaciones en desarrollo');
+          // TODO: window.location.href = `/api/reservations/user/${user._id}`;
+        });
+
+        navExperiences.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = '/api/experiences/my-experiences';
+        });
+
+        navRequestGuide.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Abrir el modal
+          const modal = document.getElementById('guideModal');
+          modal.style.display = 'block';
+        });
+
+        // Acciones de usuario
         userActions.innerHTML = `
           <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
           <button class="logout" id="logoutBtn">Cerrar Sesión</button>
@@ -251,6 +604,264 @@
           localStorage.removeItem('user');
           window.location.href = '/api'; // redirige a landing page
         });
+      }
+    });
+
+    // Lógica del Modal
+    const modal = document.getElementById('guideModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitGuideBtn = document.getElementById('submitGuideBtn');
+    const languageInput = document.getElementById('languageInput');
+    const addLanguageBtn = document.getElementById('addLanguageBtn');
+    const languageTags = document.getElementById('languageTags');
+    const specialtyInput = document.getElementById('specialtyInput');
+    const addSpecialtyBtn = document.getElementById('addSpecialtyBtn');
+    const specialtyTags = document.getElementById('specialtyTags');
+
+    let languages = ['Español']; // Idioma por defecto
+    let specialties = [];
+
+    // Mostrar idioma por defecto
+    updateLanguageTags();
+
+    function updateLanguageTags() {
+      languageTags.innerHTML = '';
+      languages.forEach((lang, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'language-tag';
+        tag.innerHTML = `
+          ${lang}
+          <span class="remove-tag" data-index="${index}">&times;</span>
+        `;
+        languageTags.appendChild(tag);
+      });
+
+      // Event listeners para remover idiomas
+      document.querySelectorAll('.language-tag .remove-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          languages.splice(index, 1);
+          updateLanguageTags();
+        });
+      });
+    }
+
+    function updateSpecialtyTags() {
+      specialtyTags.innerHTML = '';
+      specialties.forEach((spec, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'specialty-tag';
+        tag.innerHTML = `
+          ${spec}
+          <span class="remove-tag" data-index="${index}">&times;</span>
+        `;
+        specialtyTags.appendChild(tag);
+      });
+
+      // Event listeners para remover especialidades
+      document.querySelectorAll('.specialty-tag .remove-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          specialties.splice(index, 1);
+          updateSpecialtyTags();
+        });
+      });
+    }
+
+    // Agregar idioma
+    addLanguageBtn.addEventListener('click', () => {
+      const lang = languageInput.value.trim();
+      if (lang && !languages.includes(lang)) {
+        languages.push(lang);
+        updateLanguageTags();
+        languageInput.value = '';
+      }
+    });
+
+    // Agregar idioma con Enter
+    languageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addLanguageBtn.click();
+      }
+    });
+
+    // Agregar especialidad
+    addSpecialtyBtn.addEventListener('click', () => {
+      const spec = specialtyInput.value.trim();
+      if (spec && !specialties.includes(spec)) {
+        specialties.push(spec);
+        updateSpecialtyTags();
+        specialtyInput.value = '';
+      }
+    });
+
+    // Agregar especialidad con Enter
+    specialtyInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSpecialtyBtn.click();
+      }
+    });
+
+    // Cerrar modal
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Cerrar modal al hacer click fuera de él
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    // Función para obtener un token válido (refrescar si es necesario)
+    async function getValidToken() {
+      let token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        return null;
+      }
+
+      // Intentar usar el token actual primero
+      return token;
+    }
+
+    // Función para refrescar el token si ha expirado
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) {
+        console.error('No hay refresh token disponible');
+        return null;
+      }
+
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refreshToken })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('accessToken', data.data.accessToken);
+          console.log('Token refrescado exitosamente');
+          return data.data.accessToken;
+        } else {
+          console.error('Error al refrescar token');
+          return null;
+        }
+      } catch (err) {
+        console.error('Error en refresh token:', err);
+        return null;
+      }
+    }
+
+    // Enviar solicitud de guía
+    submitGuideBtn.addEventListener('click', async () => {
+      const bio = document.getElementById('guideBio').value.trim();
+      const experienceYears = document.getElementById('guideExperienceYears').value;
+
+      // Validaciones
+      if (!bio) {
+        alert('Por favor ingresa una biografía');
+        return;
+      }
+
+      if (!experienceYears || experienceYears < 0) {
+        alert('Por favor ingresa años de experiencia válidos');
+        return;
+      }
+
+      if (languages.length === 0) {
+        alert('Por favor agrega al menos un idioma');
+        return;
+      }
+
+      let token = await getValidToken();
+      console.log('Token encontrado:', token ? 'Sí' : 'No');
+      
+      if (!token) {
+        alert('Debes iniciar sesión');
+        return;
+      }
+
+      console.log('Enviando datos:', { bio, experienceYears: parseInt(experienceYears), languages, specialties });
+
+      try {
+        let res = await fetch('/api/auth/request-guide', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            bio,
+            experienceYears: parseInt(experienceYears),
+            languages,
+            specialties
+          })
+        });
+
+        console.log('Status de respuesta:', res.status);
+
+        // Si el token expiró, intentar refrescarlo y reintentar
+        if (res.status === 401) {
+          console.log('Token expirado, intentando refrescar...');
+          const newToken = await refreshAccessToken();
+          
+          if (newToken) {
+            // Reintentar con el nuevo token
+            res = await fetch('/api/auth/request-guide', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Bearer ' + newToken,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                bio,
+                experienceYears: parseInt(experienceYears),
+                languages,
+                specialties
+              })
+            });
+          } else {
+            alert('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+            localStorage.clear();
+            window.location.href = '/api/auth/login';
+            return;
+          }
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log('Respuesta exitosa:', data);
+          alert('¡Solicitud enviada exitosamente! Ahora eres guía.');
+          
+          // Actualizar usuario en localStorage
+          const user = JSON.parse(localStorage.getItem('user'));
+          user.roles = data.data.user.roles;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Recargar página para actualizar navbar
+          window.location.reload();
+        } else {
+          const error = await res.json();
+          console.error('Error de servidor:', error);
+          alert(error.message || 'Error al solicitar ser guía');
+        }
+      } catch (err) {
+        console.error('Error en la petición:', err);
+        alert('Error al procesar la solicitud: ' + err.message);
       }
     });
 

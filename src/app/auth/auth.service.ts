@@ -2,6 +2,7 @@ import { connection } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import User from '../users/user.model';
+import Guide from '../guides/guide.model';
 import { ObjectId } from 'mongodb';
 import EmailService from '../services/email.service';
 
@@ -344,7 +345,15 @@ class AuthService {
    * Solicita convertirse en guía
    * Solo usuarios con email verificado pueden convertirse en guías
    */
-  async requestToBecomeGuide(userId: string): Promise<{ success: boolean; message: string; user?: any }> {
+  async requestToBecomeGuide(
+    userId: string,
+    guideData?: {
+      bio?: string;
+      languages?: string[];
+      experienceYears?: number;
+      specialties?: string[];
+    }
+  ): Promise<{ success: boolean; message: string; user?: any }> {
     const usersCollection = this.getUsersCollection();
 
     try {
@@ -394,12 +403,29 @@ class AuthService {
         };
       }
 
+      // Crear el documento del guía en la colección guides
+      // Usar datos proporcionados o valores por defecto
+      const newGuide = new Guide({
+        userId: new ObjectId(userId),
+        bio: guideData?.bio || 'Nuevo guía en VERTIKA',
+        experienceYears: guideData?.experienceYears ?? 0,
+        languages: guideData?.languages && guideData.languages.length > 0 ? guideData.languages : ['es'],
+        certifications: [],
+        specialties: guideData?.specialties || [],
+        verified: false,
+        rating: 0,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+
+      await newGuide.save();
+
       // Enviar email de aprobación como guía
       await emailService.sendGuideApprovalEmail(result.email, result.name);
 
       return {
         success: true,
-        message: 'Ahora eres un guía. ¡Puedes empezar a crear experiencias!',
+        message: 'Ahora eres un guía. ¡Puedes empezar a crear experiencias! Recuerda completar tu perfil de guía.',
         user: result
       };
     } catch (error) {

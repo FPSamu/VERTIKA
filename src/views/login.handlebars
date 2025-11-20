@@ -148,8 +148,9 @@
         return;
       }
 
-      // Guardar token y user
+      // Guardar tokens y user
       localStorage.setItem('accessToken', data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.data.user));
 
       // Redirigir al landing page
