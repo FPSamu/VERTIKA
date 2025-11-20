@@ -43,7 +43,12 @@ export async function getReviewById(req: Request, res: Response) {
 /* POST /reviews */
 export async function createReview(req: Request, res: Response) {
   try {
-    const { reservationId, userId, experienceId, guideId, experienceRating, guideRating, comment, photos } = req.body;
+    // Si hay fotos subidas, Multer las habrá procesado
+    const files = req.files as Express.MulterS3.File[];
+    const photoUrls = files && files.length > 0 ? files.map(file => file.location) : [];
+
+    const { reservationId, userId, experienceId, guideId, experienceRating, guideRating, comment } = req.body;
+    
     const newReview = await Review.create({
       reservationId,
       userId,
@@ -52,8 +57,9 @@ export async function createReview(req: Request, res: Response) {
       experienceRating,
       guideRating,
       comment,
-      photos: photos ?? [],
+      photos: photoUrls,
     });
+    
     res.status(201).json(newReview);
   } catch (err) {
     console.error(err);
@@ -82,5 +88,47 @@ export async function deleteReview(req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al eliminar review" });
+  }
+}
+
+/* POST /reviews/:id/upload-photos (agregar fotos a review existente) */
+export async function uploadReviewPhotos(req: Request, res: Response) {
+  try {
+    const reviewId = req.params.id;
+    const review = await Review.findById(reviewId);
+    
+    if (!review) {
+      return res.status(404).json({ error: "Review no encontrada" });
+    }
+
+    // Verificar que el usuario sea el dueño de la review
+    const userId = (req as any).user?._id;
+    if ((review.userId as any).toString() !== userId) {
+      return res.status(403).json({ error: "No tienes permisos para modificar esta review" });
+    }
+
+    // Multer ya subió las imágenes a S3, ahora obtenemos las URLs
+    const files = req.files as Express.MulterS3.File[];
+    
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No se proporcionaron imágenes" });
+    }
+
+    // Obtener las URLs de las fotos subidas
+    const photoUrls = files.map(file => file.location);
+
+    // Agregar las nuevas URLs al array de fotos existente
+    const currentPhotos = (review.photos as string[]) || [];
+    review.photos = [...currentPhotos, ...photoUrls];
+    await review.save();
+
+    res.status(200).json({
+      message: "Fotos subidas correctamente",
+      photos: photoUrls,
+      review
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al subir fotos de review" });
   }
 }

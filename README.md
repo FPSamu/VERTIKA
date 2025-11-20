@@ -22,6 +22,16 @@ Busca ofrecer un servicio confiable, accesible y regional, verificación de guí
 - ✅ **Sistema de solicitud para ser guía** (requiere email verificado)
 - ✅ **Perfil de usuario** protegido con autenticación
 
+### Gestión de Experiencias y Reviews
+
+- ✅ **Creación de experiencias** con validación de guía verificado
+- ✅ **Sistema de carga de fotos a S3** para experiencias y reviews
+- ✅ **Subir fotos durante la creación** o agregarlas posteriormente
+- ✅ **Máximo 10 fotos por experiencia** (5MB cada una)
+- ✅ **Máximo 5 fotos por review** (5MB cada una)
+- ✅ **Almacenamiento en AWS S3** con URLs públicas
+- ✅ **Validación de propiedad** para modificar experiencias
+
 ### Sistema de Emails
 
 - ✅ **Email de verificación** al registrarse (con diseño HTML profesional)
@@ -77,7 +87,14 @@ VERTIKA/
 │   │   │   └── email.service.ts     # Servicio de envío de emails (nodemailer)
 │   │   │
 │   │   ├── middlewares/             # Middlewares de Express
-│   │   │   └── auth.ts              # Middleware de autenticación y roles
+│   │   │   ├── auth.ts              # Middleware de autenticación JWT
+│   │   │   ├── guideVerification.ts # Middleware de verificación de guía (usuario autenticado)
+│   │   │   ├── guideVerificationByUserId.ts # Middleware de verificación de guía (por userId del body)
+│   │   │   ├── experienceOwnership.ts # Middleware de validación de propiedad de experiencia
+│   │   │   └── upload/              # Middlewares de carga de archivos
+│   │   │       ├── upload_s3_image.ts      # Upload de imágenes de perfil a S3
+│   │   │       ├── upload_s3_experience.ts # Upload de fotos de experiencias a S3
+│   │   │       └── upload_s3_review.ts     # Upload de fotos de reviews a S3
 │   │   │
 │   │   ├── types/                   # Tipos TypeScript personalizados
 │   │   │   └── express.d.ts         # Extensiones de tipos para Express
@@ -114,6 +131,8 @@ VERTIKA/
 - **Swagger** - Documentación de API
 - **Dotenv** - Gestión de variables de entorno
 - **Nodemon** - Hot reload en desarrollo
+- **AWS SDK S3** - Almacenamiento de imágenes en S3
+- **Multer** + **Multer-S3** - Carga de archivos multipart
 
 ## ⚙️ Instalación y Configuración
 
@@ -163,6 +182,12 @@ EMAIL_PASS='tu_contraseña_de_aplicacion'
 
 # URL del frontend (para enlaces en emails)
 FRONTEND_URL='http://localhost:5173'
+
+# Configuración de AWS S3 (para carga de imágenes)
+S3_ACCESS_KEY='tu_access_key'
+S3_SECRET_KEY='tu_secret_key'
+S3_REGION='us-east-1'
+S3_BUCKET='tu-bucket-name'
 ```
 
 ### 4. Iniciar el servidor
@@ -306,6 +331,115 @@ POST /api/auth/logout
 Authorization: Bearer {accessToken}
 ```
 
+#### Experiencias (`/api/experiences`)
+
+**Crear experiencia con fotos**
+
+```http
+POST /api/experiences
+Authorization: Bearer {accessToken}
+Content-Type: multipart/form-data
+
+Body (form-data):
+userId: "69151fa525a16fe4e4157ccb"    # ID del usuario (debe ser guía verificado)
+title: "Ascenso al Pico de Orizaba"
+description: "Ascenso de 2 días..."
+activity: "alpinismo"
+location: "Pico de Orizaba, Puebla"
+difficulty: "difícil"
+date: "2025-11-15T08:00:00Z"
+maxGroupSize: "6"
+pricePerPerson: "8500"
+photos: [file1.jpg]                    # Hasta 10 fotos (5MB c/u)
+photos: [file2.jpg]
+```
+
+- Valida que el `userId` corresponda a un guía verificado
+- Obtiene automáticamente el `guideId` de la colección `guides`
+- Sube las fotos a S3 y almacena las URLs
+- Crea la experiencia en estado `draft`
+
+**Agregar fotos a experiencia existente**
+
+```http
+POST /api/experiences/{id}/upload-photos
+Authorization: Bearer {accessToken}
+Content-Type: multipart/form-data
+
+Body (form-data):
+photos: [file3.jpg]
+photos: [file4.jpg]
+```
+
+- Solo el propietario de la experiencia puede agregar fotos
+- Las fotos se agregan al array existente (no se reemplazan)
+- Máximo 10 fotos por solicitud
+
+**Listar experiencias**
+
+```http
+GET /api/experiences
+```
+
+**Obtener experiencia por ID**
+
+```http
+GET /api/experiences/{id}
+```
+
+**Publicar experiencia**
+
+```http
+PATCH /api/experiences/{id}/publish
+Authorization: Bearer {accessToken}
+```
+
+**Archivar experiencia**
+
+```http
+PATCH /api/experiences/{id}/archive
+Authorization: Bearer {accessToken}
+```
+
+#### Reviews (`/api/reviews`)
+
+**Crear review con fotos**
+
+```http
+POST /api/reviews
+Authorization: Bearer {accessToken}
+Content-Type: multipart/form-data
+
+Body (form-data):
+reservationId: "69151fdb25a16fe4e4157ccc"
+userId: "69151fa525a16fe4e4157ccb"
+experienceId: "69151fdb25a16fe4e4157ccc"
+guideId: "69151fa525a16fe4e4157cca"
+experienceRating: "5"
+guideRating: "5"
+comment: "¡Excelente experiencia!"
+photos: [file1.jpg]                    # Hasta 5 fotos (5MB c/u)
+photos: [file2.jpg]
+```
+
+- Disponible para cualquier usuario autenticado
+- Sube las fotos a S3 automáticamente
+- No requiere rol de guía
+
+**Agregar fotos a review existente**
+
+```http
+POST /api/reviews/{id}/upload-photos
+Authorization: Bearer {accessToken}
+Content-Type: multipart/form-data
+
+Body (form-data):
+photos: [file3.jpg]
+```
+
+- Solo el creador de la review puede agregar fotos
+- Máximo 5 fotos por solicitud
+
 #### Usuarios (`/api/users`)
 
 ```http
@@ -323,9 +457,60 @@ DELETE /api/users/{id}         # Eliminar usuario
 2. **Verificación**: Usuario hace clic en el enlace → Email verificado
 3. **Inicio de sesión**: Usuario inicia sesión → Recibe access token
 4. **Solicitar ser guía**: Usuario con email verificado → Se convierte en guía
-5. **Crear experiencia**: Guía crea experiencias de montañismo
-6. **Reservar**: Usuario reserva una experiencia
-7. **Reseña**: Usuario deja una reseña después de la experiencia
+5. **Crear experiencia con fotos**: Guía crea experiencias con hasta 10 fotos
+6. **Publicar experiencia**: Guía publica la experiencia para que sea visible
+7. **Reservar**: Usuario reserva una experiencia
+8. **Reseña con fotos**: Usuario deja una reseña con hasta 5 fotos después de la experiencia
+
+### Flujo de Carga de Fotos
+
+#### Para Experiencias (solo guías verificados):
+
+**Opción 1: Durante la creación** (Recomendado)
+
+```
+1. Usuario envía userId en el body
+2. Sistema valida que userId sea un guía verificado
+3. Sistema busca el guía en la colección guides
+4. Sistema obtiene automáticamente el guideId
+5. Multer sube las fotos a S3 (hasta 10)
+6. Sistema crea la experiencia con las URLs de las fotos
+```
+
+**Opción 2: Después de crear**
+
+```
+1. Usuario autenticado (guía) solicita agregar fotos
+2. Sistema valida que sea el propietario de la experiencia
+3. Multer sube las fotos a S3 (hasta 10)
+4. Sistema agrega las URLs al array existente
+```
+
+#### Para Reviews (cualquier usuario):
+
+**Opción 1: Durante la creación** (Recomendado)
+
+```
+1. Usuario autenticado crea review
+2. Multer sube las fotos a S3 (hasta 5)
+3. Sistema crea la review con las URLs de las fotos
+```
+
+**Opción 2: Después de crear**
+
+```
+1. Usuario autenticado (creador) solicita agregar fotos
+2. Sistema valida que sea el propietario de la review
+3. Multer sube las fotos a S3 (hasta 5)
+4. Sistema agrega las URLs al array existente
+```
+
+**Almacenamiento en S3:**
+
+- Experiencias: `experiences/{userId}/{uuid}.{ext}`
+- Reviews: `reviews/{userId}/{uuid}.{ext}`
+- ACL: `public-read` (URLs accesibles públicamente)
+- Límite de tamaño: 5MB por foto
 
 ### Ver documentación interactiva
 
@@ -350,14 +535,17 @@ Abre http://localhost:3000/swagger y prueba los endpoints directamente desde el 
 - Sistema de roles (customer/guide)
 - Envío de emails (verificación, bienvenida, aprobación)
 - Documentación con Swagger
+- **Módulo de experiencias con carga de fotos a S3**
+- **Sistema de reviews con carga de fotos a S3**
+- **Validación de guías verificados por userId**
+- **Validación de propiedad de experiencias**
 
 ### 🔄 En Desarrollo
 
-- Módulo de experiencias/expediciones
 - Sistema de reservaciones
-- Sistema de reseñas
 - Integración de pagos
 - Panel de administración
+- Sistema de notificaciones en tiempo real
 
 ## Diagrama ER
 
