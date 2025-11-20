@@ -14,13 +14,13 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const authHeader = req.headers['authorization'];
 
   if (!authHeader) {
-    return res.status(401).json({ mensaje: 'Token no proporcionado' });
+    return res.status(401).json({ success: false, message: 'Token no proporcionado' });
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ mensaje: 'Token invalido' });
+    return res.status(401).json({ success: false, message: 'Token inválido' });
   }
 
   try {
@@ -28,7 +28,11 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     req.user = decoded;
     console.log("REQ.USER en auth:", req.user);
     next();
-  } catch (err) {
-    return res.status(401).json({ mensaje: 'Token invalido' });
+  } catch (err: any) {
+    console.error('Error al verificar token:', err.message);
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ success: false, message: 'Token expirado. Por favor inicia sesión nuevamente.' });
+    }
+    return res.status(401).json({ success: false, message: 'Token inválido' });
   }
 };

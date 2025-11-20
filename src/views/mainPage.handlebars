@@ -38,6 +38,32 @@
       font-size: 24px;
       margin: 0;
       color: #2c3e50;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+
+    nav a:hover {
+      background: #f0f0f0;
+      color: #667eea;
+    }
+
+    nav a.active {
+      background: #667eea;
+      color: white;
     }
 
     header .user-actions {
@@ -189,14 +215,644 @@
         justify-content: center;
       }
     }
+
+    /* Estilos del Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    .close {
+      color: #aaa;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #667eea;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .language-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .language-tag {
+      background: #667eea;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .language-tag .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .add-item-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .add-item-container input {
+      flex: 1;
+    }
+
+    .add-item-container button {
+      padding: 12px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .add-item-container button:hover {
+      background: #5a67d8;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .modal-footer button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-submit {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+
+    .specialty-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .specialty-tag {
+      background: #764ba2;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .specialty-tag .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Modal de Detalle de Experiencia */
+    .experience-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+      animation: fadeIn 0.3s;
+    }
+
+    .experience-modal-content {
+      background-color: #fefefe;
+      margin: 2% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 900px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .experience-modal-header {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .experience-modal-header img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .experience-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+      z-index: 10;
+      line-height: 1;
+    }
+
+    .experience-modal-close:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    .experience-modal-body {
+      padding: 30px;
+    }
+
+    .experience-modal-title {
+      font-size: 32px;
+      color: #2c3e50;
+      margin: 0 0 20px;
+      font-weight: bold;
+    }
+
+    .experience-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .experience-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-activity {
+      background: #667eea;
+      color: white;
+    }
+
+    .badge-difficulty {
+      background: #764ba2;
+      color: white;
+    }
+
+    .badge-status {
+      background: #48bb78;
+      color: white;
+    }
+
+    .experience-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .experience-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .experience-info-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .experience-info-value {
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .experience-description {
+      margin: 30px 0;
+      line-height: 1.8;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .experience-photos-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .experience-photos-gallery img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .experience-photos-gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .experience-modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 30px;
+      border-top: 2px solid #f0f0f0;
+      background: #fafafa;
+      border-radius: 0 0 15px 15px;
+    }
+
+    .experience-price {
+      font-size: 28px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .experience-price-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: normal;
+    }
+
+    .btn-reserve {
+      padding: 15px 40px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-reserve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+
+    @media (max-width: 768px) {
+      .experience-modal-content {
+        width: 95%;
+        margin: 5% auto;
+      }
+
+      .experience-modal-header {
+        height: 250px;
+      }
+
+      .experience-modal-title {
+        font-size: 24px;
+      }
+
+      .experience-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .experience-modal-footer {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+
+    /* Modal de Reserva */
+    .reservation-modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+      animation: fadeIn 0.3s;
+    }
+
+    .reservation-modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s;
+    }
+
+    .reservation-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .reservation-modal-header h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    .reservation-summary {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .reservation-summary-title {
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .reservation-summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .reservation-summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-top: 2px solid #ddd;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    .seats-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .seats-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seats-btn:hover:not(:disabled) {
+      background: #667eea;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .seats-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .seats-display {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .seats-label {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .reservation-modal-footer {
+      display: flex;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .reservation-modal-footer button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel-reservation {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel-reservation:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-confirm-reservation {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-confirm-reservation:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+
+    .reservation-alert {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
-      <h1>Vertika</h1>
+      <img src="https://imgur.com/G39Rg8s.png" alt="Vertika Logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
+    
+    <nav id="mainNav" style="display: none;">
+      <a href="/api" class="nav-link" data-page="home">Inicio</a>
+      <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser Guía</a>
+    </nav>
+
     <div class="user-actions" id="userActions">
       <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
       <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
@@ -217,13 +873,184 @@
     </div>
   </main>
 
+  <!-- Modal de Detalle de Experiencia -->
+  <div id="experienceDetailModal" class="experience-modal">
+    <div class="experience-modal-content">
+      <div class="experience-modal-header">
+        <img id="modalMainImage" src="" alt="Experiencia">
+        <span class="experience-modal-close" id="closeExperienceModal">&times;</span>
+      </div>
+      
+      <div class="experience-modal-body">
+        <h1 class="experience-modal-title" id="modalTitle"></h1>
+        
+        <div class="experience-badges" id="modalBadges"></div>
+        
+        <div class="experience-info-grid" id="modalInfoGrid"></div>
+        
+        <div class="experience-description" id="modalDescription"></div>
+        
+        <div id="modalPhotosContainer"></div>
+      </div>
+      
+      <div class="experience-modal-footer">
+        <div>
+          <span class="experience-price" id="modalPrice"></span>
+          <span class="experience-price-label"> por persona</span>
+        </div>
+        <button class="btn-reserve" id="btnReserve">Reservar Ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Reserva -->
+  <div id="reservationModal" class="reservation-modal">
+    <div class="reservation-modal-content">
+      <div class="reservation-modal-header">
+        <h2>Reservar Experiencia</h2>
+        <span class="close" id="closeReservationModal">&times;</span>
+      </div>
+
+      <div id="reservationAlert" class="reservation-alert" style="display: none;"></div>
+
+      <div class="reservation-summary">
+        <div class="reservation-summary-title" id="reservationExpTitle"></div>
+        <div class="reservation-summary-item">
+          <span>Fecha:</span>
+          <span id="reservationExpDate"></span>
+        </div>
+        <div class="reservation-summary-item">
+          <span>Ubicación:</span>
+          <span id="reservationExpLocation"></span>
+        </div>
+        <div class="reservation-summary-item">
+          <span>Precio por persona:</span>
+          <span id="reservationPricePerPerson"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="text-align: center; display: block; margin-bottom: 15px;">Número de personas</label>
+        <div class="seats-selector">
+          <button class="seats-btn" id="decreaseSeats">−</button>
+          <div class="seats-display" id="seatsDisplay">1</div>
+          <button class="seats-btn" id="increaseSeats">+</button>
+        </div>
+        <div class="seats-label" id="seatsAvailableLabel"></div>
+      </div>
+
+      <div class="reservation-summary">
+        <div class="reservation-summary-total">
+          <span>Total:</span>
+          <span id="reservationTotal">$0.00</span>
+        </div>
+      </div>
+
+      <div class="reservation-modal-footer">
+        <button class="btn-cancel-reservation" id="btnCancelReservation">Cancelar</button>
+        <button class="btn-confirm-reservation" id="btnConfirmReservation">Confirmar Reserva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para solicitar ser guía -->
+  <div id="guideModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Solicitar ser Guía</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      
+      <div class="modal-body">
+        <form id="guideForm">
+          <div class="form-group">
+            <label for="guideBio">Biografía *</label>
+            <textarea id="guideBio" name="bio" required 
+                      placeholder="Cuéntanos sobre ti, tu experiencia y qué te apasiona de las aventuras en la montaña..."></textarea>
+            <small>Comparte tu historia y experiencia como guía</small>
+          </div>
+
+          <div class="form-group">
+            <label for="guideExperienceYears">Años de Experiencia *</label>
+            <input type="number" id="guideExperienceYears" name="experienceYears" 
+                   min="0" max="50" required placeholder="0">
+            <small>¿Cuántos años de experiencia tienes como guía?</small>
+          </div>
+
+          <div class="form-group">
+            <label>Idiomas que hablas *</label>
+            <div class="add-item-container">
+              <input type="text" id="languageInput" placeholder="Ej: Español, Inglés, Francés">
+              <button type="button" id="addLanguageBtn">Agregar</button>
+            </div>
+            <div class="language-tags" id="languageTags"></div>
+            <small>Agrega los idiomas que hablas. Al menos uno es requerido.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Especialidades</label>
+            <div class="add-item-container">
+              <input type="text" id="specialtyInput" placeholder="Ej: Escalada, Senderismo, Rappel">
+              <button type="button" id="addSpecialtyBtn">Agregar</button>
+            </div>
+            <div class="specialty-tags" id="specialtyTags"></div>
+            <small>Agrega tus especialidades o áreas de expertise (opcional)</small>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+        <button type="button" class="btn-submit" id="submitGuideBtn">Enviar Solicitud</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Mostrar botones según usuario logueado
     document.addEventListener('DOMContentLoaded', () => {
       const userActions = document.getElementById('userActions');
+      const mainNav = document.getElementById('mainNav');
+      const navExperiences = document.getElementById('navExperiences');
+      const navRequestGuide = document.getElementById('navRequestGuide');
+      const navReservations = document.getElementById('navReservations');
+      
       const user = JSON.parse(localStorage.getItem('user') || 'null');
 
       if (user) {
+        // Mostrar navbar
+        mainNav.style.display = 'flex';
+
+        // Configurar opciones según roles
+        const isGuide = user.roles && user.roles.includes('guide');
+        
+        if (isGuide) {
+          navExperiences.style.display = 'block';
+          navRequestGuide.style.display = 'none';
+        } else {
+          navExperiences.style.display = 'none';
+          navRequestGuide.style.display = 'block';
+        }
+
+        // Event listeners para navegación
+        navReservations.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = '/api/reservations/my-reservations';
+        });
+
+        navExperiences.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = '/api/experiences/my-experiences';
+        });
+
+        navRequestGuide.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Abrir el modal
+          const modal = document.getElementById('guideModal');
+          modal.style.display = 'block';
+        });
+
+        // Acciones de usuario
         userActions.innerHTML = `
           <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
           <button class="logout" id="logoutBtn">Cerrar Sesión</button>
@@ -254,6 +1081,264 @@
       }
     });
 
+    // Lógica del Modal
+    const modal = document.getElementById('guideModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitGuideBtn = document.getElementById('submitGuideBtn');
+    const languageInput = document.getElementById('languageInput');
+    const addLanguageBtn = document.getElementById('addLanguageBtn');
+    const languageTags = document.getElementById('languageTags');
+    const specialtyInput = document.getElementById('specialtyInput');
+    const addSpecialtyBtn = document.getElementById('addSpecialtyBtn');
+    const specialtyTags = document.getElementById('specialtyTags');
+
+    let languages = ['Español']; // Idioma por defecto
+    let specialties = [];
+
+    // Mostrar idioma por defecto
+    updateLanguageTags();
+
+    function updateLanguageTags() {
+      languageTags.innerHTML = '';
+      languages.forEach((lang, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'language-tag';
+        tag.innerHTML = `
+          ${lang}
+          <span class="remove-tag" data-index="${index}">&times;</span>
+        `;
+        languageTags.appendChild(tag);
+      });
+
+      // Event listeners para remover idiomas
+      document.querySelectorAll('.language-tag .remove-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          languages.splice(index, 1);
+          updateLanguageTags();
+        });
+      });
+    }
+
+    function updateSpecialtyTags() {
+      specialtyTags.innerHTML = '';
+      specialties.forEach((spec, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'specialty-tag';
+        tag.innerHTML = `
+          ${spec}
+          <span class="remove-tag" data-index="${index}">&times;</span>
+        `;
+        specialtyTags.appendChild(tag);
+      });
+
+      // Event listeners para remover especialidades
+      document.querySelectorAll('.specialty-tag .remove-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          specialties.splice(index, 1);
+          updateSpecialtyTags();
+        });
+      });
+    }
+
+    // Agregar idioma
+    addLanguageBtn.addEventListener('click', () => {
+      const lang = languageInput.value.trim();
+      if (lang && !languages.includes(lang)) {
+        languages.push(lang);
+        updateLanguageTags();
+        languageInput.value = '';
+      }
+    });
+
+    // Agregar idioma con Enter
+    languageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addLanguageBtn.click();
+      }
+    });
+
+    // Agregar especialidad
+    addSpecialtyBtn.addEventListener('click', () => {
+      const spec = specialtyInput.value.trim();
+      if (spec && !specialties.includes(spec)) {
+        specialties.push(spec);
+        updateSpecialtyTags();
+        specialtyInput.value = '';
+      }
+    });
+
+    // Agregar especialidad con Enter
+    specialtyInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSpecialtyBtn.click();
+      }
+    });
+
+    // Cerrar modal
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Cerrar modal al hacer click fuera de él
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    // Función para obtener un token válido (refrescar si es necesario)
+    async function getValidToken() {
+      let token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        return null;
+      }
+
+      // Intentar usar el token actual primero
+      return token;
+    }
+
+    // Función para refrescar el token si ha expirado
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) {
+        console.error('No hay refresh token disponible');
+        return null;
+      }
+
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refreshToken })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('accessToken', data.data.accessToken);
+          console.log('Token refrescado exitosamente');
+          return data.data.accessToken;
+        } else {
+          console.error('Error al refrescar token');
+          return null;
+        }
+      } catch (err) {
+        console.error('Error en refresh token:', err);
+        return null;
+      }
+    }
+
+    // Enviar solicitud de guía
+    submitGuideBtn.addEventListener('click', async () => {
+      const bio = document.getElementById('guideBio').value.trim();
+      const experienceYears = document.getElementById('guideExperienceYears').value;
+
+      // Validaciones
+      if (!bio) {
+        alert('Por favor ingresa una biografía');
+        return;
+      }
+
+      if (!experienceYears || experienceYears < 0) {
+        alert('Por favor ingresa años de experiencia válidos');
+        return;
+      }
+
+      if (languages.length === 0) {
+        alert('Por favor agrega al menos un idioma');
+        return;
+      }
+
+      let token = await getValidToken();
+      console.log('Token encontrado:', token ? 'Sí' : 'No');
+      
+      if (!token) {
+        alert('Debes iniciar sesión');
+        return;
+      }
+
+      console.log('Enviando datos:', { bio, experienceYears: parseInt(experienceYears), languages, specialties });
+
+      try {
+        let res = await fetch('/api/auth/request-guide', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            bio,
+            experienceYears: parseInt(experienceYears),
+            languages,
+            specialties
+          })
+        });
+
+        console.log('Status de respuesta:', res.status);
+
+        // Si el token expiró, intentar refrescarlo y reintentar
+        if (res.status === 401) {
+          console.log('Token expirado, intentando refrescar...');
+          const newToken = await refreshAccessToken();
+          
+          if (newToken) {
+            // Reintentar con el nuevo token
+            res = await fetch('/api/auth/request-guide', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Bearer ' + newToken,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                bio,
+                experienceYears: parseInt(experienceYears),
+                languages,
+                specialties
+              })
+            });
+          } else {
+            alert('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+            localStorage.clear();
+            window.location.href = '/api/auth/login';
+            return;
+          }
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log('Respuesta exitosa:', data);
+          alert('¡Solicitud enviada exitosamente! Ahora eres guía.');
+          
+          // Actualizar usuario en localStorage
+          const user = JSON.parse(localStorage.getItem('user'));
+          user.roles = data.data.user.roles;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Recargar página para actualizar navbar
+          window.location.reload();
+        } else {
+          const error = await res.json();
+          console.error('Error de servidor:', error);
+          alert(error.message || 'Error al solicitar ser guía');
+        }
+      } catch (err) {
+        console.error('Error en la petición:', err);
+        alert('Error al procesar la solicitud: ' + err.message);
+      }
+    });
+
     // Carga de experiencias
     async function fetchExperiences(query = '') {
       try {
@@ -271,17 +1356,18 @@
         data.forEach(exp => {
           const card = document.createElement('div');
           card.className = 'experience-card';
+          const imageUrl = exp.photos && exp.photos.length > 0 ? exp.photos[0] : 'https://via.placeholder.com/280x180';
           card.innerHTML = `
-            <img src="${exp.photos?.[0] || 'https://via.placeholder.com/280x180'}" alt="${exp.title}">
+            <img src="${imageUrl}" alt="${exp.title}">
             <div class="content">
               <h3>${exp.title}</h3>
               <p>${exp.description || ''}</p>
             </div>
           `;
 
-          // Redirigir al hacer click
+          // Abrir modal al hacer click
           card.addEventListener('click', () => {
-            window.location.href = `/api/experiences/${exp._id}`;
+            openExperienceModal(exp._id);
           });
 
           container.appendChild(card);
@@ -290,6 +1376,308 @@
         console.error(err);
       }
     }
+
+    // Abrir modal de detalle de experiencia
+    async function openExperienceModal(experienceId) {
+      try {
+        const res = await fetch(`/api/experiences/${experienceId}`);
+        const exp = await res.json();
+
+        // Configurar imagen principal
+        const mainImage = document.getElementById('modalMainImage');
+        mainImage.src = exp.photos && exp.photos.length > 0 ? exp.photos[0] : 'https://via.placeholder.com/900x400';
+
+        // Título
+        document.getElementById('modalTitle').textContent = exp.title;
+
+        // Badges
+        const badgesContainer = document.getElementById('modalBadges');
+        badgesContainer.innerHTML = `
+          <span class="experience-badge badge-activity">${exp.activity}</span>
+          <span class="experience-badge badge-difficulty">${exp.difficulty}</span>
+          <span class="experience-badge badge-status">${exp.status === 'published' ? 'Publicado' : exp.status === 'draft' ? 'Borrador' : 'Archivado'}</span>
+        `;
+
+        // Grid de información
+        const infoGrid = document.getElementById('modalInfoGrid');
+        const dateFormatted = new Date(exp.date).toLocaleDateString('es-MX', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        
+        infoGrid.innerHTML = `
+          <div class="experience-info-item">
+            <span class="experience-info-label">Ubicación</span>
+            <span class="experience-info-value">📍 ${exp.location}</span>
+          </div>
+          <div class="experience-info-item">
+            <span class="experience-info-label">Fecha</span>
+            <span class="experience-info-value">📅 ${dateFormatted}</span>
+          </div>
+          <div class="experience-info-item">
+            <span class="experience-info-label">Grupo</span>
+            <span class="experience-info-value">👥 ${exp.minGroupSize || 1} - ${exp.maxGroupSize} personas</span>
+          </div>
+          <div class="experience-info-item">
+            <span class="experience-info-label">Calificación</span>
+            <span class="experience-info-value">⭐ ${exp.rating.toFixed(1)} / 5.0</span>
+          </div>
+        `;
+
+        // Descripción
+        document.getElementById('modalDescription').textContent = exp.description;
+
+        // Galería de fotos (si hay más de 1)
+        const photosContainer = document.getElementById('modalPhotosContainer');
+        if (exp.photos && exp.photos.length > 1) {
+          photosContainer.innerHTML = `
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">Galería de Fotos</h3>
+            <div class="experience-photos-gallery">
+              ${exp.photos.map(photo => `<img src="${photo}" alt="Foto de experiencia">`).join('')}
+            </div>
+          `;
+        } else {
+          photosContainer.innerHTML = '';
+        }
+
+        // Precio
+        const priceFormatted = new Intl.NumberFormat('es-MX', { 
+          style: 'currency', 
+          currency: exp.currency || 'MXN' 
+        }).format(exp.pricePerPerson);
+        
+        document.getElementById('modalPrice').textContent = priceFormatted;
+
+        // Botón de reservar
+        const btnReserve = document.getElementById('btnReserve');
+        btnReserve.onclick = () => {
+          openReservationModal(exp);
+        };
+
+        // Mostrar modal
+        document.getElementById('experienceDetailModal').style.display = 'block';
+      } catch (err) {
+        console.error('Error al cargar experiencia:', err);
+        alert('Error al cargar los detalles de la experiencia');
+      }
+    }
+
+    // Variables globales para la reserva
+    let currentExperience = null;
+    let selectedSeats = 1;
+
+    // Abrir modal de reserva
+    function openReservationModal(experience) {
+      // Verificar si el usuario está logueado
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      
+      if (!user) {
+        alert('Debes iniciar sesión para hacer una reserva');
+        window.location.href = '/api/auth/login';
+        return;
+      }
+
+      // Verificar que la experiencia esté publicada
+      if (experience.status !== 'published') {
+        const alertDiv = document.getElementById('reservationAlert');
+        alertDiv.textContent = 'Esta experiencia no está disponible para reservar en este momento.';
+        alertDiv.style.display = 'block';
+        return;
+      }
+
+      // Verificar que la fecha no haya pasado
+      const experienceDate = new Date(experience.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (experienceDate < today) {
+        alert('Esta experiencia ya ha pasado y no está disponible para reservar.');
+        return;
+      }
+
+      currentExperience = experience;
+      selectedSeats = 1;
+
+      // Llenar información de la experiencia
+      document.getElementById('reservationExpTitle').textContent = experience.title;
+      
+      const dateFormatted = new Date(experience.date).toLocaleDateString('es-MX', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      document.getElementById('reservationExpDate').textContent = dateFormatted;
+      document.getElementById('reservationExpLocation').textContent = experience.location;
+      
+      const priceFormatted = new Intl.NumberFormat('es-MX', { 
+        style: 'currency', 
+        currency: experience.currency || 'MXN' 
+      }).format(experience.pricePerPerson);
+      document.getElementById('reservationPricePerPerson').textContent = priceFormatted;
+
+      // Configurar selector de asientos
+      document.getElementById('seatsDisplay').textContent = selectedSeats;
+      document.getElementById('seatsAvailableLabel').textContent = 
+        `Disponibles: ${experience.minGroupSize || 1} - ${experience.maxGroupSize} personas`;
+
+      // Calcular y mostrar total
+      updateReservationTotal();
+
+      // Ocultar alerta
+      document.getElementById('reservationAlert').style.display = 'none';
+
+      // Cerrar modal de experiencia y abrir modal de reserva
+      document.getElementById('experienceDetailModal').style.display = 'none';
+      document.getElementById('reservationModal').style.display = 'block';
+    }
+
+    // Actualizar total de la reserva
+    function updateReservationTotal() {
+      if (!currentExperience) return;
+
+      const total = currentExperience.pricePerPerson * selectedSeats;
+      const totalFormatted = new Intl.NumberFormat('es-MX', { 
+        style: 'currency', 
+        currency: currentExperience.currency || 'MXN' 
+      }).format(total);
+      
+      document.getElementById('reservationTotal').textContent = totalFormatted;
+
+      // Actualizar estado de botones
+      const decreaseBtn = document.getElementById('decreaseSeats');
+      const increaseBtn = document.getElementById('increaseSeats');
+      
+      decreaseBtn.disabled = selectedSeats <= 1;
+      increaseBtn.disabled = selectedSeats >= currentExperience.maxGroupSize;
+    }
+
+    // Decrementar asientos
+    document.getElementById('decreaseSeats').addEventListener('click', () => {
+      if (selectedSeats > 1) {
+        selectedSeats--;
+        document.getElementById('seatsDisplay').textContent = selectedSeats;
+        updateReservationTotal();
+      }
+    });
+
+    // Incrementar asientos
+    document.getElementById('increaseSeats').addEventListener('click', () => {
+      if (currentExperience && selectedSeats < currentExperience.maxGroupSize) {
+        selectedSeats++;
+        document.getElementById('seatsDisplay').textContent = selectedSeats;
+        updateReservationTotal();
+      }
+    });
+
+    // Cerrar modal de reserva
+    document.getElementById('closeReservationModal').addEventListener('click', () => {
+      document.getElementById('reservationModal').style.display = 'none';
+    });
+
+    document.getElementById('btnCancelReservation').addEventListener('click', () => {
+      document.getElementById('reservationModal').style.display = 'none';
+    });
+
+    // Confirmar reserva
+    document.getElementById('btnConfirmReservation').addEventListener('click', async () => {
+      if (!currentExperience) return;
+
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (!user) {
+        alert('Debes iniciar sesión para hacer una reserva');
+        window.location.href = '/api/auth/login';
+        return;
+      }
+
+      // Validar número de asientos
+      if (selectedSeats < (currentExperience.minGroupSize || 1)) {
+        alert(`El número mínimo de personas es ${currentExperience.minGroupSize || 1}`);
+        return;
+      }
+
+      if (selectedSeats > currentExperience.maxGroupSize) {
+        alert(`El número máximo de personas es ${currentExperience.maxGroupSize}`);
+        return;
+      }
+
+      const total = currentExperience.pricePerPerson * selectedSeats;
+
+      const reservationData = {
+        experienceId: currentExperience._id,
+        userId: user._id,
+        seats: selectedSeats,
+        total: total,
+        status: 'pending'
+      };
+
+      try {
+        let token = localStorage.getItem('accessToken');
+        
+        let res = await fetch('/api/reservations', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(reservationData)
+        });
+
+        // Si el token expiró, intentar refrescarlo
+        if (res.status === 401) {
+          const newToken = await refreshAccessToken();
+          
+          if (newToken) {
+            res = await fetch('/api/reservations', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Bearer ' + newToken,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(reservationData)
+            });
+          } else {
+            alert('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+            localStorage.clear();
+            window.location.href = '/api/auth/login';
+            return;
+          }
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          alert('¡Reserva confirmada exitosamente! Nos pondremos en contacto contigo pronto.');
+          document.getElementById('reservationModal').style.display = 'none';
+          currentExperience = null;
+          selectedSeats = 1;
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al crear la reserva');
+        }
+      } catch (err) {
+        console.error('Error al crear reserva:', err);
+        alert('Error al procesar la reserva. Por favor intenta de nuevo.');
+      }
+    });
+
+    // Cerrar modal de experiencia
+    document.getElementById('closeExperienceModal').addEventListener('click', () => {
+      document.getElementById('experienceDetailModal').style.display = 'none';
+    });
+
+    // Cerrar al hacer click fuera de los modales
+    window.addEventListener('click', (e) => {
+      const experienceModal = document.getElementById('experienceDetailModal');
+      const reservationModal = document.getElementById('reservationModal');
+      
+      if (e.target === experienceModal) {
+        experienceModal.style.display = 'none';
+      }
+      
+      if (e.target === reservationModal) {
+        reservationModal.style.display = 'none';
+      }
+    });
 
     fetchExperiences();
 

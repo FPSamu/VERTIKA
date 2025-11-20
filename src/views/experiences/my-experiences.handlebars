@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Experiencias - VERTIKA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .logo img {
+      height: 50px;
+    }
+
+    header .logo h1 {
+      font-size: 24px;
+      color: #2c3e50;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+
+    nav a:hover {
+      background: #f0f0f0;
+      color: #667eea;
+    }
+
+    nav a.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .page-header {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 40px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .btn-create {
+      background: white;
+      color: #667eea;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    .filters {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .filters label {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .filters select {
+      padding: 8px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+
+    .filters select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .experiences-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .experience-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+
+    .experience-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .experience-card .card-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      position: relative;
+    }
+
+    .experience-card .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .status-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-draft {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .status-published {
+      background: #28a745;
+      color: white;
+    }
+
+    .status-archived {
+      background: #6c757d;
+      color: white;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-content h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-edit {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background: #5a67d8;
+    }
+
+    .btn-publish {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-publish:hover {
+      background: #218838;
+    }
+
+    .btn-archive {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .btn-archive:hover {
+      background: #e0a800;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background: #c82333;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 12px;
+    }
+
+    .empty-state img {
+      width: 200px;
+      opacity: 0.5;
+      margin-bottom: 20px;
+    }
+
+    .empty-state h2 {
+      font-size: 24px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #667eea;
+    }
+
+    /* Modal de confirmación */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .modal-content p {
+      margin-bottom: 25px;
+      color: #666;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-confirm {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-confirm:hover {
+      background: #c82333;
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .experiences-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="https://imgur.com/G39Rg8s.png" alt="Vertika Logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
+    </div>
+    
+    <nav>
+      <a href="/api">Inicio</a>
+      <a href="/api/experiences/my-experiences" class="active">Mis Experiencias</a>
+      <a href="#" onclick="logout()">Cerrar Sesión</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>Mis Experiencias</h1>
+        <p>Gestiona tus experiencias publicadas y borradores</p>
+      </div>
+      <button class="btn-create" onclick="createNewExperience()">
+        + Nueva Experiencia
+      </button>
+    </div>
+
+    <div class="filters">
+      <label for="statusFilter">Filtrar por estado:</label>
+      <select id="statusFilter" onchange="filterExperiences()">
+        <option value="all">Todas</option>
+        <option value="draft">Borradores</option>
+        <option value="published">Publicadas</option>
+        <option value="archived">Archivadas</option>
+      </select>
+    </div>
+
+    <div id="experiencesContainer" class="loading">
+      Cargando experiencias...
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">¿Confirmar acción?</h2>
+      <p id="modalMessage">Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-confirm" id="confirmBtn" onclick="confirmAction()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allExperiences = [];
+    let currentAction = null;
+    let currentExperienceId = null;
+
+    // Cargar experiencias al iniciar
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadExperiences();
+    });
+
+    // Función para refrescar el token si ha expirado
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) {
+        console.error('No hay refresh token disponible');
+        return null;
+      }
+
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refreshToken })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('accessToken', data.data.accessToken);
+          console.log('Token refrescado exitosamente');
+          return data.data.accessToken;
+        } else {
+          console.error('Error al refrescar token');
+          return null;
+        }
+      } catch (err) {
+        console.error('Error en refresh token:', err);
+        return null;
+      }
+    }
+
+    // Función para hacer fetch con reintento automático si el token expira
+    async function fetchWithAuth(url, options = {}) {
+      let token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        throw new Error('No hay token de autenticación');
+      }
+
+      // Primer intento
+      let response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      // Si el token expiró, intentar refrescarlo
+      if (response.status === 401) {
+        console.log('Token expirado, intentando refrescar...');
+        const newToken = await refreshAccessToken();
+        
+        if (newToken) {
+          // Reintentar con el nuevo token
+          response = await fetch(url, {
+            ...options,
+            headers: {
+              ...options.headers,
+              'Authorization': 'Bearer ' + newToken
+            }
+          });
+        } else {
+          // Si no se pudo refrescar, redirigir al login
+          localStorage.clear();
+          window.location.href = '/api/auth/login';
+          throw new Error('Sesión expirada');
+        }
+      }
+
+      return response;
+    }
+
+    async function loadExperiences() {
+      const container = document.getElementById('experiencesContainer');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+      if (!user) {
+        window.location.href = '/api/auth/login';
+        return;
+      }
+
+      try {
+        const res = await fetchWithAuth(`/api/experiences/guide/${user._id}`);
+
+        if (res.ok) {
+          allExperiences = await res.json();
+          displayExperiences(allExperiences);
+        } else {
+          const error = await res.json();
+          container.innerHTML = `<div class="empty-state"><p>Error: ${error.error || 'Error al cargar experiencias'}</p></div>`;
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message === 'Sesión expirada') {
+          return; // Ya redirigido al login
+        }
+        container.innerHTML = '<div class="empty-state"><p>Error al conectar con el servidor</p></div>';
+      }
+    }
+
+    function displayExperiences(experiences) {
+      const container = document.getElementById('experiencesContainer');
+
+      if (experiences.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h2>No tienes experiencias aún</h2>
+            <p>Crea tu primera experiencia para comenzar a compartir aventuras</p>
+            <button class="btn-create" onclick="createNewExperience()">+ Nueva Experiencia</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.className = 'experiences-grid';
+      container.innerHTML = experiences.map(exp => `
+        <div class="experience-card">
+          <div class="card-image">
+            ${exp.photos && exp.photos.length > 0 
+              ? `<img src="${exp.photos[0]}" alt="${exp.title}">` 
+              : '<span>Sin imagen</span>'}
+            <span class="status-badge status-${exp.status}">${getStatusLabel(exp.status)}</span>
+          </div>
+          <div class="card-content">
+            <h3>${exp.title}</h3>
+            <div class="card-meta">
+              <span>📍 ${exp.location}</span>
+              <span>💰 $${exp.pricePerPerson} ${exp.currency}</span>
+            </div>
+            <p class="card-description">${exp.description}</p>
+            <div class="card-actions">
+              <button class="btn btn-edit" onclick="editExperience('${exp._id}')">Editar</button>
+              ${exp.status === 'draft' 
+                ? `<button class="btn btn-publish" onclick="publishExperience('${exp._id}')">Publicar</button>` 
+                : ''}
+              ${exp.status === 'published' 
+                ? `<button class="btn btn-archive" onclick="archiveExperience('${exp._id}')">Archivar</button>` 
+                : ''}
+              <button class="btn btn-delete" onclick="showDeleteModal('${exp._id}')">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getStatusLabel(status) {
+      const labels = {
+        'draft': 'Borrador',
+        'published': 'Publicada',
+        'archived': 'Archivada',
+        'cancelled': 'Cancelada',
+        'completed': 'Completada'
+      };
+      return labels[status] || status;
+    }
+
+    function filterExperiences() {
+      const filter = document.getElementById('statusFilter').value;
+      
+      if (filter === 'all') {
+        displayExperiences(allExperiences);
+      } else {
+        const filtered = allExperiences.filter(exp => exp.status === filter);
+        displayExperiences(filtered);
+      }
+    }
+
+    function createNewExperience() {
+      // Redirigir al formulario de creación
+      window.location.href = '/api/experiences/create';
+    }
+
+    function editExperience(id) {
+      // Redirigir a formulario de edición (por implementar)
+      alert(`Editar experiencia ${id} - Funcionalidad en desarrollo`);
+    }
+
+    async function publishExperience(id) {
+      try {
+        const res = await fetchWithAuth(`/api/experiences/${id}/publish`, {
+          method: 'PATCH'
+        });
+
+        if (res.ok) {
+          alert('Experiencia publicada exitosamente');
+          await loadExperiences();
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al publicar experiencia');
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          alert('Error al publicar experiencia');
+        }
+      }
+    }
+
+    async function archiveExperience(id) {
+      try {
+        const res = await fetchWithAuth(`/api/experiences/${id}/archive`, {
+          method: 'PATCH'
+        });
+
+        if (res.ok) {
+          alert('Experiencia archivada exitosamente');
+          await loadExperiences();
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al archivar experiencia');
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          alert('Error al archivar experiencia');
+        }
+      }
+    }
+
+    function showDeleteModal(id) {
+      currentExperienceId = id;
+      currentAction = 'delete';
+      document.getElementById('modalTitle').textContent = '¿Eliminar experiencia?';
+      document.getElementById('modalMessage').textContent = 'Esta acción no se puede deshacer. ¿Estás seguro?';
+      document.getElementById('confirmModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('confirmModal').style.display = 'none';
+      currentAction = null;
+      currentExperienceId = null;
+    }
+
+    async function confirmAction() {
+      if (currentAction === 'delete' && currentExperienceId) {
+        await deleteExperience(currentExperienceId);
+      }
+      closeModal();
+    }
+
+    async function deleteExperience(id) {
+      try {
+        const res = await fetchWithAuth(`/api/experiences/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok || res.status === 204) {
+          alert('Experiencia eliminada exitosamente');
+          await loadExperiences();
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al eliminar experiencia');
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          alert('Error al eliminar experiencia');
+        }
+      }
+    }
+
+    async function logout() {
+      const token = localStorage.getItem('accessToken');
+      
+      if (token) {
+        try {
+          await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      
+      localStorage.clear();
+      window.location.href = '/api';
+    }
+
+    // Cerrar modal al hacer click fuera
+    window.onclick = function(event) {
+      const modal = document.getElementById('confirmModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>

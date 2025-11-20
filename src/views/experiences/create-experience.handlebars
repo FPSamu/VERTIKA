@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Experiencia - VERTIKA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .logo img {
+      height: 50px;
+    }
+
+    header .logo h1 {
+      font-size: 24px;
+      color: #2c3e50;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+
+    nav a:hover {
+      background: #f0f0f0;
+      color: #667eea;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .page-header {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 40px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-section {
+      margin-bottom: 30px;
+    }
+
+    .form-section h2 {
+      font-size: 20px;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group label .required {
+      color: #dc3545;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .photo-upload-area {
+      border: 2px dashed #e0e0e0;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      background: #fafafa;
+    }
+
+    .photo-upload-area:hover {
+      border-color: #667eea;
+      background: #f0f0ff;
+    }
+
+    .photo-upload-area.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f5f5f5;
+    }
+
+    .photo-upload-area.drag-over {
+      border-color: #667eea;
+      background: #f0f0ff;
+      transform: scale(1.02);
+    }
+
+    .photo-upload-area p {
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .photo-upload-area .icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+
+    .photo-preview-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .photo-preview-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      aspect-ratio: 1;
+    }
+
+    .photo-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-preview-item .remove-photo {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(220, 53, 69, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      transition: all 0.3s;
+    }
+
+    .photo-preview-item .remove-photo:hover {
+      background: rgba(220, 53, 69, 1);
+      transform: scale(1.1);
+    }
+
+    .photo-preview-item .photo-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 8px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-draft {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .btn-draft:hover {
+      background: #e0a800;
+    }
+
+    .btn-publish {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-publish:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: 20px;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="https://imgur.com/G39Rg8s.png" alt="Vertika Logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
+    </div>
+    
+    <nav>
+      <a href="/api">Inicio</a>
+      <a href="/api/experiences/my-experiences">Mis Experiencias</a>
+      <a href="#" onclick="logout()">Cerrar Sesión</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Crear Nueva Experiencia</h1>
+      <p>Comparte una aventura única con la comunidad</p>
+    </div>
+
+    <div class="form-card">
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+      <div class="loading" id="loadingMessage">Guardando experiencia...</div>
+
+      <form id="experienceForm">
+        <!-- Información Básica -->
+        <div class="form-section">
+          <h2>Información Básica</h2>
+          
+          <div class="form-group">
+            <label for="title">Título de la Experiencia <span class="required">*</span></label>
+            <input type="text" id="title" name="title" required 
+                   placeholder="Ej: Ascenso al Pico de Orizaba">
+            <small>Elige un título atractivo y descriptivo</small>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descripción <span class="required">*</span></label>
+            <textarea id="description" name="description" required 
+                      placeholder="Describe la experiencia, qué incluye, qué deben llevar los participantes, nivel de preparación requerido, etc."></textarea>
+            <small>Incluye detalles sobre el itinerario, equipamiento, y qué hace especial esta experiencia</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="activity">Actividad <span class="required">*</span></label>
+              <select id="activity" name="activity" required>
+                <option value="">Selecciona una actividad</option>
+                <option value="hiking">Senderismo</option>
+                <option value="alpinismo">Alpinismo</option>
+                <option value="trail">Trail Running</option>
+                <option value="escalada">Escalada</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="difficulty">Dificultad <span class="required">*</span></label>
+              <select id="difficulty" name="difficulty" required>
+                <option value="">Selecciona dificultad</option>
+                <option value="fácil">Fácil</option>
+                <option value="medio">Medio</option>
+                <option value="difícil">Difícil</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Ubicación <span class="required">*</span></label>
+            <input type="text" id="location" name="location" required 
+                   placeholder="Ej: Parque Nacional Izta-Popo, Estado de México">
+            <small>Indica el lugar donde se realizará la actividad</small>
+          </div>
+        </div>
+
+        <!-- Fecha y Grupo -->
+        <div class="form-section">
+          <h2>Fecha y Capacidad</h2>
+          
+          <div class="form-group">
+            <label for="date">Fecha y Hora <span class="required">*</span></label>
+            <input type="datetime-local" id="date" name="date" required>
+            <small>Selecciona la fecha y hora de inicio de la experiencia</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="minGroupSize">Tamaño Mínimo del Grupo</label>
+              <input type="number" id="minGroupSize" name="minGroupSize" min="1" 
+                     placeholder="Ej: 2">
+              <small>Número mínimo de participantes (opcional)</small>
+            </div>
+
+            <div class="form-group">
+              <label for="maxGroupSize">Tamaño Máximo del Grupo <span class="required">*</span></label>
+              <input type="number" id="maxGroupSize" name="maxGroupSize" min="1" required 
+                     placeholder="Ej: 8">
+              <small>Número máximo de participantes</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="form-section">
+          <h2>Precio</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pricePerPerson">Precio por Persona <span class="required">*</span></label>
+              <input type="number" id="pricePerPerson" name="pricePerPerson" min="0" step="0.01" required 
+                     placeholder="Ej: 1500">
+              <small>Precio por participante</small>
+            </div>
+
+            <div class="form-group">
+              <label for="currency">Moneda <span class="required">*</span></label>
+              <select id="currency" name="currency" required>
+                <option value="MXN">MXN (Pesos Mexicanos)</option>
+                <option value="USD">USD (Dólares)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fotos -->
+        <div class="form-section">
+          <h2>Fotografías</h2>
+          
+          <div class="form-group">
+            <label>Imágenes de la Experiencia</label>
+            <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoSelection(event)">
+            <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()">
+              <div class="icon">📷</div>
+              <p><strong>Haz click para seleccionar fotos</strong></p>
+              <p>O arrastra y suelta aquí</p>
+              <small>Máximo 10 fotos, 5MB cada una (JPG, PNG, WebP)</small>
+            </div>
+            
+            <div class="photo-preview-container" id="photoPreviewContainer"></div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-cancel" onclick="cancelForm()">Cancelar</button>
+          <button type="button" class="btn btn-draft" onclick="saveDraft()">Guardar Borrador</button>
+          <button type="button" class="btn btn-publish" onclick="saveAndPublish()">Crear y Publicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Array para almacenar las fotos seleccionadas
+    let selectedPhotos = [];
+    const MAX_PHOTOS = 10;
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+    // Función para refrescar el token si ha expirado
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) {
+        console.error('No hay refresh token disponible');
+        return null;
+      }
+
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refreshToken })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('accessToken', data.data.accessToken);
+          console.log('Token refrescado exitosamente');
+          return data.data.accessToken;
+        } else {
+          console.error('Error al refrescar token');
+          return null;
+        }
+      } catch (err) {
+        console.error('Error en refresh token:', err);
+        return null;
+      }
+    }
+
+    // Función para hacer fetch con reintento automático si el token expira
+    async function fetchWithAuth(url, options = {}) {
+      let token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        throw new Error('No hay token de autenticación');
+      }
+
+      // Preparar headers
+      const headers = {
+        ...options.headers,
+        'Authorization': 'Bearer ' + token
+      };
+
+      // Primer intento
+      let response = await fetch(url, {
+        ...options,
+        headers: headers
+      });
+
+      // Si el token expiró, intentar refrescarlo
+      if (response.status === 401) {
+        console.log('Token expirado, intentando refrescar...');
+        const newToken = await refreshAccessToken();
+        
+        if (newToken) {
+          // Actualizar headers con nuevo token
+          headers['Authorization'] = 'Bearer ' + newToken;
+          
+          // Reintentar con el nuevo token
+          response = await fetch(url, {
+            ...options,
+            headers: headers
+          });
+        } else {
+          // Si no se pudo refrescar, redirigir al login
+          localStorage.clear();
+          window.location.href = '/api/auth/login';
+          throw new Error('Sesión expirada');
+        }
+      }
+
+      return response;
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showLoading(show) {
+      const loadingDiv = document.getElementById('loadingMessage');
+      loadingDiv.classList.toggle('active', show);
+    }
+
+    function handlePhotoSelection(event) {
+      const files = Array.from(event.target.files);
+      addPhotos(files);
+      // Limpiar el input para permitir seleccionar las mismas fotos de nuevo
+      event.target.value = '';
+    }
+
+    function addPhotos(files) {
+      const validFiles = files.filter(file => {
+        // Validar tipo de archivo
+        if (!file.type.startsWith('image/')) {
+          showError(`${file.name} no es una imagen válida`);
+          return false;
+        }
+
+        // Validar tamaño
+        if (file.size > MAX_FILE_SIZE) {
+          showError(`${file.name} excede el tamaño máximo de 5MB`);
+          return false;
+        }
+
+        return true;
+      });
+
+      // Verificar límite de fotos
+      const remainingSlots = MAX_PHOTOS - selectedPhotos.length;
+      if (validFiles.length > remainingSlots) {
+        showError(`Solo puedes agregar ${remainingSlots} foto(s) más (máximo ${MAX_PHOTOS})`);
+        validFiles.splice(remainingSlots);
+      }
+
+      // Agregar fotos válidas
+      validFiles.forEach(file => {
+        const photoObj = {
+          file: file,
+          id: Date.now() + Math.random(), // ID único
+          preview: URL.createObjectURL(file)
+        };
+        selectedPhotos.push(photoObj);
+      });
+
+      updatePhotoPreview();
+    }
+
+    function removePhoto(photoId) {
+      const index = selectedPhotos.findIndex(p => p.id === photoId);
+      if (index > -1) {
+        // Liberar la URL del objeto
+        URL.revokeObjectURL(selectedPhotos[index].preview);
+        selectedPhotos.splice(index, 1);
+        updatePhotoPreview();
+      }
+    }
+
+    function updatePhotoPreview() {
+      const container = document.getElementById('photoPreviewContainer');
+      
+      if (selectedPhotos.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = selectedPhotos.map(photo => `
+        <div class="photo-preview-item">
+          <img src="${photo.preview}" alt="Preview">
+          <button type="button" class="remove-photo" onclick="removePhoto(${photo.id})">&times;</button>
+          <div class="photo-info">${formatFileSize(photo.file.size)}</div>
+        </div>
+      `).join('');
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // Configurar drag & drop
+    function setupDragAndDrop() {
+      const uploadArea = document.getElementById('photoUploadArea');
+
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.add('drag-over');
+      });
+
+      uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('drag-over');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('drag-over');
+        
+        const files = Array.from(e.dataTransfer.files);
+        addPhotos(files);
+      });
+    }
+
+    function getFormData() {
+      const form = document.getElementById('experienceForm');
+      const formData = {
+        title: form.title.value.trim(),
+        description: form.description.value.trim(),
+        activity: form.activity.value,
+        location: form.location.value.trim(),
+        difficulty: form.difficulty.value,
+        date: form.date.value,
+        maxGroupSize: parseInt(form.maxGroupSize.value),
+        pricePerPerson: parseFloat(form.pricePerPerson.value),
+        currency: form.currency.value
+      };
+
+      // Agregar minGroupSize solo si tiene valor
+      if (form.minGroupSize.value) {
+        formData.minGroupSize = parseInt(form.minGroupSize.value);
+      }
+
+      return formData;
+    }
+
+    function validateForm() {
+      const formData = getFormData();
+      
+      if (!formData.title || !formData.description || !formData.activity || 
+          !formData.location || !formData.difficulty || !formData.date) {
+        showError('Por favor completa todos los campos obligatorios');
+        return false;
+      }
+
+      if (formData.maxGroupSize < 1) {
+        showError('El tamaño máximo del grupo debe ser al menos 1');
+        return false;
+      }
+
+      if (formData.minGroupSize && formData.minGroupSize > formData.maxGroupSize) {
+        showError('El tamaño mínimo no puede ser mayor que el máximo');
+        return false;
+      }
+
+      if (formData.pricePerPerson < 0) {
+        showError('El precio no puede ser negativo');
+        return false;
+      }
+
+      const selectedDate = new Date(formData.date);
+      const now = new Date();
+      if (selectedDate < now) {
+        showError('La fecha debe ser en el futuro');
+        return false;
+      }
+
+      return true;
+    }
+
+    async function saveExperience(status = 'draft') {
+      if (!validateForm()) {
+        return;
+      }
+
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (!user) {
+        showError('Debes iniciar sesión');
+        window.location.href = '/api/auth/login';
+        return;
+      }
+
+      showLoading(true);
+
+      try {
+        const basicFormData = getFormData();
+        
+        // Crear FormData para enviar archivos
+        const formData = new FormData();
+        
+        // Agregar campos básicos
+        formData.append('userId', user._id);
+        formData.append('status', status);
+        formData.append('title', basicFormData.title);
+        formData.append('description', basicFormData.description);
+        formData.append('activity', basicFormData.activity);
+        formData.append('location', basicFormData.location);
+        formData.append('difficulty', basicFormData.difficulty);
+        formData.append('date', basicFormData.date);
+        formData.append('maxGroupSize', basicFormData.maxGroupSize.toString());
+        formData.append('pricePerPerson', basicFormData.pricePerPerson.toString());
+        formData.append('currency', basicFormData.currency);
+        
+        if (basicFormData.minGroupSize) {
+          formData.append('minGroupSize', basicFormData.minGroupSize.toString());
+        }
+
+        // Agregar fotos
+        selectedPhotos.forEach(photo => {
+          formData.append('photos', photo.file);
+        });
+
+        console.log('Enviando experiencia con', selectedPhotos.length, 'fotos');
+
+        const res = await fetchWithAuth('/api/experiences', {
+          method: 'POST',
+          body: formData
+          // No incluir Content-Type, el navegador lo establece automáticamente con el boundary
+        });
+
+        showLoading(false);
+
+        if (res.ok) {
+          const data = await res.json();
+          const message = status === 'draft' 
+            ? '¡Borrador guardado exitosamente!' 
+            : '¡Experiencia creada y publicada exitosamente!';
+          
+          showSuccess(message);
+          
+          // Liberar URLs de objetos
+          selectedPhotos.forEach(photo => URL.revokeObjectURL(photo.preview));
+          
+          // Redirigir después de 2 segundos
+          setTimeout(() => {
+            window.location.href = '/api/experiences/my-experiences';
+          }, 2000);
+        } else {
+          const error = await res.json();
+          showError(error.error || 'Error al crear la experiencia');
+        }
+      } catch (err) {
+        showLoading(false);
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          showError('Error al conectar con el servidor');
+        }
+      }
+    }
+
+    async function saveDraft() {
+      await saveExperience('draft');
+    }
+
+    async function saveAndPublish() {
+      await saveExperience('published');
+    }
+
+    function cancelForm() {
+      if (confirm('¿Estás seguro de cancelar? Se perderán los cambios no guardados.')) {
+        window.location.href = '/api/experiences/my-experiences';
+      }
+    }
+
+    async function logout() {
+      const token = localStorage.getItem('accessToken');
+      
+      if (token) {
+        try {
+          await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      
+      localStorage.clear();
+      window.location.href = '/api';
+    }
+
+    // Verificar autenticación al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      
+      if (!user) {
+        window.location.href = '/api/auth/login';
+        return;
+      }
+
+      // Verificar que sea un guía
+      if (!user.roles || !user.roles.includes('guide')) {
+        alert('Solo los guías pueden crear experiencias');
+        window.location.href = '/api';
+        return;
+      }
+
+      // Configurar drag & drop para fotos
+      setupDragAndDrop();
+    });
+  </script>
+</body>
+</html>

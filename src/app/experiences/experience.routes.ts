@@ -9,6 +9,9 @@ import {
   archiveExperience,
   deleteExperience,
   uploadExperiencePhotos as uploadPhotosController,
+  showMyExperiencesPage,
+  showCreateExperiencePage,
+  getGuideExperiences,
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
 import { guideVerificationMiddleware } from "../middlewares/guideVerification";
@@ -24,6 +27,48 @@ const router = Router();
  *   name: Experiences
  *   description: Endpoints de experiencias 
  */
+
+/**
+ * @swagger
+ * /api/experiences/my-experiences:
+ *   get:
+ *     tags: [Experiences]
+ *     summary: Página de gestión de experiencias del guía
+ *     responses:
+ *       200:
+ *         description: Página HTML de mis experiencias
+ */
+router.get("/my-experiences", showMyExperiencesPage);
+
+/**
+ * @swagger
+ * /api/experiences/create:
+ *   get:
+ *     tags: [Experiences]
+ *     summary: Página para crear una nueva experiencia
+ *     responses:
+ *       200:
+ *         description: Página HTML de formulario de creación
+ */
+router.get("/create", showCreateExperiencePage);
+
+/**
+ * @swagger
+ * /api/experiences/guide/{userId}:
+ *   get:
+ *     tags: [Experiences]
+ *     summary: Obtener experiencias de un guía específico
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de experiencias del guía
+ */
+router.get("/guide/:userId", authMiddleware, getGuideExperiences);
 
 /**
  * @swagger
@@ -127,7 +172,7 @@ router.get("/:id", getExperienceById);
  *       201:
  *         description: Experiencia creada correctamente
  */
-router.post("/", authMiddleware, guideVerificationByUserIdMiddleware, uploadExperiencePhotos.array("photos", 10), createExperience);
+router.post("/", authMiddleware, uploadExperiencePhotos.array("photos", 10), guideVerificationByUserIdMiddleware, createExperience);
 
 /**
  * @swagger

@@ -14,6 +14,50 @@ export async function listExperiences(req: Request, res: Response) {
   }
 }
 
+/* GET /experiences/my-experiences (Vista para guías) */
+export async function showMyExperiencesPage(req: Request, res: Response) {
+  try {
+    // Simplemente renderizar la vista, la autenticación se hace en el frontend
+    res.render('experiences/my-experiences');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al cargar página" });
+  }
+}
+
+/* GET /experiences/create (Vista para crear experiencia) */
+export async function showCreateExperiencePage(req: Request, res: Response) {
+  try {
+    // Renderizar la vista de creación de experiencia
+    res.render('experiences/create-experience');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al cargar página" });
+  }
+}
+
+/* GET /experiences/guide/:userId (API para obtener experiencias del guía) */
+export async function getGuideExperiences(req: Request, res: Response) {
+  try {
+    const userId = req.params.userId;
+
+    // Buscar el guía por userId
+    const guide = await Guide.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+    
+    if (!guide) {
+      return res.status(404).json({ error: "Guía no encontrado" });
+    }
+
+    // Obtener todas las experiencias del guía (publicadas y no publicadas)
+    const experiences = await Experience.find({ guideId: guide._id }).sort({ createdAt: -1 });
+    
+    res.json(experiences);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener experiencias del guía" });
+  }
+}
+
 /* GET /experiences/:id */
 export async function getExperienceById(req: Request, res: Response) {
   try {

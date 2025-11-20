@@ -357,7 +357,17 @@ export const requestToBecomeGuide = async (req: Request, res: Response): Promise
       return;
     }
 
-    const result = await authService.requestToBecomeGuide(userId);
+    // Obtener datos opcionales del perfil del guía desde el body
+    const { bio, languages, experienceYears, specialties } = req.body;
+
+    const guideData = {
+      bio,
+      languages,
+      experienceYears: experienceYears ? parseInt(experienceYears) : undefined,
+      specialties
+    };
+
+    const result = await authService.requestToBecomeGuide(userId, guideData);
 
     if (!result.success) {
       // Determinar el código de estado según el mensaje
