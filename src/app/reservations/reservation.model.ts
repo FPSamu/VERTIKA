@@ -7,6 +7,8 @@ const ReservationSchema: Schema = new Schema({
   seats: { type: Number, required: true },
   status: { type: String, enum: Object.values(StatusType), default: "pending" },
   total: { type: Number, required: true },
+  confirmationToken: { type: String },
+  confirmationTokenExpires: { type: Date },
   createdAt: { type: Date, default: () => new Date() },
   updatedAt: { type: Date, default: () => new Date() },
 });

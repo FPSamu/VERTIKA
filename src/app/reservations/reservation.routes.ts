@@ -5,6 +5,9 @@ import {
   createReservation,
   updateReservation,
   deleteReservation,
+  showMyReservationsPage,
+  getUserReservations,
+  confirmReservation,
 } from "./reservation.controller";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -16,6 +19,61 @@ const router = Router();
  *   name: Reservations
  *   description: Endpoints de reservas
  */
+
+/**
+ * @swagger
+ * /api/reservations/my-reservations:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: Página de mis reservaciones
+ *     responses:
+ *       200:
+ *         description: Página renderizada
+ */
+router.get("/my-reservations", showMyReservationsPage);
+
+/**
+ * @swagger
+ * /api/reservations/confirm/{reservationId}/{token}:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: Confirmar reservación con token de email
+ *     parameters:
+ *       - in: path
+ *         name: reservationId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Reservación confirmada exitosamente
+ */
+router.get("/confirm/:reservationId/:token", confirmReservation);
+
+/**
+ * @swagger
+ * /api/reservations/user/{userId}:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: Obtener reservaciones de un usuario
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de reservaciones del usuario
+ */
+router.get("/user/:userId", authMiddleware, getUserReservations);
 
 /**
  * @swagger
