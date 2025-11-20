@@ -22,9 +22,9 @@ const s3Storage = multerS3({
   },
   acl: "public-read",
   key: (req: Request, file, cb) => {
-    const userId = (req as any).user?._id;
+    const userId = (req as any).user?.userId;
     if (!userId) {
-      return cb(new Error("No autenticado"), "");
+      return cb(new Error("S3Experience: No autenticado"), "");
     }
     
     // Generar nombre único para cada foto de experiencia

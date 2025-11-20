@@ -272,7 +272,7 @@
           const card = document.createElement('div');
           card.className = 'experience-card';
           card.innerHTML = `
-            <img src="${exp.image || 'https://via.placeholder.com/280x180'}" alt="${exp.title}">
+            <img src="${exp.photos?.[0] || 'https://via.placeholder.com/280x180'}" alt="${exp.title}">
             <div class="content">
               <h3>${exp.title}</h3>
               <p>${exp.description || ''}</p>
