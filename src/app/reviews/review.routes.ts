@@ -4,9 +4,11 @@ import {
   getReviewById,
   createReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  uploadReviewPhotos as uploadPhotosController
 } from "./review.controller";
 import { authMiddleware } from "../middlewares/auth";
+import { uploadReviewPhotos } from "../middlewares/upload/upload_s3_review";
 
 const router = Router();
 
@@ -72,14 +74,14 @@ router.get("/:id", getReviewById);
  * /api/reviews:
  *   post:
  *     tags: [Reviews]
- *     summary: Crear una nueva reseña
- *     description: Crear una reseña asociada a una reserva. Requiere autenticación.
+ *     summary: Crear una nueva reseña con fotos opcionales
+ *     description: Crear una reseña asociada a una reserva. Puede incluir hasta 5 fotos (5MB c/u). Requiere autenticación. Disponible para cualquier usuario (con o sin rol de guía).
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -110,12 +112,13 @@ router.get("/:id", getReviewById);
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: uri
+ *                   format: binary
+ *                 description: Fotos de la reseña (opcional, máximo 5 imágenes de 5MB c/u)
  *     responses:
  *       201:
  *         description: Reseña creada correctamente
  */
-router.post("/", authMiddleware, createReview);
+router.post("/", authMiddleware, uploadReviewPhotos.array("photos", 5), createReview);
 
 /**
  * @swagger
@@ -169,5 +172,64 @@ router.patch("/:id", authMiddleware, updateReview);
  *         description: Eliminada correctamente
  */
 router.delete("/:id", authMiddleware, deleteReview);
+
+/**
+ * @swagger
+ * /api/reviews/{id}/upload-photos:
+ *   post:
+ *     tags: [Reviews]
+ *     summary: Agregar fotos a una reseña existente
+ *     description: Permite al usuario agregar hasta 5 fotos (5MB c/u) a S3 para su reseña. Solo el creador de la reseña puede agregar fotos.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la reseña
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: Imágenes de la reseña (máximo 5, 5MB cada una)
+ *     responses:
+ *       200:
+ *         description: Fotos agregadas correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 photos:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 review:
+ *                   type: object
+ *       400:
+ *         description: No se proporcionaron imágenes
+ *       403:
+ *         description: No tienes permisos para modificar esta reseña
+ *       404:
+ *         description: Reseña no encontrada
+ */
+router.post(
+  "/:id/upload-photos",
+  authMiddleware,
+  uploadReviewPhotos.array("photos", 5),
+  uploadPhotosController
+);
 
 export default router;

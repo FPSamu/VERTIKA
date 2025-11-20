@@ -36,7 +36,7 @@ export async function listGuides(req: Request, res: Response) {
 /* GET /guides/:id */
 export async function getGuideById(req: Request, res: Response) {
   try {
-    const guide = await Guide.findById(req.params.id);
+    const guide = await Guide.findById(req.params.guideId);
     if (!guide) return res.status(404).json({ error: "Guía no encontrada" });
 
     if (!mongoose.connection.db) {

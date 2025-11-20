@@ -8,9 +8,13 @@ import {
   republishExperience,
   archiveExperience,
   deleteExperience,
+  uploadExperiencePhotos as uploadPhotosController,
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
 import { guideVerificationMiddleware } from "../middlewares/guideVerification";
+import { guideVerificationByUserIdMiddleware } from "../middlewares/guideVerificationByUserId";
+import { experienceOwnershipMiddleware } from "../middlewares/experienceOwnership";
+import { uploadExperiencePhotos } from "../middlewares/upload/upload_s3_experience";
 
 const router = Router();
 
@@ -58,16 +62,16 @@ router.get("/:id", getExperienceById);
  * /api/experiences:
  *   post:
  *     tags: [Experiences]
- *     summary: Crear una nueva experiencia (borrador)
- *     description: Crea una experiencia en estado 'draft'. Solo disponible para guías verificados.
+ *     summary: Crear una nueva experiencia (borrador) con fotos opcionales
+ *     description: Crea una experiencia en estado 'draft'. Solo disponible para guías verificados. Puede incluir hasta 10 fotos (5MB c/u).
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
- *               - guideId
+ *               - userId
  *               - title
  *               - description
  *               - activity
@@ -77,9 +81,10 @@ router.get("/:id", getExperienceById);
  *               - maxGroupSize
  *               - pricePerPerson
  *             properties:
- *               guideId:
+ *               userId:
  *                 type: string
- *                 example: "g1"
+ *                 description: ID del usuario que debe ser un guía verificado (el guideId se obtiene automáticamente)
+ *                 example: "69151fa525a16fe4e4157ccb"
  *               title:
  *                 type: string
  *                 example: "Ascenso al Pico de Orizaba"
@@ -116,12 +121,13 @@ router.get("/:id", getExperienceById);
  *                 type: array
  *                 items:
  *                   type: string
- *                   example: "https://example.com/photo1.jpg"
+ *                   format: binary
+ *                 description: Fotos de la experiencia (opcional, máximo 10 imágenes de 5MB c/u)
  *     responses:
  *       201:
  *         description: Experiencia creada correctamente
  */
-router.post("/", authMiddleware, guideVerificationMiddleware,createExperience);
+router.post("/", authMiddleware, guideVerificationByUserIdMiddleware, uploadExperiencePhotos.array("photos", 10), createExperience);
 
 /**
  * @swagger
@@ -227,5 +233,63 @@ router.patch("/:id/archive", authMiddleware,guideVerificationMiddleware ,archive
  *         description: Eliminada correctamente
  */
 router.delete("/:id", authMiddleware,guideVerificationMiddleware, deleteExperience);
+
+/**
+ * @swagger
+ * /api/experiences/{id}/upload-photos:
+ *   post:
+ *     tags: [Experiences]
+ *     summary: Subir fotos a una experiencia
+ *     description: Permite al guía subir hasta 10 fotos (5MB c/u) a S3 para su experiencia.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la experiencia
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: Imágenes de la experiencia (máximo 10, 5MB cada una)
+ *     responses:
+ *       200:
+ *         description: Fotos subidas correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 photos:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 experience:
+ *                   type: object
+ *       400:
+ *         description: No se proporcionaron imágenes
+ *       403:
+ *         description: No tienes permisos para modificar esta experiencia
+ *       404:
+ *         description: Experiencia no encontrada
+ */
+router.post(
+  "/:id/upload-photos",
+  authMiddleware,
+  experienceOwnershipMiddleware,
+  uploadExperiencePhotos.array("photos", 10),
+  uploadPhotosController
+);
 
 export default router;

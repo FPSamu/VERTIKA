@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Experience from "../experiences/experience.model";
+import Guide from "../guides/guide.model";
 
 /* GET /experiences */
 export async function listExperiences(req: Request, res: Response) {
@@ -28,7 +29,28 @@ export async function getExperienceById(req: Request, res: Response) {
 /* POST /experiences (draft) */
 export async function createExperience(req: Request, res: Response) {
   try {
-    const newExperience = await Experience.create(req.body);
+    const { userId, ...restBody } = req.body;
+
+    // El middleware guideVerificationByUserIdMiddleware ya validó que existe el guía
+    // Ahora buscamos el guía para obtener su _id
+    const guide = await Guide.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+    
+    if (!guide) {
+      return res.status(404).json({ error: "Guía no encontrado" });
+    }
+
+    // Si hay fotos subidas, Multer las habrá procesado
+    const files = req.files as Express.MulterS3.File[];
+    const photoUrls = files && files.length > 0 ? files.map(file => file.location) : [];
+
+    // Crear la experiencia con el guideId obtenido del documento Guide
+    const experienceData = {
+      ...restBody,
+      guideId: guide._id,  // Usamos el _id del guía, no el userId
+      photos: photoUrls
+    };
+
+    const newExperience = await Experience.create(experienceData);
     res.status(201).json(newExperience);
   } catch (err) {
     console.error(err);
@@ -112,5 +134,43 @@ export async function deleteExperience(req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al eliminar experiencia" });
+  }
+}
+
+/* POST /experiences/:id/upload-photos (subir fotos a S3) */
+export async function uploadExperiencePhotos(req: Request, res: Response) {
+  try {
+    const experienceId = req.params.id;
+    const experience = await Experience.findById(experienceId);
+    
+    if (!experience) {
+      return res.status(404).json({ error: "Experiencia no encontrada" });
+    }
+
+    // El middleware experienceOwnershipMiddleware ya validó la propiedad
+    
+    // Multer ya subió las imágenes a S3, ahora obtenemos las URLs
+    const files = req.files as Express.MulterS3.File[];
+    
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No se proporcionaron imágenes" });
+    }
+
+    // Obtener las URLs de las fotos subidas
+    const photoUrls = files.map(file => file.location);
+
+    // Agregar las nuevas URLs al array de fotos existente
+    const currentPhotos = (experience.photos as string[]) || [];
+    experience.photos = [...currentPhotos, ...photoUrls];
+    await experience.save();
+
+    res.status(200).json({
+      message: "Fotos subidas correctamente",
+      photos: photoUrls,
+      experience
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al subir fotos de experiencia" });
   }
 }
