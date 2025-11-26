@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Vertika - Explora Experiencias</title>
@@ -14,7 +15,7 @@
 
     header {
       background: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -142,13 +143,13 @@
       border-radius: 50px;
       border: none;
       font-size: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       transition: box-shadow 0.3s;
     }
 
     .search-container input:focus {
       outline: none;
-      box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
     }
 
     main {
@@ -167,14 +168,14 @@
       background: white;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
     }
 
     .experience-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
     }
 
     .experience-card img {
@@ -210,6 +211,7 @@
         flex-direction: column;
         gap: 10px;
       }
+
       header .user-actions {
         flex-wrap: wrap;
         justify-content: center;
@@ -226,13 +228,18 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.6);
+      background-color: rgba(0, 0, 0, 0.6);
       animation: fadeIn 0.3s;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .modal-content {
@@ -242,7 +249,7 @@
       border-radius: 15px;
       width: 90%;
       max-width: 600px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       animation: slideDown 0.3s;
     }
 
@@ -251,6 +258,7 @@
         transform: translateY(-50px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -416,7 +424,7 @@
 
     .btn-submit:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
     }
 
     .specialty-tags {
@@ -453,7 +461,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       animation: fadeIn 0.3s;
     }
 
@@ -464,7 +472,7 @@
       border-radius: 15px;
       width: 90%;
       max-width: 900px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       animation: slideDown 0.3s;
       max-height: 90vh;
       overflow-y: auto;
@@ -491,7 +499,7 @@
       font-size: 40px;
       font-weight: bold;
       cursor: pointer;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       width: 45px;
       height: 45px;
       border-radius: 50%;
@@ -504,7 +512,7 @@
     }
 
     .experience-modal-close:hover {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
     }
 
     .experience-modal-body {
@@ -641,7 +649,7 @@
 
     .btn-reserve:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
     @media (max-width: 768px) {
@@ -668,6 +676,177 @@
       }
     }
 
+
+    /* Estilos para Reviews del Guía */
+    .guide-reviews-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .guide-reviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .guide-reviews-title {
+      font-size: 24px;
+      color: #2c3e50;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .guide-rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #f8f9fa;
+      padding: 15px 25px;
+      border-radius: 10px;
+    }
+
+    .guide-rating-number {
+      font-size: 36px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .guide-rating-stars {
+      display: flex;
+      gap: 4px;
+      font-size: 24px;
+    }
+
+    .guide-rating-stars .star-filled {
+      color: #ffd700;
+    }
+
+    .guide-rating-stars .star-empty {
+      color: #ddd;
+    }
+
+    .guide-rating-count {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .review-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      transition: box-shadow 0.3s;
+    }
+
+    .review-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .review-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .review-user-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+
+    .review-date {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .review-ratings {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+    }
+
+    .review-rating-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+    }
+
+    .review-stars .star-filled {
+      color: #ffd700;
+    }
+
+    .review-stars .star-empty {
+      color: #ddd;
+    }
+
+    .review-comment {
+      color: #555;
+      line-height: 1.6;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    .review-photos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .review-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .review-photo:hover {
+      transform: scale(1.1);
+    }
+
+    .no-reviews {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 16px;
+    }
+
+    .reviews-loading {
+      text-align: center;
+      padding: 40px;
+      color: #667eea;
+      font-size: 16px;
+    }
+
     /* Modal de Reserva */
     .reservation-modal {
       display: none;
@@ -678,7 +857,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       animation: fadeIn 0.3s;
     }
 
@@ -689,7 +868,7 @@
       border-radius: 15px;
       width: 90%;
       max-width: 500px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       animation: slideDown 0.3s;
     }
 
@@ -825,7 +1004,7 @@
 
     .btn-confirm-reservation:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
     }
 
     .reservation-alert {
@@ -839,18 +1018,21 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="logo">
       <img src="https://imgur.com/G39Rg8s.png" alt="Vertika Logo">
       <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
-    
+
     <nav id="mainNav" style="display: none;">
       <a href="/api" class="nav-link" data-page="home">Inicio</a>
       <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
-      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis Experiencias</a>
-      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser Guía</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis
+        Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser
+        Guía</a>
     </nav>
 
     <div class="user-actions" id="userActions">
@@ -880,19 +1062,37 @@
         <img id="modalMainImage" src="" alt="Experiencia">
         <span class="experience-modal-close" id="closeExperienceModal">&times;</span>
       </div>
-      
+
       <div class="experience-modal-body">
         <h1 class="experience-modal-title" id="modalTitle"></h1>
-        
+
         <div class="experience-badges" id="modalBadges"></div>
-        
+
         <div class="experience-info-grid" id="modalInfoGrid"></div>
-        
+
         <div class="experience-description" id="modalDescription"></div>
-        
+
         <div id="modalPhotosContainer"></div>
+
+        <!-- Sección de Reviews del Guía -->
+        <div class="guide-reviews-section">
+          <div class="guide-reviews-header">
+            <h3 class="guide-reviews-title">Calificaciones del Guía</h3>
+            <div class="guide-rating-summary" id="guideRatingSummary">
+              <div class="guide-rating-number" id="guideAvgRating">-</div>
+              <div>
+                <div class="guide-rating-stars" id="guideRatingStars"></div>
+                <div class="guide-rating-count" id="guideReviewCount">Sin calificaciones</div>
+              </div>
+            </div>
+          </div>
+          <div id="reviewsContainer">
+            <div class="reviews-loading">Cargando reseñas...</div>
+          </div>
+        </div>
+
       </div>
-      
+
       <div class="experience-modal-footer">
         <div>
           <span class="experience-price" id="modalPrice"></span>
@@ -960,20 +1160,20 @@
         <h2>Solicitar ser Guía</h2>
         <span class="close" id="closeModal">&times;</span>
       </div>
-      
+
       <div class="modal-body">
         <form id="guideForm">
           <div class="form-group">
             <label for="guideBio">Biografía *</label>
-            <textarea id="guideBio" name="bio" required 
-                      placeholder="Cuéntanos sobre ti, tu experiencia y qué te apasiona de las aventuras en la montaña..."></textarea>
+            <textarea id="guideBio" name="bio" required
+              placeholder="Cuéntanos sobre ti, tu experiencia y qué te apasiona de las aventuras en la montaña..."></textarea>
             <small>Comparte tu historia y experiencia como guía</small>
           </div>
 
           <div class="form-group">
             <label for="guideExperienceYears">Años de Experiencia *</label>
-            <input type="number" id="guideExperienceYears" name="experienceYears" 
-                   min="0" max="50" required placeholder="0">
+            <input type="number" id="guideExperienceYears" name="experienceYears" min="0" max="50" required
+              placeholder="0">
             <small>¿Cuántos años de experiencia tienes como guía?</small>
           </div>
 
@@ -1014,7 +1214,7 @@
       const navExperiences = document.getElementById('navExperiences');
       const navRequestGuide = document.getElementById('navRequestGuide');
       const navReservations = document.getElementById('navReservations');
-      
+
       const user = JSON.parse(localStorage.getItem('user') || 'null');
 
       if (user) {
@@ -1023,7 +1223,7 @@
 
         // Configurar opciones según roles
         const isGuide = user.roles && user.roles.includes('guide');
-        
+
         if (isGuide) {
           navExperiences.style.display = 'block';
           navRequestGuide.style.display = 'none';
@@ -1198,7 +1398,7 @@
     // Función para obtener un token válido (refrescar si es necesario)
     async function getValidToken() {
       let token = localStorage.getItem('accessToken');
-      
+
       if (!token) {
         return null;
       }
@@ -1210,7 +1410,7 @@
     // Función para refrescar el token si ha expirado
     async function refreshAccessToken() {
       const refreshToken = localStorage.getItem('refreshToken');
-      
+
       if (!refreshToken) {
         console.error('No hay refresh token disponible');
         return null;
@@ -1263,7 +1463,7 @@
 
       let token = await getValidToken();
       console.log('Token encontrado:', token ? 'Sí' : 'No');
-      
+
       if (!token) {
         alert('Debes iniciar sesión');
         return;
@@ -1292,7 +1492,7 @@
         if (res.status === 401) {
           console.log('Token expirado, intentando refrescar...');
           const newToken = await refreshAccessToken();
-          
+
           if (newToken) {
             // Reintentar con el nuevo token
             res = await fetch('/api/auth/request-guide', {
@@ -1320,12 +1520,12 @@
           const data = await res.json();
           console.log('Respuesta exitosa:', data);
           alert('¡Solicitud enviada exitosamente! Ahora eres guía.');
-          
+
           // Actualizar usuario en localStorage
           const user = JSON.parse(localStorage.getItem('user'));
           user.roles = data.data.user.roles;
           localStorage.setItem('user', JSON.stringify(user));
-          
+
           // Recargar página para actualizar navbar
           window.location.reload();
         } else {
@@ -1400,12 +1600,12 @@
 
         // Grid de información
         const infoGrid = document.getElementById('modalInfoGrid');
-        const dateFormatted = new Date(exp.date).toLocaleDateString('es-MX', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
+        const dateFormatted = new Date(exp.date).toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
         });
-        
+
         infoGrid.innerHTML = `
           <div class="experience-info-item">
             <span class="experience-info-label">Ubicación</span>
@@ -1442,11 +1642,11 @@
         }
 
         // Precio
-        const priceFormatted = new Intl.NumberFormat('es-MX', { 
-          style: 'currency', 
-          currency: exp.currency || 'MXN' 
+        const priceFormatted = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: exp.currency || 'MXN'
         }).format(exp.pricePerPerson);
-        
+
         document.getElementById('modalPrice').textContent = priceFormatted;
 
         // Botón de reservar
@@ -1456,6 +1656,9 @@
         };
 
         // Mostrar modal
+        // Cargar reviews del guía
+        await loadGuideReviews(exp.guideId);
+
         document.getElementById('experienceDetailModal').style.display = 'block';
       } catch (err) {
         console.error('Error al cargar experiencia:', err);
@@ -1471,7 +1674,7 @@
     function openReservationModal(experience) {
       // Verificar si el usuario está logueado
       const user = JSON.parse(localStorage.getItem('user') || 'null');
-      
+
       if (!user) {
         alert('Debes iniciar sesión para hacer una reserva');
         window.location.href = '/api/auth/login';
@@ -1490,7 +1693,7 @@
       const experienceDate = new Date(experience.date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       if (experienceDate < today) {
         alert('Esta experiencia ya ha pasado y no está disponible para reservar.');
         return;
@@ -1501,24 +1704,24 @@
 
       // Llenar información de la experiencia
       document.getElementById('reservationExpTitle').textContent = experience.title;
-      
-      const dateFormatted = new Date(experience.date).toLocaleDateString('es-MX', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+
+      const dateFormatted = new Date(experience.date).toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
       document.getElementById('reservationExpDate').textContent = dateFormatted;
       document.getElementById('reservationExpLocation').textContent = experience.location;
-      
-      const priceFormatted = new Intl.NumberFormat('es-MX', { 
-        style: 'currency', 
-        currency: experience.currency || 'MXN' 
+
+      const priceFormatted = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: experience.currency || 'MXN'
       }).format(experience.pricePerPerson);
       document.getElementById('reservationPricePerPerson').textContent = priceFormatted;
 
       // Configurar selector de asientos
       document.getElementById('seatsDisplay').textContent = selectedSeats;
-      document.getElementById('seatsAvailableLabel').textContent = 
+      document.getElementById('seatsAvailableLabel').textContent =
         `Disponibles: ${experience.minGroupSize || 1} - ${experience.maxGroupSize} personas`;
 
       // Calcular y mostrar total
@@ -1537,17 +1740,17 @@
       if (!currentExperience) return;
 
       const total = currentExperience.pricePerPerson * selectedSeats;
-      const totalFormatted = new Intl.NumberFormat('es-MX', { 
-        style: 'currency', 
-        currency: currentExperience.currency || 'MXN' 
+      const totalFormatted = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: currentExperience.currency || 'MXN'
       }).format(total);
-      
+
       document.getElementById('reservationTotal').textContent = totalFormatted;
 
       // Actualizar estado de botones
       const decreaseBtn = document.getElementById('decreaseSeats');
       const increaseBtn = document.getElementById('increaseSeats');
-      
+
       decreaseBtn.disabled = selectedSeats <= 1;
       increaseBtn.disabled = selectedSeats >= currentExperience.maxGroupSize;
     }
@@ -1613,7 +1816,7 @@
 
       try {
         let token = localStorage.getItem('accessToken');
-        
+
         let res = await fetch('/api/reservations', {
           method: 'POST',
           headers: {
@@ -1626,7 +1829,7 @@
         // Si el token expiró, intentar refrescarlo
         if (res.status === 401) {
           const newToken = await refreshAccessToken();
-          
+
           if (newToken) {
             res = await fetch('/api/reservations', {
               method: 'POST',
@@ -1669,15 +1872,123 @@
     window.addEventListener('click', (e) => {
       const experienceModal = document.getElementById('experienceDetailModal');
       const reservationModal = document.getElementById('reservationModal');
-      
+
       if (e.target === experienceModal) {
         experienceModal.style.display = 'none';
       }
-      
+
       if (e.target === reservationModal) {
         reservationModal.style.display = 'none';
       }
     });
+
+
+    // Función para cargar reviews del guía
+    async function loadGuideReviews(guideId) {
+      const reviewsContainer = document.getElementById('reviewsContainer');
+      reviewsContainer.innerHTML = '<div class="reviews-loading">Cargando reseñas...</div>';
+
+      try {
+        const res = await fetch(`/api/reviews?guideId=${guideId}`);
+        if (!res.ok) {
+          throw new Error('Error al cargar reviews');
+        }
+
+        const reviews = await res.json();
+
+        if (reviews.length > 0) {
+          const avgRating = reviews.reduce((sum, r) => sum + (r.guideRating || 0), 0) / reviews.length;
+
+          document.getElementById('guideAvgRating').textContent = avgRating.toFixed(1);
+          document.getElementById('guideReviewCount').textContent = `${reviews.length} reseña${reviews.length !== 1 ? 's' : ''}`;
+
+          const starsContainer = document.getElementById('guideRatingStars');
+          starsContainer.innerHTML = '';
+          for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            star.className = i <= Math.round(avgRating) ? 'star-filled' : 'star-empty';
+            star.textContent = '★';
+            starsContainer.appendChild(star);
+          }
+
+          renderReviews(reviews);
+        } else {
+          reviewsContainer.innerHTML = '<div class="no-reviews">Este guía aún no tiene reseñas</div>';
+          document.getElementById('guideAvgRating').textContent = '-';
+          document.getElementById('guideReviewCount').textContent = 'Sin calificaciones';
+          document.getElementById('guideRatingStars').innerHTML = '';
+        }
+      } catch (err) {
+        console.error('Error al cargar reviews:', err);
+        reviewsContainer.innerHTML = '<div class="no-reviews">Error al cargar reseñas</div>';
+      }
+    }
+
+    function renderReviews(reviews) {
+      const container = document.getElementById('reviewsContainer');
+
+      if (reviews.length === 0) {
+        container.innerHTML = '<div class="no-reviews">Este guía aún no tiene reseñas</div>';
+        return;
+      }
+
+      const reviewsList = document.createElement('div');
+      reviewsList.className = 'reviews-list';
+
+      reviews.forEach(review => {
+        const reviewCard = document.createElement('div');
+        reviewCard.className = 'review-card';
+
+        const reviewDate = new Date(review.createdAt).toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        const expStars = generateStars(review.experienceRating || 0);
+        const guideStars = generateStars(review.guideRating || 0);
+        const userName = review.userId?.name || 'Usuario';
+
+        reviewCard.innerHTML = `
+              <div class="review-header">
+                <div class="review-user-info">
+                  <div class="review-user-name">${userName}</div>
+                  <div class="review-date">${reviewDate}</div>
+                </div>
+                <div class="review-ratings">
+                  <div class="review-rating-item">
+                    <span>Experiencia:</span>
+                    <div class="review-stars">${expStars}</div>
+                  </div>
+                  <div class="review-rating-item">
+                    <span>Guía:</span>
+                    <div class="review-stars">${guideStars}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="review-comment">${review.comment || 'Sin comentario'}</div>
+              ${review.photos && review.photos.length > 0 ? `
+                <div class="review-photos">
+                  ${review.photos.map(photo => `<img src="${photo}" alt="Foto de reseña" class="review-photo">`).join('')}
+                </div>
+              ` : ''}
+            `;
+
+        reviewsList.appendChild(reviewCard);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(reviewsList);
+    }
+
+    function generateStars(rating) {
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        stars += `<span class="${i <= rating ? 'star-filled' : 'star-empty'}">★</span>`;
+      }
+      return stars;
+    }
+
 
     fetchExperiences();
 
@@ -1686,4 +1997,5 @@
     });
   </script>
 </body>
+
 </html>

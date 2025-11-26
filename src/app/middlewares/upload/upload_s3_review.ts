@@ -11,7 +11,7 @@ const s3 = new S3Client({
     secretAccessKey: process.env.S3_SECRET_KEY || ""
   }
 });
- 
+
 const BUCKET = process.env.S3_BUCKET || "iteso-deservidor2025";
 
 const s3Storage = multerS3({
@@ -22,16 +22,16 @@ const s3Storage = multerS3({
   },
   acl: "public-read",
   key: (req: Request, file, cb) => {
-    const userId = (req as any).user?._id;
+    const userId = (req as any).user?.userId;
     if (!userId) {
       return cb(new Error("No autenticado"), "");
     }
-    
+
     // Generar nombre único para cada foto de review
     const fileExtension = file.originalname.split('.').pop() || 'jpg';
     const uniqueFileName = `${randomUUID()}.${fileExtension}`;
     const key = `reviews/${userId}/${uniqueFileName}`;
-    
+
     cb(null, key);
   }
 });
@@ -49,7 +49,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
 export const uploadReviewPhotos = multer({
   storage: s3Storage,
   fileFilter,
-  limits: { 
+  limits: {
     fileSize: 5 * 1024 * 1024, // 5MB por foto
     files: 5 // máximo 5 fotos
   }
