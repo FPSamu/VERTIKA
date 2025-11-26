@@ -5,6 +5,9 @@ import { randomBytes } from "crypto";
 import EmailService from "../services/email.service";
 import User from "../users/user.model";
 import Experience from "../experiences/experience.model";
+import Guide from "../guides/guide.model";
+import Notification from "../notifications/notification.model";
+
 
 const emailService = new EmailService();
 
@@ -84,6 +87,9 @@ export async function createReservation(req: Request, res: Response) {
       const user = await User.findById(userId);
       const experience = await Experience.findById(experienceId);
 
+      console.log("experience.guideId:", experience!.guideId);
+      console.log("guide userId:", experience!.userId);    
+
       if (user && experience) {
         // Enviar email de confirmación
         await emailService.sendReservationConfirmationEmail(
@@ -98,11 +104,37 @@ export async function createReservation(req: Request, res: Response) {
           (newReservation._id as mongoose.Types.ObjectId).toString(),
           confirmationToken
         );
-      }
+
+        //Notificacion
+        //Notificacion despues del correo 
+        const guide = await Guide.findById(experience.guideId);
+        const guideUserId = guide?.userId;
+
+        if (guideUserId) {
+          const guideNotification = new Notification({
+            userId: guideUserId,   // user._id del guía
+            actorId: user._id,     // quien hizo la acción
+            type: "reservation",
+            title: "Nueva reserva",
+            message: `${user.name} ha reservado tu experiencia "${experience.title}"`,
+            data: {
+              reservationId: newReservation._id,
+              experienceId: experience._id,
+            },
+            read: false,
+          });
+
+          await guideNotification.save();
+          console.log("Notificación creada para el guía:", guideNotification);
+        }
+      }//If cierra
     } catch (emailError) {
       console.error('Error al enviar email de confirmación:', emailError);
       // No fallar la creación de la reserva si el email falla
     }
+
+
+
 
     res.status(201).json(newReservation);
   } catch (err) {
