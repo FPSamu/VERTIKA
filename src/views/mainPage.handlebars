@@ -1577,6 +1577,12 @@
       }
     }
 
+
+    //Buscador experiencias
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        fetchExperiences(e.target.value);
+      });
+
     // Abrir modal de detalle de experiencia
     async function openExperienceModal(experienceId) {
       try {

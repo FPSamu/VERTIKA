@@ -6,13 +6,32 @@ import Guide from "../guides/guide.model";
 /* GET /experiences */
 export async function listExperiences(req: Request, res: Response) {
   try {
-    const experiences = await Experience.find();
+    const search = req.query.search?.toString().trim() || "";
+
+    let filter = {};
+
+    if (search !== "") {
+      const regex = new RegExp(search, "i"); // i = case insensitive
+      filter = {
+        $or: [
+          { title: regex },
+          { description: regex },
+          { location: regex },
+          { activity: regex }
+        ]
+      };
+    }
+
+    const experiences = await Experience.find(filter);
+
     res.json(experiences);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al listar experiencias" });
   }
 }
+
+
 
 /* GET /experiences/my-experiences (Vista para guías) */
 export async function showMyExperiencesPage(req: Request, res: Response) {
