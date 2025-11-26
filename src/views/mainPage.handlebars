@@ -1043,6 +1043,29 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+@keyframes blinkAnimation {
+  0%, 100% { color: #c62828; }
+  50% { color: #ffbf00; }
+}
+
+.blink i {
+  animation: blinkAnimation 1s infinite;
+}
+
+.notif-badge {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.notif-icon-container {
+  position: relative; /* Necesario para posicionar la bolita */
+}
   </style>
 </head>
 
@@ -1257,7 +1280,8 @@
 
       const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-      if (user) {
+      if (!user) return;
+      
         // Mostrar navbar
         mainNav.style.display = 'flex';
 
@@ -1298,7 +1322,27 @@
           <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
           <button class="logout" id="logoutBtn">Cerrar Sesión</button>
         `;
-      
+        //Socket
+        // Configurar socket **después** de crear HTML
+        const socket = io('/');
+        socket.emit('join', user._id);
+
+        socket.on('newNotification', (notif) => {
+          console.log('Nueva notificación:', notif);
+
+          const bell = document.getElementById('notifIcon');
+          if (bell) {
+            bell.classList.add('blink');
+            setTimeout(() => bell.classList.remove('blink'), 2000);
+          }
+
+          const list = document.getElementById('notificationsList');
+          if (list) {
+            const li = document.createElement('li');
+            li.textContent = notif.message;
+            list.prepend(li);
+          }
+        });
         //Modal notificaciones
         document.getElementById('notifIcon').addEventListener('click', async () => { // **Añadir 'async' aquí**
           console.log("Campana de notificaciones clickeada");
@@ -1373,7 +1417,7 @@
           localStorage.removeItem('user');
           window.location.href = '/api'; // redirige a landing page
         });
-      }
+      
     });
 
 

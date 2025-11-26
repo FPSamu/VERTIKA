@@ -7,6 +7,7 @@ import User from "../users/user.model";
 import Experience from "../experiences/experience.model";
 import Guide from "../guides/guide.model";
 import Notification from "../notifications/notification.model";
+import { getIO} from '../../index';
 
 
 const emailService = new EmailService();
@@ -124,8 +125,13 @@ export async function createReservation(req: Request, res: Response) {
             read: false,
           });
 
-          await guideNotification.save();
-          console.log("Notificación creada para el guía:", guideNotification);
+         await guideNotification.save()
+         console.log("Notificación creada para el guía:", guideNotification);
+          getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
+          console.log('Evento newNotification emitido por socket', guideNotification);
+            
+          
+          console.log('Evento newReservation emitido', newReservation);
         }
       }//If cierra
     } catch (emailError) {
