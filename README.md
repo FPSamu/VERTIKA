@@ -199,6 +199,81 @@ npm run dev
 ```
 
 El servidor estará disponible en: http://localhost:3000
+## Sockets
+Se implementó Socket.IO para manejar notificaciones en tiempo real. Ejemplo: Cuando llega una nueva reserva o cancelación, el servidor emite un evento al usuario correspondiente (ej. guía) y el cliente actualiza la interfaz automáticamente: la campana parpadea y se muestra la notificación en el modal sin recargar la página. Esto mejora la experiencia del usuario y permite recibir alertas instantáneas directamente en la vista.
+
+Integración de Sockets en reservation-controller 
+```reservation.controller.ts
+//Notificacion
+const guide = await Guide.findById(experience.guideId);
+const guideUserId = guide?.userId;
+
+if (guideUserId) {
+  const guideNotification = new Notification({
+  userId: guideUserId,   // user._id del guia
+  actorId: user._id,     // quien hizo la accion
+  type: "reservation",
+  title: "Nueva reserva",
+   message: `${user.name} ha reservado tu experiencia "${experience.title}"`,
+  data: {
+            reservationId: newReservation._id,
+            experienceId: experience._id,
+        },
+        read: false,
+      });
+
+  await guideNotification.save()
+  console.log("Notificación creada para el guía:", guideNotification);
+  //envia la notification al room del user
+  getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
+  console.log('Evento newNotification emitido por socket', guideNotification);
+```
+Integración de Sockets en cliente
+```main.js
+//Socket
+// Configurar socket **después** de crear HTML
+const socket = io('/');
+socket.emit('join', user._id); //Se une al room de su user
+
+socket.on('newNotification', (notif) => { //Recibe datos enviados desde el servidor 
+console.log('Nueva notificación:', notif);
+
+const bell = document.getElementById('notifIcon');
+//Blink y anadir notificacion
+if (bell) {
+    bell.classList.add('blink');
+    setTimeout(() => bell.classList.remove('blink'), 2000);
+
+  if (!bell.querySelector('.notif-badge')) {
+     const badge = document.createElement('span');
+     badge.classList.add('notif-badge');
+     bell.appendChild(badge);
+  }
+
+  }
+  //Agregar notificacion dinamica
+  const list = document.getElementById('notificationsList');
+  if (list) {
+      const li = document.createElement('li');
+      li.textContent = notif.message;
+      list.prepend(li);
+  }
+});
+```
+
+Reservar experiencia
+<img src="https://imgur.com/hXzy4NV.png" alt="Perfil" height="380">
+
+Campana de notificaciones 
+<img src="https://imgur.com/u8tG52o.png" alt="Perfil" height="380">
+
+Cancelar reservación
+
+<img src="https://imgur.com/NftYrx8.png" alt="Perfil" height="380">
+
+Despliegue de notificaciones
+<img src="https://imgur.com/xhIEPAG.png" alt="Perfil" height="380">
+
 
 ## Carga de Archivos
 Esta entrega implementa la funcionalidad de subida, almacenamiento y visualización de archivos en la nube usando buckets de **AWS S3**. Se ha integrado tanto en el backend (API) como en las vistas del frontend, considerando permisos y validaciones.
