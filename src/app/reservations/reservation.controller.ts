@@ -107,7 +107,6 @@ export async function createReservation(req: Request, res: Response) {
         );
 
         //Notificacion
-        //Notificacion despues del correo 
         const guide = await Guide.findById(experience.guideId);
         const guideUserId = guide?.userId;
 
