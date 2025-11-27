@@ -1052,7 +1052,10 @@
 .blink i {
   animation: blinkAnimation 1s infinite;
 }
-
+.notif-icon {
+  position: relative; /* necesario para la bolita */
+  display: inline-block;
+}
 .notif-badge {
   position: absolute;
   top: 0px;
@@ -1316,7 +1319,7 @@
 
         // Acciones de usuario
         userActions.innerHTML = `
-          <div class="notif-icon" id="notifIcon" style="cursor:pointer;">
+          <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
             <i class="fa-solid fa-bell"></i>
           </div>
           <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
@@ -1334,6 +1337,13 @@
           if (bell) {
             bell.classList.add('blink');
             setTimeout(() => bell.classList.remove('blink'), 2000);
+
+            if (!bell.querySelector('.notif-badge')) {
+                const badge = document.createElement('span');
+                badge.classList.add('notif-badge');
+                bell.appendChild(badge);
+              }
+
           }
 
           const list = document.getElementById('notificationsList');
@@ -1343,6 +1353,8 @@
             list.prepend(li);
           }
         });
+
+
         //Modal notificaciones
         document.getElementById('notifIcon').addEventListener('click', async () => { // **Añadir 'async' aquí**
           console.log("Campana de notificaciones clickeada");
@@ -1380,6 +1392,10 @@
 
               // Mostramos el modal
               modal.style.display = "block";
+
+              /// Quitar badge si existe
+              const badge = document.querySelector('#notifIcon .notif-badge');
+              if (badge) badge.remove();
 
               // Configuramos cierre del modal
               const closeBtn = modal.querySelector(".close");
