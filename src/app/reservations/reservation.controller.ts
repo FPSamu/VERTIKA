@@ -113,8 +113,8 @@ export async function createReservation(req: Request, res: Response) {
 
         if (guideUserId) {
           const guideNotification = new Notification({
-            userId: guideUserId,   // user._id del guía
-            actorId: user._id,     // quien hizo la acción
+            userId: guideUserId,   // user._id del guia
+            actorId: user._id,     // quien hizo la accion
             type: "reservation",
             title: "Nueva reserva",
             message: `${user.name} ha reservado tu experiencia "${experience.title}"`,
@@ -125,8 +125,9 @@ export async function createReservation(req: Request, res: Response) {
             read: false,
           });
 
-         await guideNotification.save()
-         console.log("Notificación creada para el guía:", guideNotification);
+          await guideNotification.save()
+          console.log("Notificación creada para el guía:", guideNotification);
+          //envia la notification al room del user
           getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
           console.log('Evento newNotification emitido por socket', guideNotification);
             
@@ -155,6 +156,41 @@ export async function updateReservation(req: Request, res: Response) {
   try {
     const updated = await Reservation.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ error: "Reserva no encontrada" });
+    // Si el status cambió a 'cancelled', avisar al guía
+    if (req.body.status === 'cancelled') {
+      // Buscar la experiencia relacionada
+      const experience = await Experience.findById(updated.experienceId);
+      if (!experience) return res.status(404).json({ error: "Experiencia no encontrada" });
+
+      // Buscar al guía
+      const guide = await Guide.findById(experience.guideId);
+      const guideUserId = guide?.userId;
+
+      // Buscar al usuario que canceló la reserva
+      const cancellingUser = await User.findById(updated.userId);
+
+      if (guideUserId && cancellingUser) {
+        const guideNotification = new Notification({
+          userId: guideUserId,   // user._id del guía
+          actorId: cancellingUser._id, // quien canceló
+          type: "reservation",
+          title: "Reserva cancelada",
+          message: `${cancellingUser.name} ha cancelado su reserva en "${experience.title}"`,
+          data: {
+            reservationId: updated._id,
+            experienceId: experience._id,
+          },
+          read: false,
+        });
+
+        await guideNotification.save();
+        console.log("Notificación creada para el guía:", guideNotification);
+
+        // Emitir evento Socket.IO al room del guía
+        getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
+        console.log('Evento newNotification emitido por socket', guideNotification);
+      }
+    }
     res.json(updated);
   } catch (err) {
     console.error(err);

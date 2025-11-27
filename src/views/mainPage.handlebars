@@ -1018,7 +1018,9 @@
       font-size: 14px;
     }
 
-    .notif-modal {
+
+/* NOTIFICACIONES*/
+   .notif-modal {
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -1026,27 +1028,45 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.8);
 }
 
 .notif-modal-content {
-  background-color: #fff;
-  margin: 10% auto;
+  background-color: #ffffff; /* gris claro */
+  margin: 5% auto;
   padding: 20px;
   width: 400px;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.notif-close {
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+/* Quitar los bullets de lista */
+#notificationsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Cada notificación como un rectángulo */
+#notificationsList li {
+  background-color: #f0f0f0; /* gris claro */
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover para iluminar */
+#notificationsList li:hover {
+  background-color: #e0e0e0;
 }
 
 @keyframes blinkAnimation {
   0%, 100% { color: #c62828; }
-  50% { color: #ffbf00; }
+  50% { color: #000000; }
 }
 
 .blink i {
@@ -1217,8 +1237,6 @@
   </div>
 </div>
 
-
-
   <!-- Modal para solicitar ser guía -->
   <div id="guideModal" class="modal">
     <div class="modal-content">
@@ -1328,12 +1346,13 @@
         //Socket
         // Configurar socket **después** de crear HTML
         const socket = io('/');
-        socket.emit('join', user._id);
+        socket.emit('join', user._id); //Se une al room de su user
 
-        socket.on('newNotification', (notif) => {
+        socket.on('newNotification', (notif) => { //Recibe datos enviados desde el servidor 
           console.log('Nueva notificación:', notif);
 
           const bell = document.getElementById('notifIcon');
+          //Blink y anadir notificacion
           if (bell) {
             bell.classList.add('blink');
             setTimeout(() => bell.classList.remove('blink'), 2000);
@@ -1345,7 +1364,7 @@
               }
 
           }
-
+          //Agregar notificacion dinamica
           const list = document.getElementById('notificationsList');
           if (list) {
             const li = document.createElement('li');
@@ -1382,6 +1401,15 @@
                 notifications.forEach(n => {
                   const li = document.createElement("li");
                   li.textContent = n.message;
+                  li.style.cursor = "pointer"; // indica que es clickeable
+
+                  // Si es tipo 'reservation' y es guía
+                  if (n.type === 'reservation' && user.roles.includes('guide')) {
+                    li.addEventListener('click', () => {
+                      window.location.href = `/api/experiences/${n.data.experienceId}`;
+                    });
+                  }
+
                   notificationsList.appendChild(li);
                 });
               } else {
