@@ -429,6 +429,14 @@ Content-Type: application/json
 - El enlace expira en 5 minutos
 - Responde con mensaje genérico por seguridad
 
+Pantalla de solicitud de recuperación
+
+<img src="https://imgur.com/a/odB1OCj" alt="Olvide mi contraseña" height="380">
+
+Correo electrónico de recuperación
+
+<img src="https://imgur.com/a/nroz7kB" alt="Email de recuperación" height="380">
+
 **Restablecer contraseña**
 
 ```http
