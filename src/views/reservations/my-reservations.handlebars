@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Mis Reservaciones - Vertika</title>
@@ -27,7 +26,7 @@
       background: white;
       padding: 25px 30px;
       border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       margin-bottom: 30px;
       display: flex;
       justify-content: space-between;
@@ -57,14 +56,14 @@
 
     .btn-back:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
     }
 
     .filters {
       background: white;
       padding: 20px 30px;
       border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       margin-bottom: 30px;
       display: flex;
       gap: 20px;
@@ -109,13 +108,13 @@
       background: white;
       border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .reservation-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
     .reservation-image {
@@ -240,7 +239,7 @@
 
     .btn-review:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.4);
     }
 
     .empty-state {
@@ -248,7 +247,7 @@
       padding: 60px 30px;
       border-radius: 15px;
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
     .empty-state-icon {
@@ -284,7 +283,7 @@
 
     .btn-explore:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
     }
 
     .loading {
@@ -295,7 +294,7 @@
     }
 
     .loading-spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
+      border: 4px solid rgba(255,255,255,0.3);
       border-top: 4px solid white;
       border-radius: 50%;
       width: 50px;
@@ -305,13 +304,8 @@
     }
 
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Modal de Confirmación */
@@ -324,18 +318,13 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0,0,0,0.6);
       animation: fadeIn 0.3s;
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-content {
@@ -345,7 +334,7 @@
       border-radius: 15px;
       width: 90%;
       max-width: 500px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
       animation: slideDown 0.3s;
     }
 
@@ -354,7 +343,6 @@
         transform: translateY(-50px);
         opacity: 0;
       }
-
       to {
         transform: translateY(0);
         opacity: 1;
@@ -410,172 +398,6 @@
       transform: translateY(-2px);
     }
 
-    .btn-modal-submit {
-      background: linear-gradient(to right, #667eea, #764ba2);
-      color: white;
-    }
-
-    .btn-modal-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .modal-content.large {
-      max-width: 600px;
-      margin: 5% auto;
-    }
-
-    .review-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group label {
-      font-weight: 600;
-      color: #2c3e50;
-      font-size: 14px;
-    }
-
-    .experience-title {
-      background: linear-gradient(to right, #667eea, #764ba2);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .star-rating {
-      display: flex;
-      gap: 8px;
-      font-size: 32px;
-      cursor: pointer;
-    }
-
-    .star {
-      color: #ddd;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .star:hover,
-    .star.active {
-      color: #ffd700;
-      transform: scale(1.1);
-    }
-
-    .star.hovered {
-      color: #ffd700;
-    }
-
-    .form-group textarea {
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      resize: vertical;
-      min-height: 100px;
-      transition: border-color 0.3s;
-    }
-
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .image-upload-section {
-      border: 2px dashed #e0e0e0;
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .image-upload-section:hover {
-      border-color: #667eea;
-      background: #f8f9ff;
-    }
-
-    .image-upload-section input[type="file"] {
-      display: none;
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 10px;
-      color: #667eea;
-    }
-
-    .upload-text {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .upload-text strong {
-      color: #667eea;
-    }
-
-    .upload-hint {
-      font-size: 12px;
-      color: #999;
-      margin-top: 5px;
-    }
-
-    .image-preview-container {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .image-preview {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 2px solid #e0e0e0;
-    }
-
-    .image-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .remove-image {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(220, 53, 69, 0.9);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .remove-image:hover {
-      background: #dc3545;
-      transform: scale(1.1);
-    }
-
     @media (max-width: 768px) {
       .reservations-grid {
         grid-template-columns: 1fr;
@@ -594,7 +416,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <div class="header">
@@ -647,70 +468,6 @@
     </div>
   </div>
 
-  <!-- Modal de Review -->
-  <div id="reviewModal" class="modal">
-    <div class="modal-content large">
-      <div class="modal-header">
-        <h2>⭐ Dejar una Reseña</h2>
-        <div class="experience-title" id="reviewExperienceTitle"></div>
-      </div>
-      <div class="modal-body">
-        <form class="review-form" id="reviewForm">
-          <div class="form-group">
-            <label>Califica la Experiencia</label>
-            <div class="star-rating" id="experienceStars">
-              <span class="star" data-rating="1">★</span>
-              <span class="star" data-rating="2">★</span>
-              <span class="star" data-rating="3">★</span>
-              <span class="star" data-rating="4">★</span>
-              <span class="star" data-rating="5">★</span>
-            </div>
-            <input type="hidden" id="experienceRating" name="experienceRating" value="0">
-          </div>
-
-          <div class="form-group">
-            <label>Califica al Guía</label>
-            <div class="star-rating" id="guideStars">
-              <span class="star" data-rating="1">★</span>
-              <span class="star" data-rating="2">★</span>
-              <span class="star" data-rating="3">★</span>
-              <span class="star" data-rating="4">★</span>
-              <span class="star" data-rating="5">★</span>
-            </div>
-            <input type="hidden" id="guideRating" name="guideRating" value="0">
-          </div>
-
-          <div class="form-group">
-            <label for="reviewComment">Cuéntanos sobre tu experiencia</label>
-            <textarea id="reviewComment" name="comment"
-              placeholder="Comparte los detalles de tu aventura, qué te gustó, qué mejorarías..."
-              maxlength="1000"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Agregar Fotos (Opcional)</label>
-            <div class="image-upload-section" id="imageUploadSection">
-              <input type="file" id="reviewPhotos" name="photos" accept="image/*" multiple>
-              <div class="upload-icon">📸</div>
-              <div class="upload-text">
-                <strong>Click para seleccionar fotos</strong>
-                <div class="upload-hint">Máximo 5 fotos, 5MB cada una</div>
-              </div>
-            </div>
-            <div class="image-preview-container" id="imagePreviewContainer"></div>
-          </div>
-
-          <input type="hidden" id="reviewReservationId" name="reservationId">
-          <input type="hidden" id="reviewExperienceId" name="experienceId">
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" id="btnReviewCancel">Cancelar</button>
-        <button class="btn-modal-submit" id="btnReviewSubmit">Publicar Reseña</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     let allReservations = [];
     let currentFilter = 'all';
@@ -719,7 +476,7 @@
     // Función para fetch con autenticación
     async function fetchWithAuth(url, options = {}) {
       let token = localStorage.getItem('accessToken');
-
+      
       if (!token) {
         window.location.href = '/api/auth/login';
         return null;
@@ -735,7 +492,7 @@
       // Si el token expiró, intentar refrescar
       if (res.status === 401) {
         const newToken = await refreshAccessToken();
-
+        
         if (newToken) {
           options.headers['Authorization'] = 'Bearer ' + newToken;
           res = await fetch(url, options);
@@ -753,7 +510,7 @@
     // Función para refrescar token
     async function refreshAccessToken() {
       const refreshToken = localStorage.getItem('refreshToken');
-
+      
       if (!refreshToken) {
         return null;
       }
@@ -783,7 +540,7 @@
     // Cargar reservaciones
     async function loadReservations() {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
-
+      
       if (!user) {
         window.location.href = '/api/auth/login';
         return;
@@ -791,14 +548,14 @@
 
       try {
         const res = await fetchWithAuth(`/api/reservations/user/${user._id}`);
-
+        
         if (!res) return;
 
         if (res.ok) {
           allReservations = await res.json();
-
+          
           document.getElementById('loadingState').style.display = 'none';
-
+          
           if (allReservations.length === 0) {
             document.getElementById('emptyState').style.display = 'block';
           } else {
@@ -818,7 +575,7 @@
     // Renderizar reservaciones
     function renderReservations() {
       const container = document.getElementById('reservationsContainer');
-
+      
       // Filtrar por estado
       let filteredReservations = allReservations;
       if (currentFilter !== 'all') {
@@ -831,36 +588,36 @@
       }
 
       container.innerHTML = '';
-
+      
       filteredReservations.forEach(reservation => {
         const experience = reservation.experienceId;
-
+        
         if (!experience) {
           return; // Saltar si la experiencia fue eliminada
         }
 
         const card = document.createElement('div');
         card.className = 'reservation-card';
-
-        const imageUrl = experience.photos && experience.photos.length > 0
-          ? experience.photos[0]
+        
+        const imageUrl = experience.photos && experience.photos.length > 0 
+          ? experience.photos[0] 
           : 'https://via.placeholder.com/350x200';
 
-        const dateFormatted = new Date(experience.date).toLocaleDateString('es-MX', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
+        const dateFormatted = new Date(experience.date).toLocaleDateString('es-MX', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
         });
 
-        const createdFormatted = new Date(reservation.createdAt).toLocaleDateString('es-MX', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        const createdFormatted = new Date(reservation.createdAt).toLocaleDateString('es-MX', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
         });
 
-        const totalFormatted = new Intl.NumberFormat('es-MX', {
-          style: 'currency',
-          currency: experience.currency || 'MXN'
+        const totalFormatted = new Intl.NumberFormat('es-MX', { 
+          style: 'currency', 
+          currency: experience.currency || 'MXN' 
         }).format(reservation.total);
 
         const statusText = {
@@ -871,9 +628,9 @@
         }[reservation.status] || reservation.status;
 
         const canCancel = reservation.status === 'pending' || reservation.status === 'confirmed';
-
+        
         // Nota para reservaciones pendientes
-        const pendingNote = reservation.status === 'pending'
+        const pendingNote = reservation.status === 'pending' 
           ? `<div class="info-row" style="background: #fff3cd; padding: 10px; border-radius: 8px; margin-top: 10px;">
               <span>⚠️</span>
               <span style="color: #856404; font-size: 13px;"><strong>Revisa tu email</strong> para confirmar esta reservación</span>
@@ -920,7 +677,7 @@
                   </button>
                 ` : ''}
                 ${reservation.status === 'completed' ? `
-                  <button class="btn-action btn-review" onclick="openReviewModal('${reservation._id}', '${experience._id}', '${experience.guideId}', '${experience.title}')">
+                  <button class="btn-action btn-review" onclick="openReviewModal('${reservation._id}', '${experience._id}', '${experience.title}')">
                     ⭐ Dejar Review
                   </button>
                 ` : ''}
@@ -928,7 +685,7 @@
             </div>
           </div>
         `;
-
+        
         container.appendChild(card);
       });
     }
@@ -970,7 +727,7 @@
           alert('Reservación cancelada exitosamente');
           document.getElementById('cancelModal').style.display = 'none';
           reservationToCancel = null;
-
+          
           // Recargar reservaciones
           allReservations = [];
           document.getElementById('loadingState').style.display = 'block';
@@ -986,196 +743,18 @@
       }
     });
 
-    // ===== REVIEW MODAL FUNCTIONALITY =====
-    let currentReviewData = {};
-    let selectedImages = [];
-
-    function openReviewModal(reservationId, experienceId, guideId, experienceTitle) {
-      currentReviewData = { reservationId, experienceId, guideId, experienceTitle };
-      document.getElementById('reviewForm').reset();
-      document.getElementById('experienceRating').value = '0';
-      document.getElementById('guideRating').value = '0';
-      document.getElementById('reviewReservationId').value = reservationId;
-      document.getElementById('reviewExperienceId').value = experienceId;
-      document.getElementById('reviewExperienceTitle').textContent = experienceTitle;
-      document.querySelectorAll('#experienceStars .star').forEach(star => star.classList.remove('active'));
-      document.querySelectorAll('#guideStars .star').forEach(star => star.classList.remove('active'));
-      selectedImages = [];
-      document.getElementById('imagePreviewContainer').innerHTML = '';
-      document.getElementById('reviewModal').style.display = 'block';
+    // Abrir modal de review
+    function openReviewModal(reservationId, experienceId, experienceTitle) {
+      alert(`Funcionalidad de reviews en desarrollo\n\nReservación: ${reservationId}\nExperiencia: ${experienceTitle}`);
+      // TODO: Implementar modal de review con rating, comentario y fotos
     }
-
-    document.getElementById('btnReviewCancel').addEventListener('click', () => {
-      document.getElementById('reviewModal').style.display = 'none';
-      currentReviewData = {};
-      selectedImages = [];
-    });
-
-    function setupStarRating(containerId, inputId) {
-      const container = document.getElementById(containerId);
-      const stars = container.querySelectorAll('.star');
-      const input = document.getElementById(inputId);
-      stars.forEach((star) => {
-        star.addEventListener('click', () => {
-          const rating = parseInt(star.getAttribute('data-rating'));
-          input.value = rating;
-          stars.forEach((s, i) => {
-            if (i < rating) s.classList.add('active');
-            else s.classList.remove('active');
-          });
-        });
-        star.addEventListener('mouseenter', () => {
-          const rating = parseInt(star.getAttribute('data-rating'));
-          stars.forEach((s, i) => {
-            if (i < rating) s.classList.add('hovered');
-            else s.classList.remove('hovered');
-          });
-        });
-        container.addEventListener('mouseleave', () => {
-          stars.forEach(s => s.classList.remove('hovered'));
-        });
-      });
-    }
-
-    setupStarRating('experienceStars', 'experienceRating');
-    setupStarRating('guideStars', 'guideRating');
-
-    document.getElementById('imageUploadSection').addEventListener('click', () => {
-      document.getElementById('reviewPhotos').click();
-    });
-
-    document.getElementById('reviewPhotos').addEventListener('change', (e) => {
-      const files = Array.from(e.target.files);
-      if (selectedImages.length + files.length > 5) {
-        alert('Máximo 5 fotos permitidas');
-        return;
-      }
-      const maxSize = 5 * 1024 * 1024;
-      for (let file of files) {
-        if (file.size > maxSize) {
-          alert(`La imagen "${file.name}" excede el tamaño máximo de 5MB`);
-          return;
-        }
-      }
-      files.forEach(file => {
-        selectedImages.push(file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const container = document.getElementById('imagePreviewContainer');
-          const preview = document.createElement('div');
-          preview.className = 'image-preview';
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          const removeBtn = document.createElement('button');
-          removeBtn.className = 'remove-image';
-          removeBtn.innerHTML = '×';
-          removeBtn.onclick = () => {
-            const index = selectedImages.indexOf(file);
-            if (index > -1) selectedImages.splice(index, 1);
-            preview.remove();
-          };
-          preview.appendChild(img);
-          preview.appendChild(removeBtn);
-          container.appendChild(preview);
-        };
-        reader.readAsDataURL(file);
-      });
-    });
-
-    document.getElementById('btnReviewSubmit').addEventListener('click', async () => {
-      const experienceRating = parseInt(document.getElementById('experienceRating').value);
-      const guideRating = parseInt(document.getElementById('guideRating').value);
-      const comment = document.getElementById('reviewComment').value.trim();
-
-      // Validaciones
-      if (experienceRating === 0) {
-        alert('Por favor califica la experiencia');
-        return;
-      }
-      if (guideRating === 0) {
-        alert('Por favor califica al guía');
-        return;
-      }
-      if (!comment) {
-        alert('Por favor escribe un comentario sobre tu experiencia');
-        return;
-      }
-
-      // Obtener usuario autenticado
-      const user = JSON.parse(localStorage.getItem('user') || 'null');
-      if (!user) {
-        alert('Debes iniciar sesión para dejar una reseña');
-        window.location.href = '/api/auth/login';
-        return;
-      }
-
-      // Preparar FormData para enviar con fotos
-      const formData = new FormData();
-      formData.append('reservationId', currentReviewData.reservationId);
-      formData.append('userId', user._id);
-      formData.append('experienceId', currentReviewData.experienceId);
-      formData.append('guideId', currentReviewData.guideId);
-      formData.append('experienceRating', experienceRating.toString());
-      formData.append('guideRating', guideRating.toString());
-      formData.append('comment', comment);
-
-      // Agregar fotos si hay
-      selectedImages.forEach(file => {
-        formData.append('photos', file);
-      });
-
-      try {
-        // Deshabilitar botón mientras se envía
-        const submitBtn = document.getElementById('btnReviewSubmit');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        const res = await fetchWithAuth('/api/reviews', {
-          method: 'POST',
-          body: formData
-          // No incluir Content-Type, el navegador lo configurará automáticamente con boundary
-        });
-
-        if (!res) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Publicar Reseña';
-          return;
-        }
-
-        if (res.ok) {
-          const review = await res.json();
-          alert('¡Reseña publicada exitosamente! \n\nGracias por compartir tu experiencia.');
-          document.getElementById('reviewModal').style.display = 'none';
-
-          // Opcional: recargar reservaciones para actualizar el estado
-          // loadReservations();
-        } else {
-          const error = await res.json();
-          alert('Error al publicar la reseña: ' + (error.error || 'Error desconocido'));
-        }
-      } catch (err) {
-        console.error('Error al enviar review:', err);
-        alert('Error al publicar la reseña. Por favor intenta de nuevo.');
-      } finally {
-        // Rehabilitar botón
-        const submitBtn = document.getElementById('btnReviewSubmit');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Publicar Reseña';
-      }
-    });
 
     // Cerrar modal al hacer click fuera
     window.addEventListener('click', (e) => {
-      const cancelModal = document.getElementById('cancelModal');
-      const reviewModal = document.getElementById('reviewModal');
-      if (e.target === cancelModal) {
-        cancelModal.style.display = 'none';
+      const modal = document.getElementById('cancelModal');
+      if (e.target === modal) {
+        modal.style.display = 'none';
         reservationToCancel = null;
-      }
-      if (e.target === reviewModal) {
-        reviewModal.style.display = 'none';
-        currentReviewData = {};
-        selectedImages = [];
       }
     });
 
@@ -1183,5 +762,4 @@
     loadReservations();
   </script>
 </body>
-
 </html>

@@ -11,6 +11,7 @@ Busca ofrecer un servicio confiable, accesible y regional, verificación de guí
 
 - ✅ **Sistema completo de autenticación** con JWT (Access & Refresh Tokens)
 - ✅ **Verificación de email** con tokens de un solo uso (24h de validez)
+- ✅ **Recuperación de contraseña** con tokens de 5 minutos (enviados por email)
 - ✅ **Roles de usuario**: Customer (cliente) y Guide (guía)
 - ✅ **Middleware de autorización** basado en roles
 - ✅ **Encriptación de contraseñas** con bcrypt
@@ -37,6 +38,7 @@ Busca ofrecer un servicio confiable, accesible y regional, verificación de guí
 - ✅ **Email de verificación** al registrarse (con diseño HTML profesional)
 - ✅ **Email de bienvenida** después de verificar la cuenta
 - ✅ **Email de aprobación** al convertirse en guía
+- ✅ **Email de recuperación de contraseña** con enlace seguro (5 min de validez)
 - ✅ **Configuración con Gmail** mediante contraseñas de aplicación
 
 ### API RESTful
@@ -199,10 +201,13 @@ npm run dev
 ```
 
 El servidor estará disponible en: http://localhost:3000
+
 ## Sockets
+
 Se implementó Socket.IO para manejar notificaciones en tiempo real. Ejemplo: Cuando llega una nueva reserva o cancelación, el servidor emite un evento al usuario correspondiente (ej. guía) y el cliente actualiza la interfaz automáticamente: la campana parpadea y se muestra la notificación en el modal sin recargar la página. Esto mejora la experiencia del usuario y permite recibir alertas instantáneas directamente en la vista.
 
-Integración de Sockets en reservation-controller 
+Integración de Sockets en reservation-controller
+
 ```reservation.controller.ts
 //Notificacion
 const guide = await Guide.findById(experience.guideId);
@@ -228,14 +233,16 @@ if (guideUserId) {
   getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
   console.log('Evento newNotification emitido por socket', guideNotification);
 ```
+
 Integración de Sockets en cliente
+
 ```main.js
 //Socket
 // Configurar socket **después** de crear HTML
 const socket = io('/');
 socket.emit('join', user._id); //Se une al room de su user
 
-socket.on('newNotification', (notif) => { //Recibe datos enviados desde el servidor 
+socket.on('newNotification', (notif) => { //Recibe datos enviados desde el servidor
 console.log('Nueva notificación:', notif);
 
 const bell = document.getElementById('notifIcon');
@@ -264,7 +271,7 @@ if (bell) {
 Reservar experiencia
 <img src="https://imgur.com/hXzy4NV.png" alt="Perfil" height="380">
 
-Campana de notificaciones 
+Campana de notificaciones
 <img src="https://imgur.com/u8tG52o.png" alt="Perfil" height="380">
 
 Cancelar reservación
@@ -274,11 +281,12 @@ Cancelar reservación
 Despliegue de notificaciones
 <img src="https://imgur.com/xhIEPAG.png" alt="Perfil" height="380">
 
-
 ## Carga de Archivos
+
 Esta entrega implementa la funcionalidad de subida, almacenamiento y visualización de archivos en la nube usando buckets de **AWS S3**. Se ha integrado tanto en el backend (API) como en las vistas del frontend, considerando permisos y validaciones.
 
-Middleware para subir archivos a AWS S3, específicamente diseñado para subir imágenes de perfil de usuario. 
+Middleware para subir archivos a AWS S3, específicamente diseñado para subir imágenes de perfil de usuario.
+
 ```upload_s3_profileImage.ts
 const s3Storage = multerS3({
   s3,
@@ -309,7 +317,8 @@ export const uploadS3Profile = multer({
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 ```
-Pantalla de cambio de imagen de perfil 
+
+Pantalla de cambio de imagen de perfil
 
 <img src="https://imgur.com/E24kVW5.png" alt="Perfil" height="380">
 <img src="https://imgur.com/zaLtcu2.png" alt="Perfil Foto" height="400">
@@ -318,7 +327,6 @@ Objetos en el bucket de S3
 
 <img src="https://imgur.com/ecyKsum.png" alt="S3" height="340">
 <img src="https://imgur.com/4ZUlMlG.png" alt="S3 profile" height="240">
-
 
 Visualización de experiencias
 
@@ -405,6 +413,38 @@ Content-Type: application/json
 POST /api/auth/logout
 Authorization: Bearer {accessToken}
 ```
+
+**Solicitar recuperación de contraseña**
+
+```http
+POST /api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "juan@example.com"
+}
+```
+
+- Envía un email con enlace de recuperación
+- El enlace expira en 5 minutos
+- Responde con mensaje genérico por seguridad
+
+**Restablecer contraseña**
+
+```http
+POST /api/auth/reset-password/{token}
+Content-Type: application/json
+
+{
+  "password": "NewPassword123"
+}
+```
+
+- Usa el token recibido en el email
+- La contraseña debe cumplir requisitos de seguridad
+- Token se invalida después del uso
+
+> 📖 **Documentación completa**: Ver [RESET_PASSWORD_GUIDE.md](./RESET_PASSWORD_GUIDE.md) para detalles del flujo de recuperación
 
 #### Experiencias (`/api/experiences`)
 
@@ -606,9 +646,10 @@ Abre http://localhost:3000/swagger y prueba los endpoints directamente desde el 
 
 - Sistema de autenticación completo
 - Verificación de email con tokens
+- **Recuperación de contraseña con tokens de 5 minutos**
 - Gestión de usuarios (CRUD)
 - Sistema de roles (customer/guide)
-- Envío de emails (verificación, bienvenida, aprobación)
+- Envío de emails (verificación, bienvenida, aprobación, recuperación)
 - Documentación con Swagger
 - **Módulo de experiencias con carga de fotos a S3**
 - **Sistema de reviews con carga de fotos a S3**

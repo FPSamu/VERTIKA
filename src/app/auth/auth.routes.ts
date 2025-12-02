@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as authController from './auth.controller';
-import { registerValidators, loginValidators, refreshTokenValidators } from './auth.validators';
+import { registerValidators, loginValidators, refreshTokenValidators, forgotPasswordValidators, resetPasswordValidators } from './auth.validators';
 import { authMiddleware } from '../middlewares/auth';
 
 const router = Router();
@@ -210,5 +210,89 @@ router.get('/verify-email/:token', authController.verifyEmailWithToken);
  *         description: Ya eres un guía
  */
 router.post('/request-guide', authMiddleware, authController.requestToBecomeGuide);
+
+// Rutas de recuperación de contraseña
+router.get('/forgot-password', authController.showForgotPasswordPage);
+
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Solicitar recuperación de contraseña
+ *     tags: [Authentication]
+ *     description: Envía un email con un enlace para restablecer la contraseña (válido por 5 minutos)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: juan@example.com
+ *     responses:
+ *       200:
+ *         description: Email de recuperación enviado (si el usuario existe)
+ *       400:
+ *         description: Datos inválidos
+ */
+router.post('/forgot-password', forgotPasswordValidators, authController.forgotPassword);
+
+/**
+ * @swagger
+ * /api/auth/reset-password/{token}:
+ *   get:
+ *     summary: Mostrar página de restablecimiento de contraseña
+ *     tags: [Authentication]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Token de recuperación de contraseña
+ *     responses:
+ *       200:
+ *         description: Página de reset de contraseña
+ */
+router.get('/reset-password/:token', authController.showResetPasswordPage);
+
+/**
+ * @swagger
+ * /api/auth/reset-password/{token}:
+ *   post:
+ *     summary: Restablecer contraseña con token
+ *     tags: [Authentication]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Token de recuperación de contraseña
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: NewPassword123
+ *     responses:
+ *       200:
+ *         description: Contraseña restablecida exitosamente
+ *       400:
+ *         description: Token inválido o expirado
+ */
+router.post('/reset-password/:token', resetPasswordValidators, authController.resetPassword);
 
 export default router;

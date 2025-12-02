@@ -778,6 +778,127 @@ class EmailService {
       html,
     });
   }
+
+  /**
+   * Envía email de recuperación de contraseña
+   */
+  async sendPasswordResetEmail(email: string, name: string, token: string): Promise<boolean> {
+    const backendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+    const resetUrl = `${backendUrl}/api/auth/reset-password/${token}`;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+          }
+          .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+          }
+          .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+          }
+          .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-top: 20px;
+          }
+          .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">🔑</div>
+            <h1>Recuperación de Contraseña</h1>
+          </div>
+          
+          <div class="content">
+            <p><strong>Hola ${name},</strong></p>
+            
+            <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en VERTIKA.</p>
+            
+            <p>Para crear una nueva contraseña, haz clic en el siguiente botón:</p>
+            
+            <div style="text-align: center;">
+              <a href="${resetUrl}" class="button">Restablecer Contraseña</a>
+            </div>
+            
+            <div class="warning-box">
+              <strong>⚠️ Importante:</strong><br>
+              Este enlace expirará en <strong>5 minutos</strong> por razones de seguridad.
+            </div>
+            
+            <p>Si no puedes hacer clic en el botón, copia y pega el siguiente enlace en tu navegador:</p>
+            <p style="word-break: break-all; background: #e9ecef; padding: 10px; border-radius: 5px; font-size: 12px;">
+              ${resetUrl}
+            </p>
+            
+            <p style="margin-top: 30px; color: #666;">
+              <strong>¿No solicitaste este cambio?</strong><br>
+              Si no solicitaste restablecer tu contraseña, puedes ignorar este correo de forma segura. Tu contraseña actual permanecerá sin cambios.
+            </p>
+            
+            <p style="margin-top: 20px;">
+              Saludos,<br>
+              <strong>El equipo de VERTIKA</strong>
+            </p>
+          </div>
+          
+          <div class="footer">
+            <p>© ${new Date().getFullYear()} VERTIKA. Todos los derechos reservados.</p>
+            <p>Por tu seguridad, nunca compartas este enlace con nadie.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return this.sendEmail({
+      to: email,
+      subject: '🔑 Recuperación de Contraseña - VERTIKA',
+      html,
+    });
+  }
 }
 
 export default EmailService;

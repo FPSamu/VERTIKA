@@ -403,3 +403,130 @@ export const requestToBecomeGuide = async (req: Request, res: Response): Promise
     });
   }
 };
+
+/**
+ * Muestra la página de solicitud de recuperación de contraseña
+ */
+export const showForgotPasswordPage = (req: Request, res: Response) => {
+  res.render('forgot-password');
+};
+
+/**
+ * Solicita la recuperación de contraseña (envía email con token)
+ */
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+      return;
+    }
+
+    const { email } = req.body;
+
+    console.log(`\n🔑 SOLICITUD DE RECUPERACIÓN DE CONTRASEÑA - Email: ${email}`);
+
+    const result = await authService.requestPasswordReset(email);
+
+    if (!result.success) {
+      res.status(404).json({
+        success: false,
+        message: result.message,
+      });
+      return;
+    }
+
+    console.log(`✅ EMAIL DE RECUPERACIÓN ENVIADO - Email: ${email}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Si el email existe, recibirás un enlace de recuperación en los próximos minutos',
+    });
+  } catch (error: any) {
+    console.error('❌ ERROR EN FORGOT PASSWORD:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al procesar la solicitud de recuperación',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * Muestra la página de reset de contraseña con el token
+ */
+export const showResetPasswordPage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { token } = req.params;
+
+    console.log(`\n🔍 VERIFICANDO TOKEN DE RESET - Token: ${token.substring(0, 10)}...`);
+
+    // Verificar si el token es válido antes de mostrar la página
+    const isValid = await authService.verifyResetToken(token);
+
+    if (!isValid) {
+      console.log('❌ TOKEN INVÁLIDO O EXPIRADO');
+      res.render('reset-password-error', {
+        message: 'El enlace de recuperación es inválido o ha expirado. Por favor, solicita uno nuevo.',
+      });
+      return;
+    }
+
+    console.log('✅ TOKEN VÁLIDO - Mostrando formulario de reset');
+
+    res.render('reset-password', { token });
+  } catch (error: any) {
+    console.error('❌ ERROR AL VERIFICAR TOKEN:', error);
+    res.render('reset-password-error', {
+      message: 'Ocurrió un error al procesar tu solicitud. Por favor, intenta nuevamente.',
+    });
+  }
+};
+
+/**
+ * Restablece la contraseña con el token válido
+ */
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+      return;
+    }
+
+    const { token } = req.params;
+    const { password } = req.body;
+
+    console.log(`\n🔄 RESTABLECIENDO CONTRASEÑA - Token: ${token.substring(0, 10)}...`);
+
+    const result = await authService.resetPassword(token, password);
+
+    if (!result.success) {
+      res.status(400).json({
+        success: false,
+        message: result.message,
+      });
+      return;
+    }
+
+    console.log(`✅ CONTRASEÑA RESTABLECIDA EXITOSAMENTE`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Contraseña restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.',
+    });
+  } catch (error: any) {
+    console.error('❌ ERROR EN RESET PASSWORD:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al restablecer la contraseña',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};

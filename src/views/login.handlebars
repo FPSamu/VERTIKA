@@ -99,6 +99,23 @@
       color: #5a67d8;
       text-decoration: underline;
     }
+
+    .forgot-password {
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .forgot-password a {
+      color: #667eea;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .forgot-password a:hover {
+      color: #5a67d8;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -110,6 +127,9 @@
     <form action="/api/auth/login" method="POST" id="loginForm">
       <input type="email" name="email" placeholder="Correo electrónico" required>
       <input type="password" name="password" placeholder="Contraseña" required>
+      <div class="forgot-password">
+        <a href="/api/auth/forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
       <button type="submit">Entrar</button>
     </form>
     <div class="signup">

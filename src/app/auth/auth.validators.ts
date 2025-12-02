@@ -70,3 +70,29 @@ export const refreshTokenValidators = [
     .notEmpty()
     .withMessage('El refresh token es requerido'),
 ];
+
+/**
+ * Validaciones para solicitar recuperación de contraseña
+ */
+export const forgotPasswordValidators = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('El email es requerido')
+    .isEmail()
+    .withMessage('Debe ser un email válido')
+    .normalizeEmail(),
+];
+
+/**
+ * Validaciones para restablecer contraseña
+ */
+export const resetPasswordValidators = [
+  body('password')
+    .notEmpty()
+    .withMessage('La contraseña es requerida')
+    .isLength({ min: 8 })
+    .withMessage('La contraseña debe tener al menos 8 caracteres')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('La contraseña debe contener al menos una mayúscula, una minúscula y un número'),
+];

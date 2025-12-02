@@ -436,6 +436,142 @@ class AuthService {
       };
     }
   }
+
+  /**
+   * Solicita el restablecimiento de contraseña (genera token y envía email)
+   */
+  async requestPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const usersCollection = this.getUsersCollection();
+
+      // Buscar el usuario por email
+      const user = await usersCollection.findOne({ email });
+
+      // Por seguridad, siempre devolvemos el mismo mensaje aunque el usuario no exista
+      if (!user) {
+        console.log(`⚠️ Usuario no encontrado: ${email}`);
+        return {
+          success: true,
+          message: 'Si el email existe, recibirás un enlace de recuperación'
+        };
+      }
+
+      // Generar token de reset (válido por 5 minutos)
+      const resetToken = emailService.generateVerificationToken();
+      const resetExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutos
+
+      console.log(`🔑 Token de reset generado para: ${email}`);
+      console.log(`⏰ Token expira en: ${resetExpires.toLocaleString()}`);
+
+      // Actualizar usuario con el token de reset
+      await usersCollection.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            resetPasswordToken: resetToken,
+            resetPasswordExpires: resetExpires,
+            updatedAt: new Date()
+          }
+        }
+      );
+
+      // Enviar email de recuperación
+      console.log(`📧 Enviando email de recuperación a: ${email}`);
+      const emailSent = await emailService.sendPasswordResetEmail(
+        email,
+        user.name,
+        resetToken
+      );
+
+      if (emailSent) {
+        console.log(`✅ Email de recuperación enviado a: ${email}`);
+      } else {
+        console.error(`❌ Error al enviar email de recuperación a: ${email}`);
+      }
+
+      return {
+        success: true,
+        message: 'Email de recuperación enviado'
+      };
+    } catch (error) {
+      console.error('Error en requestPasswordReset:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Verifica si un token de reset es válido
+   */
+  async verifyResetToken(token: string): Promise<boolean> {
+    try {
+      const usersCollection = this.getUsersCollection();
+
+      const user = await usersCollection.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: new Date() }
+      });
+
+      return !!user;
+    } catch (error) {
+      console.error('Error en verifyResetToken:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Restablece la contraseña usando el token
+   */
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const usersCollection = this.getUsersCollection();
+
+      // Buscar usuario con token válido y no expirado
+      const user = await usersCollection.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: new Date() }
+      });
+
+      if (!user) {
+        return {
+          success: false,
+          message: 'El token de recuperación es inválido o ha expirado'
+        };
+      }
+
+      // Hash de la nueva contraseña
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      console.log(`🔄 Actualizando contraseña para usuario: ${user.email}`);
+
+      // Actualizar contraseña y limpiar tokens de reset
+      await usersCollection.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            password: hashedPassword,
+            updatedAt: new Date()
+          },
+          $unset: {
+            resetPasswordToken: '',
+            resetPasswordExpires: ''
+          }
+        }
+      );
+
+      console.log(`✅ Contraseña actualizada para: ${user.email}`);
+
+      return {
+        success: true,
+        message: 'Contraseña restablecida exitosamente'
+      };
+    } catch (error) {
+      console.error('Error en resetPassword:', error);
+      return {
+        success: false,
+        message: 'Error al restablecer la contraseña'
+      };
+    }
+  }
 }
 
 export default AuthService;
