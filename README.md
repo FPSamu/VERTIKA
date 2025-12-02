@@ -648,6 +648,46 @@ Abre http://localhost:3000/swagger y prueba los endpoints directamente desde el 
 - ✅ Validación de datos de entrada con express-validator
 - ✅ Variables sensibles en archivo .env (no incluido en Git)
 
+## 🧪 Testing
+
+VERTIKA incluye una **suite completa de pruebas unitarias** para todos los endpoints de la API.
+
+### Ejecutar Tests
+
+```bash
+# Instalar dependencias de testing
+npm install --save-dev jest @jest/globals ts-jest @types/jest supertest @types/supertest
+
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests en modo watch
+npm run test:watch
+
+# Generar reporte de cobertura
+npm run test:coverage
+```
+
+### Tests Implementados
+
+- ✅ **Auth Tests** (47 casos): Registro, login, refresh token, perfil, recuperación de contraseña
+- ✅ **User Tests** (12 casos): CRUD de usuarios, autenticación, validaciones
+- ✅ **Experience Tests** (18 casos): CRUD de experiencias, publicación, archivado, validación de propietario
+- ✅ **Reservation Tests** (15 casos): CRUD de reservaciones, confirmación, cancelación
+- ✅ **Review Tests** (16 casos): CRUD de reseñas, validación de calificaciones
+
+### Cobertura
+
+Los tests cubren:
+
+- ✅ Casos exitosos (happy path)
+- ✅ Casos de error y validaciones
+- ✅ Autenticación y autorización
+- ✅ Validación de datos de entrada
+- ✅ Manejo de errores HTTP (404, 401, 400, 403)
+
+> 📖 **Documentación completa**: Ver [TESTING_QUICK_START.md](./TESTING_QUICK_START.md) y [test/README.md](./test/README.md)
+
 ## 🚧 Estado del Proyecto
 
 ### ✅ Completado
@@ -663,6 +703,7 @@ Abre http://localhost:3000/swagger y prueba los endpoints directamente desde el 
 - **Sistema de reviews con carga de fotos a S3**
 - **Validación de guías verificados por userId**
 - **Validación de propiedad de experiencias**
+- **🧪 Suite completa de pruebas unitarias** (Jest + Supertest)
 
 ### 🔄 En Desarrollo
 
