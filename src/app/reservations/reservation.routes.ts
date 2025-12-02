@@ -4,6 +4,7 @@ import {
   getReservationById,
   createReservation,
   updateReservation,
+  cancelReservation,
   deleteReservation,
   showMyReservationsPage,
   getUserReservations,
@@ -149,6 +150,27 @@ router.get("/:id", getReservationById);
  *         description: Reserva creada correctamente
  */
 router.post("/", authMiddleware, createReservation);
+
+/**
+ * @swagger
+ * /api/reservations/{id}/cancel:
+ *   patch:
+ *     tags: [Reservations]
+ *     summary: Cancelar reserva
+ *     description: Cancela una reservación cambiando su estado a 'cancelled'.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Reserva cancelada
+ *       404:
+ *         description: Reserva no encontrada
+ */
+router.patch("/:id/cancel", cancelReservation);
 
 /**
  * @swagger

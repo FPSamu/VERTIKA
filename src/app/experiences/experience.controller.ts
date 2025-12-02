@@ -80,7 +80,14 @@ export async function getGuideExperiences(req: Request, res: Response) {
 /* GET /experiences/:id */
 export async function getExperienceById(req: Request, res: Response) {
   try {
-    const experience = await Experience.findById(req.params.id);
+    const { id } = req.params;
+    
+    // Validar formato de ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "ID de experiencia inválido" });
+    }
+    
+    const experience = await Experience.findById(id);
     if (!experience) return res.status(404).json({ error: "Experiencia no encontrada" });
     res.json(experience);
   } catch (err) {
@@ -92,7 +99,19 @@ export async function getExperienceById(req: Request, res: Response) {
 /* POST /experiences (draft) */
 export async function createExperience(req: Request, res: Response) {
   try {
-    const { userId, ...restBody } = req.body;
+    const { userId, activity, difficulty, ...restBody } = req.body;
+
+    // Validar activity enum
+    const validActivities = ['hiking', 'alpinismo', 'trail', 'escalada'];
+    if (activity && !validActivities.includes(activity)) {
+      return res.status(400).json({ error: `Actividad inválida. Debe ser: ${validActivities.join(', ')}` });
+    }
+
+    // Validar difficulty enum
+    const validDifficulties = ['fácil', 'medio', 'difícil'];
+    if (difficulty && !validDifficulties.includes(difficulty)) {
+      return res.status(400).json({ error: `Dificultad inválida. Debe ser: ${validDifficulties.join(', ')}` });
+    }
 
     // El middleware guideVerificationByUserIdMiddleware ya validó que existe el guía
     // Ahora buscamos el guía para obtener su _id
@@ -109,6 +128,8 @@ export async function createExperience(req: Request, res: Response) {
     // Crear la experiencia con el guideId obtenido del documento Guide
     const experienceData = {
       ...restBody,
+      activity,
+      difficulty,
       guideId: guide._id,  // Usamos el _id del guía, no el userId
       photos: photoUrls
     };

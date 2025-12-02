@@ -18,11 +18,15 @@ const router = Router();
  *   get:
  *     tags: [Users]
  *     summary: Listar usuarios
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: OK
+ *       401:
+ *         description: No autenticado
  */
-router.get("/", getUsers);
+router.get("/", authMiddleware, getUsers);
 
 /**
  * @swagger
@@ -30,6 +34,8 @@ router.get("/", getUsers);
  *   get:
  *     tags: [Users]
  *     summary: Obtener usuario por ID
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -37,11 +43,13 @@ router.get("/", getUsers);
  *         schema: { type: string }
  *     responses:
  *       200:
- *          description: OK 
- *       description:
- *           missing token
+ *          description: OK
+ *       401:
+ *         description: No autenticado
+ *       404:
+ *         description: Usuario no encontrado
  */
-router.get("/:id", getUserById);
+router.get("/:id", authMiddleware, getUserById);
 
 
 /**

@@ -7,7 +7,7 @@ import User from "../users/user.model";
 import Experience from "../experiences/experience.model";
 import Guide from "../guides/guide.model";
 import Notification from "../notifications/notification.model";
-import { getIO} from '../../index';
+import { getIO } from '../../socket';
 
 
 const emailService = new EmailService();
@@ -67,6 +67,26 @@ export async function getReservationById(req: Request, res: Response) {
 export async function createReservation(req: Request, res: Response) {
   try {
     const { experienceId, userId, seats, total, status } = req.body;
+
+    // Validar campos requeridos
+    if (!experienceId || !userId || !seats || !total) {
+      return res.status(400).json({ error: "Faltan campos requeridos: experienceId, userId, seats, total" });
+    }
+
+    // Validar experienceId válido
+    if (!mongoose.Types.ObjectId.isValid(experienceId)) {
+      return res.status(400).json({ error: "ID de experiencia inválido" });
+    }
+
+    // Validar userId válido
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "ID de usuario inválido" });
+    }
+
+    // Validar seats positivo
+    if (seats <= 0) {
+      return res.status(400).json({ error: "El número de asientos debe ser mayor a 0" });
+    }
 
     // Generar token de confirmación
     const confirmationToken = randomBytes(32).toString('hex');
@@ -194,6 +214,51 @@ export async function updateReservation(req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al actualizar reserva" });
+  }
+}
+
+/* PATCH /reservations/:id/cancel */
+export async function cancelReservation(req: Request, res: Response) {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({ error: "Reserva no encontrada" });
+    }
+
+    // Actualizar status a cancelled
+    reservation.status = 'cancelled';
+    await reservation.save();
+
+    // Notificar al guía
+    const experience = await Experience.findById(reservation.experienceId);
+    if (experience) {
+      const guide = await Guide.findById(experience.guideId);
+      const guideUserId = guide?.userId;
+      const cancellingUser = await User.findById(reservation.userId);
+
+      if (guideUserId && cancellingUser) {
+        const guideNotification = new Notification({
+          userId: guideUserId,
+          actorId: cancellingUser._id,
+          type: "reservation",
+          title: "Reserva cancelada",
+          message: `${cancellingUser.name} ha cancelado su reserva en "${experience.title}"`,
+          data: {
+            reservationId: reservation._id,
+            experienceId: experience._id,
+          },
+          read: false,
+        });
+
+        await guideNotification.save();
+        getIO().to(guideUserId.toString()).emit('newNotification', guideNotification);
+      }
+    }
+
+    res.status(200).json(reservation);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al cancelar reserva" });
   }
 }
 

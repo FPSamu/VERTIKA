@@ -8,17 +8,23 @@ export async function listReviews(req: Request, res: Response) {
   try {
     const filter: any = {};
 
-    if (req.query.guideId && mongoose.Types.ObjectId.isValid(req.query.guideId as string)) {
-      filter.guideId = new mongoose.Types.ObjectId(req.query.guideId as string);
+    // Soportar tanto params como query
+    const guideId = req.params.guideId || req.query.guideId;
+    const userId = req.params.userId || req.query.userId;
+    const experienceId = req.params.experienceId || req.query.experienceId;
+    const reservationId = req.query.reservationId;
+
+    if (guideId && mongoose.Types.ObjectId.isValid(guideId as string)) {
+      filter.guideId = new mongoose.Types.ObjectId(guideId as string);
     }
-    if (req.query.userId && mongoose.Types.ObjectId.isValid(req.query.userId as string)) {
-      filter.userId = new mongoose.Types.ObjectId(req.query.userId as string);
+    if (userId && mongoose.Types.ObjectId.isValid(userId as string)) {
+      filter.userId = new mongoose.Types.ObjectId(userId as string);
     }
-    if (req.query.experienceId && mongoose.Types.ObjectId.isValid(req.query.experienceId as string)) {
-      filter.experienceId = new mongoose.Types.ObjectId(req.query.experienceId as string);
+    if (experienceId && mongoose.Types.ObjectId.isValid(experienceId as string)) {
+      filter.experienceId = new mongoose.Types.ObjectId(experienceId as string);
     }
-    if (req.query.reservationId && mongoose.Types.ObjectId.isValid(req.query.reservationId as string)) {
-      filter.reservationId = new mongoose.Types.ObjectId(req.query.reservationId as string);
+    if (reservationId && mongoose.Types.ObjectId.isValid(reservationId as string)) {
+      filter.reservationId = new mongoose.Types.ObjectId(reservationId as string);
     }
 
     const reviews = await Review.find(filter);
@@ -85,7 +91,7 @@ export async function deleteReview(req: Request, res: Response) {
   try {
     const deleted = await Review.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: "Review no encontrada" });
-    res.status(204).send();
+    res.status(200).json({ message: "Review eliminada correctamente" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al eliminar review" });

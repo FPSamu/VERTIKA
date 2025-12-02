@@ -51,6 +51,60 @@ router.get("/", listReviews);
 
 /**
  * @swagger
+ * /api/reviews/experience/{experienceId}:
+ *   get:
+ *     tags: [Reviews]
+ *     summary: Obtener reseñas por experiencia
+ *     parameters:
+ *       - in: path
+ *         name: experienceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de reseñas
+ */
+router.get("/experience/:experienceId", listReviews);
+
+/**
+ * @swagger
+ * /api/reviews/guide/{guideId}:
+ *   get:
+ *     tags: [Reviews]
+ *     summary: Obtener reseñas por guía
+ *     parameters:
+ *       - in: path
+ *         name: guideId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de reseñas
+ */
+router.get("/guide/:guideId", listReviews);
+
+/**
+ * @swagger
+ * /api/reviews/user/{userId}:
+ *   get:
+ *     tags: [Reviews]
+ *     summary: Obtener reseñas por usuario
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de reseñas
+ */
+router.get("/user/:userId", listReviews);
+
+/**
+ * @swagger
  * /api/reviews/{id}:
  *   get:
  *     tags: [Reviews]
@@ -123,7 +177,7 @@ router.post("/", authMiddleware, uploadReviewPhotos.array("photos", 5), createRe
 /**
  * @swagger
  * /api/reviews/{id}:
- *   patch:
+ *   put:
  *     tags: [Reviews]
  *     summary: Actualizar una reseña existente
  *     description: Permite modificar campos de la reseña (ratings, comment, photos). Requiere autenticación.
@@ -150,7 +204,7 @@ router.post("/", authMiddleware, uploadReviewPhotos.array("photos", 5), createRe
  *       200:
  *         description: Reseña actualizada
  */
-router.patch("/:id", authMiddleware, updateReview);
+router.put("/:id", authMiddleware, updateReview);
 
 /**
  * @swagger
