@@ -313,6 +313,23 @@
         }
       });
     });
+
+    const editBtn = document.getElementById('editBtn');
+
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        
+        // 1. (Opcional pero recomendado) Asegurar que la cookie existe antes de irse
+        // para que el servidor no rechace la petición GET
+        const token = localStorage.getItem('accessToken');
+        if (token && document.cookie.indexOf('token=') === -1) {
+          document.cookie = `token=${token.replace(/['"]+/g, '')}; path=/; max-age=86400`;
+        }
+
+        // 2. Redirigir a la vista de edición
+        window.location.href = '/api/users/me/edit'; 
+      });
+    }
   </script>
 
 </body>

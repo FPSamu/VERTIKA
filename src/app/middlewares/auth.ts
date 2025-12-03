@@ -11,17 +11,27 @@ export interface AuthRequest extends Request {
 }
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+  let token = null;
+  
   const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
 
-  if (!authHeader) {
+  if (!token && req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  }
+
+  if (!token) {
+    // Si la petición viene de un navegador esperando ver una página web,
+    // lo redirigimos al login en lugar de mostrar JSON.
+    if (req.accepts('html')) {
+       return res.redirect('/api/auth/login');
+    }
+    
     return res.status(401).json({ success: false, message: 'Token no proporcionado' });
   }
 
-  const token = authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Token inválido' });
-  }
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -30,6 +40,11 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     next();
   } catch (err: any) {
     console.error('Error al verificar token:', err.message);
+    //Manejo de redireccion
+    if (req.accepts('html')) {
+       return res.redirect('/api/auth/login');
+    }
+    
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ success: false, message: 'Token expirado. Por favor inicia sesión nuevamente.' });
     }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, getUserById, updateUser, deleteUser, updateAvatar } from "./user.controller";
+import { getUsers, getUserById, updateUser, deleteUser, updateAvatar, renderEditProfile} from "./user.controller";
 import { uploadS3Profile } from "../middlewares/upload/upload_s3_image";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -27,6 +27,8 @@ const router = Router();
  *         description: No autenticado
  */
 router.get("/", authMiddleware, getUsers);
+
+router.get("/me/edit", authMiddleware, renderEditProfile);
 
 /**
  * @swagger

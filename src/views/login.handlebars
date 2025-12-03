@@ -245,6 +245,8 @@
       localStorage.setItem('refreshToken', data.data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.data.user));
 
+      //Cookie
+      document.cookie = `token=${data.data.accessToken}; path=/; max-age=86400`;
       // Redirigir al landing page
       window.location.href = '/api';
 

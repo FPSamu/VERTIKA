@@ -20,10 +20,14 @@ import { engine } from 'express-handlebars';
 //Passport
 import passport from 'passport';
 
+//Cookies
+import cookieParser from "cookie-parser";
+
 
 const port = process.env.PORT || 3000;
 const app = express();
-
+//Cookies
+app.use(cookieParser());
 
 //Handlebars
 app.engine('handlebars',engine());

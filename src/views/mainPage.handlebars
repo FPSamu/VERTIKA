@@ -1440,31 +1440,7 @@
         
         // Redirigir al perfil al hacer click en el nombre
         document.getElementById('userName').addEventListener('click', async (e) => {
-          e.preventDefault();
-          const token = localStorage.getItem("accessToken");
-          if (!token) { window.location.href = '/api/auth/login'; return; }
-
-          try {
-            const resp = await fetch('/api/auth/profile', {
-              method: 'GET',
-              headers: {
-                'Accept': 'text/html',               
-                'Authorization': 'Bearer ' + token   
-              }
-            });
-
-            if (resp.status === 401) { window.location.href = '/api/auth/login'; return; }
-            if (!resp.ok) { alert('Error al cargar perfil'); return; }
-
-            const html = await resp.text();
-            document.open();
-            document.write(html);
-            document.close();
-            window.history.replaceState({}, '', 'api/profile'); // mostrar url correcta
-          } catch (err) {
-            console.error(err);
-            alert('Error de red');
-          }
+           window.location.href = '/api/auth/profile'; 
         });
 
         //Logout
@@ -1482,6 +1458,7 @@
           }
           localStorage.removeItem('accessToken');
           localStorage.removeItem('user');
+          document.cookie = "token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT";
           window.location.href = '/api'; // redirige a landing page
         });
       

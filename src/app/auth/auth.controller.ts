@@ -209,22 +209,14 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-     //Si el cliente solicita HTML (navegador normal), renderiza la vista
-     if (req.headers.accept?.includes("text/html")) {
-       return res.render("users/profile", {
-        user,
-         title: `Perfil — ${user.name}`,
-      });
-     }
+    //  res.status(200).json({
+    //    success: true,
+    //    data: {
+    //     user,
+    //    },
+    //  });
 
-     res.status(200).json({
-       success: true,
-       data: {
-        user,
-       },
-     });
-
-    //res.render("users/profile", { user, title: `Perfil — ${user.name}`});
+    res.render("users/profile", { user, title: `Perfil — ${user.name}`});
 
   } catch (error: any) {
     console.error('Error en getProfile:', error);

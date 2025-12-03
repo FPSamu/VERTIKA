@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Perfil | Vertika</title>
+  <style>
+    /* === ESTILOS GENERALES (Heredados) === */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    /* === HEADER === */
+    header {
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    header .logo img { height: 40px; }
+    header .logo h1 { font-size: 22px; margin: 0; color: #2c3e50; }
+
+    /* === CONTENEDOR === */
+    .profile-container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .edit-card {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .card-header-bg {
+      height: 80px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+    }
+
+    .card-body {
+      padding: 30px 40px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #2c3e50;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    /* === FORMULARIO === */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .read-only {
+      background-color: #f9fafb;
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    /* === BOTONES === */
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    button {
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    .btn-save {
+      background: #667eea;
+      color: white;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+      flex: 1;
+    }
+    .btn-save:hover { background: #5a6fd1; }
+
+    .btn-cancel {
+      background: #fff;
+      border: 1px solid #ddd;
+      color: #555;
+    }
+    .btn-cancel:hover { background: #f0f0f0; }
+
+    .btn-delete {
+      background: transparent;
+      color: #e74c3c;
+      border: 1px solid #fee;
+      margin-top: 40px;
+      width: 100%;
+    }
+    .btn-delete:hover {
+      background: #fff5f5;
+      border-color: #fab1a0;
+    }
+
+    /* === MODAL === */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-box h3 { color: #e74c3c; margin-top: 0; }
+    .modal-box p { color: #555; margin-bottom: 25px; line-height: 1.5; }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-confirm-delete {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .status-msg { margin-top: 15px; font-weight: bold; text-align: center; height: 20px;}
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo" onclick="window.location.href='/api'">
+      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
+      <h1>Vertika</h1>
+    </div>
+    <nav>
+      <a href="/api" style="text-decoration: none; color: #667eea; font-weight: bold;">Inicio</a>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <div class="edit-card">
+      <div class="card-header-bg"></div>
+      
+      <div class="card-body">
+        <h2>Editar Información</h2>
+
+        <form id="editForm">
+          <input type="hidden" id="userId" value="{{user._id}}">
+
+          <div class="form-group">
+            <label for="name">Nombre Completo</label>
+            <input type="text" id="name" name="name" value="{{user.name}}" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo Electrónico (No editable)</label>
+            <input type="email" id="email" value="{{user.email}}" class="read-only" readonly>
+            <small style="color: #999; font-size: 11px;">Para cambiar tu correo, contacta soporte.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth">Fecha de Nacimiento</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" data-raw="{{user.dateOfBirth}}">
+          </div>
+
+          <div class="status-msg" id="formStatus"></div>
+
+          <div class="actions">
+            <button type="button" class="btn-cancel" onclick="history.back()">Cancelar</button>
+            <button type="submit" class="btn-save" id="saveBtn">Guardar Cambios</button>
+          </div>
+        </form>
+
+        <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
+
+        <button type="button" class="btn-delete" onclick="openDeleteModal()">
+          ⚠ Eliminar mi cuenta permanentemente
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <h3>¿Estás seguro?</h3>
+      <p>Esta acción eliminará tu cuenta y todos tus datos (incluyendo tu foto de perfil) de forma permanente. <b>No se puede deshacer.</b></p>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+        <button type="button" class="btn-confirm-delete" id="confirmDeleteBtn">Sí, Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === 1. Pre-llenado de Fecha ===
+    document.addEventListener('DOMContentLoaded', () => {
+      const dobInput = document.getElementById('dateOfBirth');
+      const rawDate = dobInput.getAttribute('data-raw');
+      if (rawDate) {
+        const dateObj = new Date(rawDate);
+        if (!isNaN(dateObj)) {
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+          dobInput.value = year + '-' + month + '-' + day;
+        }
+      }
+    });
+
+    // === 2. PATCH (Actualizar Perfil) ===
+    const editForm = document.getElementById('editForm');
+    const formStatus = document.getElementById('formStatus');
+    const userIdInput = document.getElementById('userId');
+
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // --- A. OBTENCIÓN DEL TOKEN ---
+      // IMPORTANTE: Verifica en tu navegador (F12 -> Application -> Local Storage)
+      // si la llave se llama 'accessToken' o 'token'.
+      let token = localStorage.getItem('accessToken') || localStorage.getItem('token'); 
+      
+      if (!token) {
+        alert("No se encontró token de sesión. Inicia sesión nuevamente.");
+        window.location.href = '/api/auth/login';
+        return;
+      }
+      
+      // Limpieza de comillas si existen
+      token = token.replace(/['"]+/g, '');
+
+      // --- B. VALIDACIÓN DE ID ---
+      const userId = userIdInput.value;
+      if (!userId) {
+        alert("Error: No se encuentra el ID del usuario.");
+        return;
+      }
+
+      // --- C. PREPARACIÓN UI ---
+      const saveBtn = document.getElementById('saveBtn');
+      const originalBtnText = saveBtn.innerText;
+      saveBtn.innerText = "Guardando...";
+      saveBtn.disabled = true;
+
+      // --- D. DATOS DEL FORMULARIO ---
+      const name = document.getElementById('name').value;
+      const dobValue = document.getElementById('dateOfBirth').value;
+      
+      const bodyData = { name: name };
+      if (dobValue) bodyData.dateOfBirth = dobValue;
+
+      try {
+        // --- E. PETICIÓN FETCH ---
+        console.log("Enviando a:", '/api/users/' + userId);
+        console.log("Token enviado:", 'Bearer ' + token.substring(0, 10) + '...');
+
+        const response = await fetch('/api/users/' + userId, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            // Usamos concatenación simple para máxima compatibilidad
+            'Authorization': 'Bearer ' + token  
+          },
+          body: JSON.stringify(bodyData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Éxito: Actualizamos local storage y redirigimos
+          const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+          localUser.name = data.name;
+          localStorage.setItem('user', JSON.stringify(localUser));
+
+          formStatus.innerText = "¡Guardado correctamente!";
+          formStatus.style.color = "green";
+          
+          setTimeout(() => {
+            window.location.href = '/api/auth/profile';
+          }, 1000);
+
+        } else {
+          // Error del servidor (ej: 401, 400, 500)
+          throw new Error(data.message || "Error al actualizar");
+        }
+
+      } catch (error) {
+        console.error("Error en PATCH:", error);
+        formStatus.innerText = error.message;
+        formStatus.style.color = "red";
+        saveBtn.innerText = originalBtnText;
+        saveBtn.disabled = false;
+        
+        // Si el error es de token, redirigir
+        if (error.message.includes("Token") || error.message.includes("token")) {
+             setTimeout(() => window.location.href = '/api/auth/login', 2000);
+        }
+      }
+    });
+
+    // === 3. DELETE (Eliminar Cuenta) ===
+    const modal = document.getElementById('deleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+    function openDeleteModal() { modal.classList.add('active'); }
+    function closeDeleteModal() { modal.classList.remove('active'); }
+
+    // Cerrar al dar click fuera
+    if(modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeDeleteModal();
+        });
+    }
+
+    if(confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', async () => {
+          let token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+          if (token) token = token.replace(/['"]+/g, '');
+          
+          const userId = userIdInput.value;
+          
+          if (!token) {
+             alert("Error de sesión.");
+             return;
+          }
+
+          confirmDeleteBtn.innerText = "Eliminando...";
+          confirmDeleteBtn.disabled = true;
+
+          try {
+            const response = await fetch('/api/users/' + userId, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            });
+
+            if (response.status === 204) {
+              alert("Cuenta eliminada.");
+              localStorage.clear();
+              window.location.href = '/api/auth/login';
+            } else {
+              const data = await response.json();
+              throw new Error(data.message || "No se pudo eliminar");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Error: " + error.message);
+            confirmDeleteBtn.innerText = "Sí, Eliminar";
+            confirmDeleteBtn.disabled = false;
+            closeDeleteModal();
+          }
+        });
+    }
+</script>
+</body>
+</html>

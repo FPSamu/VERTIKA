@@ -101,12 +101,42 @@ export async function updateAvatar(req: Request, res: Response) {
     user.updatedAt = new Date();
 
     await user.save();
-
+    console.log("Foto per",user.avatarUrl);
     res.json({
       message: "Avatar actualizado correctamente",
       avatarUrl: user.avatarUrl
     });
   } catch (err) {
     res.status(500).json({ error: "Error subiendo avatar", details: err });
+  }
+}
+
+export async function renderEditProfile(req: Request, res: Response) {
+  try {
+    // 1. Obtener el ID del usuario desde el token (inyectado por authMiddleware)
+    // Usamos ?.userId porque así lo tienes en updateAvatar
+    const userId = (req as any).user?.userId; 
+
+    if (!userId) {
+      // Si entra aquí es porque el middleware no encontró usuario, redirigimos
+      return res.redirect('/api/auth/login');
+    }
+
+    // 2. Buscar datos del usuario (lean() es más rápido para solo lectura)
+    const user = await UserModel.findById(userId).lean();
+
+    if (!user) {
+      return res.status(404).send("Usuario no encontrado");
+    }
+
+    // 3. Renderizar la vista "src/views/users/edit-profile.hbs"
+    res.render("users/edit-profile", { 
+      user, 
+      title: "Editar Perfil" 
+    });
+
+  } catch (err) {
+    console.error("Error renderizando edit profile:", err);
+    res.status(500).send("Error del servidor al cargar perfil");
   }
 }
