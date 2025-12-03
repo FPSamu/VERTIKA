@@ -23,7 +23,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+      background: url('https://images.unsplash.com/photo-1676471049029-f93852da351d?q=80&w=1562&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center/cover no-repeat;
       opacity: 0.2;
       z-index: -1;
     }
@@ -37,6 +37,18 @@
       text-align: center;
     }
 
+    /* --- ESTILOS DEL LOGO --- */
+    .logo-wrapper {
+      margin-bottom: -20px; /* Espacio entre logo y título */
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-logo {
+      width: 200px; /* Tamaño controlado del logo */
+      height: auto;
+      display: block;
+    }
     h1 {
       margin-bottom: 30px;
       color: #2c3e50;
@@ -168,6 +180,11 @@
 </head>
 <body>
   <div class="container">
+
+    <div class="logo-wrapper">
+      <img src="https://imgur.com/2R9vMFY.png" alt="Vertika Logo" class="app-logo">
+    </div>
+
     <h1>Iniciar Sesión</h1>
     {{#if error}}
       <p class="error">{{error}}</p>
