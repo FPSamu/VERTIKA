@@ -367,6 +367,7 @@ GET /api/auth/verify-email/{token}
 - Abre este enlace desde el email recibido
 - Verifica la cuenta del usuario
 - Muestra una página de confirmación
+
 Correo de verificacion
 
 <img src="https://imgur.com/94jXLq3.png" alt="Verificacion" height="380">
