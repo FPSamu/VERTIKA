@@ -29,6 +29,8 @@
             
             // Guardamos el usuario
             localStorage.setItem('user', userJson);
+            //Guardamos cookie
+            document.cookie = `token=${accessToken}; path=/; max-age=86400`;
 
             console.log("Sesión guardada. Redirigiendo...");
 
