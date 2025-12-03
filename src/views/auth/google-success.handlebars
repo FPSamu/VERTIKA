@@ -33,7 +33,9 @@
             console.log("Sesión guardada. Redirigiendo...");
 
             // 3. Redirección
-            window.location.href = "/api"; 
+            setTimeout(() => {
+                window.location.href = "/api"; 
+            }, 1000); 
         } else {
             document.body.innerHTML = "<h3>Error: Datos de sesión incompletos.</h3><a href='/login'>Volver</a>";
         }
