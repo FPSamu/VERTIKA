@@ -30,7 +30,7 @@ export const getUserById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.render("users/profile", { user, title: `Perfil — ${user.name}`});
+    res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
 
   } catch (error) {
     console.error("Error en getUserById:", error);

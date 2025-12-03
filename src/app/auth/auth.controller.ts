@@ -194,7 +194,7 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
     if (!userId) {
       res.status(401).json({
         success: false,
-        message: 'No autorizado',
+        message: 'Profile: No autorizado',
       });
       return;
     }
@@ -204,17 +204,28 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
     if (!user) {
       res.status(404).json({
         success: false,
-        message: 'Usuario no encontrado',
+        message: 'Profile: Usuario no encontrado',
       });
       return;
     }
 
-    res.status(200).json({
-      success: true,
-      data: {
+     //Si el cliente solicita HTML (navegador normal), renderiza la vista
+     if (req.headers.accept?.includes("text/html")) {
+       return res.render("users/profile", {
         user,
-      },
-    });
+         title: `Perfil — ${user.name}`,
+      });
+     }
+
+     res.status(200).json({
+       success: true,
+       data: {
+        user,
+       },
+     });
+
+    //res.render("users/profile", { user, title: `Perfil — ${user.name}`});
+
   } catch (error: any) {
     console.error('Error en getProfile:', error);
     res.status(500).json({

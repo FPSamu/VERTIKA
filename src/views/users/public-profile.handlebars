@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{title}} | Vertika</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg: #f4f6f8;
+      --card: #fff;
+      --accent1: #667eea;
+      --accent2: #764ba2;
+      --muted: #777;
+      --glass: rgba(255,255,255,0.7);
+    }
+    /* Reset / base */
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Container / Header */
+    .container{max-width:980px;margin:36px auto;padding:0 18px}
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      background:var(--card);padding:14px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(14,18,36,0.04);
+      margin-bottom:18px;
+    }
+    .logo{display:flex;gap:12px;align-items:center;cursor:pointer}
+    .logo img{height:38px;width:auto}
+    .logo h1{font-size:18px;margin:0;color:var(--accent2);letter-spacing:0.2px}
+    header nav a{color:var(--accent1);text-decoration:none;font-weight:600}
+
+    /* Profile card */
+    .profile{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:28px;
+      background:var(--card);
+      border-radius:14px;
+      padding:22px;
+      box-shadow:0 12px 30px rgba(14,18,36,0.06);
+      align-items:start;
+    }
+
+    /* Avatar */
+    .avatar{
+      width:180px;height:180px;border-radius:14px;overflow:hidden;
+      border:4px solid white;box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      display:flex;align-items:center;justify-content:center;
+      position:relative;
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .avatar .badge-verified{
+      position:absolute;right:8px;bottom:8px;background:#fff;padding:6px 8px;border-radius:999px;font-weight:700;color:var(--accent2);font-size:12px;box-shadow:0 6px 14px rgba(0,0,0,0.06)
+    }
+
+    /* Main info */
+    .main-info h1{margin:0;font-size:22px}
+    .meta{margin-top:8px;color:var(--muted);font-size:14px}
+    .bio{margin-top:14px;color:#333;line-height:1.5}
+    .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .badge{font-size:12px;padding:6px 10px;border-radius:999px;background:#f1f5ff;color:#2e3bb8;font-weight:700}
+
+    .columns{display:flex;gap:18px;margin-top:18px}
+    .col{flex:1;background:#fafafb;padding:14px;border-radius:10px}
+    .stat{font-size:28px;font-weight:700;color:var(--accent1)}
+    .stat-label{color:var(--muted);font-size:12px;margin-top:6px}
+
+    .list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+    .list li{padding:10px;border-radius:8px;background:white;box-shadow:0 6px 12px rgba(12,16,30,0.03);display:flex;justify-content:space-between;align-items:center}
+
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* Responsive */
+    @media (max-width:860px){
+      .profile{grid-template-columns:1fr;text-align:center}
+      .avatar{width:160px;height:160px;margin:0 auto}
+      .columns{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo" onclick="window.location.href='/api'">
+        <img src="https://i.imgur.com/G39Rg8s.png" alt="Vertika">
+        <h1>Vertika</h1>
+      </div>
+      <nav><a href="/api" title="Volver">Volver al inicio</a></nav>
+    </header>
+
+    <section class="profile" role="region" aria-label="Perfil público">
+      <!-- AVATAR -->
+      <div class="avatar" aria-hidden="false">
+        <img
+          id="publicAvatar"
+          src="{{#if user.avatarUrl}}{{user.avatarUrl}}{{else}}/images/default-avatar.png{{/if}}"
+          alt="Avatar de {{user.name}}"
+          onerror="this.onerror=null; this.src='/images/default-avatar.png'; console.error('Avatar load failed:', this.src);"
+        />
+        {{#if user.verified}}
+          <div class="badge-verified">VERIFICADO</div>
+        {{/if}}
+      </div>
+
+      <!-- MAIN INFO -->
+      <div class="main-info" role="main">
+        <h1>{{user.name}}</h1>
+
+        <div class="meta">
+          {{#if user.roles}}
+            {{#each user.roles}}
+              <strong style="text-transform:capitalize">{{this}}</strong>{{#unless @last}}, {{/unless}}
+            {{/each}}
+            •
+          {{/if}}
+          Miembro desde <strong id="memberSince">{{user.createdAt}}</strong>
+        </div>
+
+        {{#if user.bio}}
+          <p class="bio">{{user.bio}}</p>
+        {{/if}}
+
+        <div class="badges" aria-hidden="false">
+          {{#if user.languages}}
+            {{#each user.languages}}<span class="badge">{{this}}</span>{{/each}}
+          {{/if}}
+          {{#if user.specialties}}
+            {{#each user.specialties}}<span class="badge">{{this}}</span>{{/each}}
+          {{/if}}
+        </div>
+
+        <div class="columns" style="margin-top:18px;">
+          <div class="col">
+            <div class="stat">{{#if user.rating}}{{user.rating}}{{else}}—{{/if}}</div>
+            <div class="stat-label">Calificación</div>
+
+            <hr style="margin:12px 0;border:none;border-top:1px solid #eee" />
+
+            <strong>Experiencias publicadas</strong>
+            <ul class="list" id="experiencesList">
+              {{#if user.experiences}}
+                {{#each user.experiences}}
+                  <li>
+                    <div style="text-align:left">
+                      <div style="font-weight:700">{{this.title}}</div>
+                      <div style="font-size:12px;color:var(--muted)">{{this.activity}} • {{this.date}}</div>
+                    </div>
+                    <div style="color:var(--muted)">{{this.maxGroupSize}}p</div>
+                  </li>
+                {{/each}}
+              {{else}}
+                <li style="text-align:center;color:var(--muted)">No hay experiencias públicas</li>
+              {{/if}}
+            </ul>
+          </div>
+
+          <div class="col">
+            <strong>Reseñas recientes</strong>
+            <ul class="list">
+              {{#if user.reviews}}
+                {{#each user.reviews}}
+                  <li>
+                    <div style="text-align:left">
+                      <div style="font-weight:700">{{this.authorName}}</div>
+                      <div style="font-size:12px;color:var(--muted)">{{this.comment}}</div>
+                    </div>
+                    <div style="text-align:right;color:var(--muted)">{{this.rating}}★</div>
+                  </li>
+                {{/each}}
+              {{else}}
+                <li style="text-align:center;color:var(--muted)">Sin reseñas</li>
+              {{/if}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer><small>Vertika — Plataforma de experiencias al aire libre</small></footer>
+  </div>
+
+  <script>
+    (function () {
+      // formatea fecha
+      const memberEl = document.getElementById('memberSince');
+      if (memberEl && memberEl.innerText) {
+        const d = new Date(memberEl.innerText);
+        if (!isNaN(d)) memberEl.innerText = d.toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
+      }
+
+      // debug imagen
+      const img = document.getElementById('publicAvatar');
+      img.addEventListener('error', () => {
+        console.error('Avatar no cargó:', img.src);
+        img.src = '/images/default-avatar.png';
+      });
+    })();
+  </script>
+</body>
+</html>

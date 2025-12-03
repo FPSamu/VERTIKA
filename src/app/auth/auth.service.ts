@@ -271,6 +271,8 @@ class AuthService {
       roles: user.roles,
       emailVerified: user.emailVerified,
       dateOfBirth: user.dateOfBirth,
+      avatarUrl: user.avatarUrl ?? null,
+      avatarKey: user.avatarKey ?? null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
