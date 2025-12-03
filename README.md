@@ -269,9 +269,11 @@ if (bell) {
 ```
 
 Reservar experiencia
+
 <img src="https://imgur.com/hXzy4NV.png" alt="Perfil" height="380">
 
 Campana de notificaciones
+
 <img src="https://imgur.com/u8tG52o.png" alt="Perfil" height="380">
 
 Cancelar reservación
@@ -365,6 +367,14 @@ GET /api/auth/verify-email/{token}
 - Abre este enlace desde el email recibido
 - Verifica la cuenta del usuario
 - Muestra una página de confirmación
+Correo de verificacion
+
+<img src="https://imgur.com/94jXLq3.png" alt="Verificacion" height="380">
+
+Email Verificado / Bienvenida formal
+
+<img src="https://imgur.com/mk8sKHE.png" alt="Verificado" height="380">
+
 
 **Iniciar sesión**
 
@@ -388,6 +398,11 @@ Authorization: Bearer {accessToken}
 - Requiere email verificado
 - Agrega el rol "guide" al usuario
 - Envía email de confirmación
+
+Email Guia
+
+<img src="https://imgur.com/sxpfyEQ.png" alt="GuiaVerificado" height="380">
+
 
 **Obtener perfil**
 
@@ -431,11 +446,12 @@ Content-Type: application/json
 
 Pantalla de solicitud de recuperación
 
-<img src="https://imgur.com/a/odB1OCj" alt="Olvide mi contraseña" height="380">
+<img src="https://imgur.com/VshAocP.png" alt="Olvide mi contraseña" height="380">
 
 Correo electrónico de recuperación
 
-<img src="https://imgur.com/a/nroz7kB" alt="Email de recuperación" height="380">
+<img src="https://imgur.com/nCJMfOa.png" alt="Email de recuperación" height="380">
+
 
 **Restablecer contraseña**
 
@@ -686,7 +702,7 @@ Los tests cubren:
 - ✅ Validación de datos de entrada
 - ✅ Manejo de errores HTTP (404, 401, 400, 403)
 
-> 📖 **Documentación completa**: Ver [TESTING_QUICK_START.md](./TESTING_QUICK_START.md) y [test/README.md](./test/README.md)
+> 📖 **Documentación completa**: Ver [test/README.md](./test/README.md)
 
 ## 🚧 Estado del Proyecto
 
