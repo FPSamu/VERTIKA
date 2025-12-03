@@ -116,6 +116,54 @@
       color: #5a67d8;
       text-decoration: underline;
     }
+    /* --- ESTILOS NUEVOS PARA GOOGLE --- */
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .divider::before { margin-right: 10px; }
+    .divider::after { margin-left: 10px; }
+
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 12px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #444;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+    }
+
+    .google-btn:hover {
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      border-color: #ccc;
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+    }
   </style>
 </head>
 <body>
@@ -132,6 +180,12 @@
       </div>
       <button type="submit">Entrar</button>
     </form>
+    <div class="divider">O continúa con</div>
+
+    <a href="/api/auth/google" class="google-btn">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="google-icon">
+      Google
+    </a>
     <div class="signup">
       ¿No tienes cuenta? <a href="/api/auth/register">Regístrate aquí</a>
     </div>

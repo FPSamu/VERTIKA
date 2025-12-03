@@ -2,6 +2,8 @@ import { Router } from 'express';
 import * as authController from './auth.controller';
 import { registerValidators, loginValidators, refreshTokenValidators, forgotPasswordValidators, resetPasswordValidators } from './auth.validators';
 import { authMiddleware } from '../middlewares/auth';
+import passport from 'passport';
+import * as googleController from './google/google.controller';
 
 const router = Router();
 
@@ -294,5 +296,41 @@ router.get('/reset-password/:token', authController.showResetPasswordPage);
  *         description: Token inválido o expirado
  */
 router.post('/reset-password/:token', resetPasswordValidators, authController.resetPassword);
+
+
+// ==========================================
+// RUTAS DE GOOGLE (NUEVAS)
+// ==========================================
+
+/**
+ * @swagger
+ * /api/auth/google:
+ * get:
+ * summary: Iniciar autenticación con Google
+ * tags: [Authentication]
+ */
+router.get('/google', passport.authenticate('google', { 
+    scope: ['profile', 'email'],
+    session: false 
+}));
+
+/**
+ * @swagger
+ * /api/auth/google/callback:
+ * get:
+ * summary: Callback de Google
+ * tags: [Authentication]
+ * description: Google redirige aquí tras el login. El servidor procesa y redirige al frontend.
+ */
+router.get('/google/callback', 
+    passport.authenticate('google', { 
+        session: false,
+        failureRedirect: '/login' 
+    }), 
+    googleController.googleCallback
+);
+
+
+
 
 export default router;

@@ -3,9 +3,11 @@ import { Schema, model, Document, Types } from "mongoose";
 import { UserType } from "../varTypes"; // ajusta la ruta si es necesario
 
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password?: string;
+  googleId?: string;
   avatarUrl?: string;
   avatarKey?: string;
   roles: UserType[]; // o string[] si no usas UserType
@@ -24,6 +26,7 @@ const UserSchema = new Schema<IUser>({
   name: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String }, // hashea la contraseña en el servicio de auth
+  googleId: { type: String, unique: true, sparse: true }, //GoogleId
   avatarUrl: { type: String, default: null },
   avatarKey: { type: String, default: null },
   roles: { type: [String], default: ["customer"] }, // valida contra UserType en la lógica si quieres

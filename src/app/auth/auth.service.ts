@@ -236,7 +236,7 @@ class AuthService {
   /**
    * Genera access token y refresh token
    */
-  private generateTokens(payload: TokenPayload): AuthTokens {
+  public generateTokens(payload: TokenPayload): AuthTokens {
     const accessToken = jwt.sign(
       payload,
       process.env.JWT_SECRET!,

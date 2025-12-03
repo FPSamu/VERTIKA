@@ -4,16 +4,16 @@ import mongoose from "mongoose";
 import Guide from "../guides/guide.model";
 
 // Extendemos Request para tener tipado del user del authMiddleware
-interface AuthRequestWithUser extends Request {
-  user?: {
-    userId: string;
-    roles: string[];
-    emailVerified: boolean;
-  };
-}
+// interface AuthRequestWithUser extends Request {
+//   user?: {
+//     userId: string;
+//     roles: string[];
+//     emailVerified: boolean;
+//   };
+// }
 
 export async function guideVerificationMiddleware(
-  req: AuthRequestWithUser,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirigiendo...</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; }
+        .loader { text-align: center; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <h2>¡Autenticación Exitosa! 🚀</h2>
+        <p>Guardando sesión...</p>
+    </div>
+
+    <script>
+        // 1. Recibimos los datos del servidor
+        const accessToken = "{{accessToken}}";
+        const refreshToken = "{{refreshToken}}";
+        
+        // IMPORTANTE: Aquí abajo usamos triple llave para que imprima el JSON tal cual
+        const userJson = '{{{user}}}'; 
+
+        if (accessToken && refreshToken) {
+            // 2. Guardamos TODO en LocalStorage
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            
+            // Guardamos el usuario
+            localStorage.setItem('user', userJson);
+
+            console.log("Sesión guardada. Redirigiendo...");
+
+            // 3. Redirección
+            window.location.href = "/api"; 
+        } else {
+            document.body.innerHTML = "<h3>Error: Datos de sesión incompletos.</h3><a href='/login'>Volver</a>";
+        }
+    </script>
+</body>
+</html>

@@ -49,7 +49,7 @@ router.get("/", authMiddleware, getUsers);
  *       404:
  *         description: Usuario no encontrado
  */
-router.get("/:id", authMiddleware, getUserById);
+router.get("/:id", getUserById);
 
 
 /**

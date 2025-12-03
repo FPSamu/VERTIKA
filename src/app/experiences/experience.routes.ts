@@ -239,7 +239,7 @@ router.patch("/:id/publish", authMiddleware,guideVerificationMiddleware ,publish
  *       201:
  *         description: Nueva experiencia clonada en estado draft
  */
-router.post("/:id/republish", authMiddleware,guideVerificationMiddleware ,republishExperience);
+router.post("/:id/republish", authMiddleware, guideVerificationMiddleware,republishExperience);
 
 /**
  * @swagger

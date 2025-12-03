@@ -7,7 +7,7 @@ import swaggerJsDoc from 'swagger-jsdoc'
 import { setup, serve} from  'swagger-ui-express'
 import swaggerOptions  from './../swagger.config';
 import dbConnect from './database/index'
-
+import { initGoogleStrategy } from './app/auth/google/google.strategy';
 //Http
 import { Server } from 'http';
 //Socket
@@ -16,6 +16,9 @@ import { initSocket } from './socket';
 import routes from './app/routes'
 
 import { engine } from 'express-handlebars';
+
+//Passport
+import passport from 'passport';
 
 
 const port = process.env.PORT || 3000;
@@ -36,8 +39,15 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/static', static_(path.join(__dirname, '..','public')));
 
+
 // Rutas principales
 app.use('/api', routes);
+
+//Google passport
+app.use(passport.initialize());
+console.log("🔵 1. Inicializando Middleware de Passport...");
+initGoogleStrategy(app);
+console.log("🔵 Estrategias cargadas:", (passport as any)._strategies);
 
 app.get('', (req, res)=> {
     res.send("Api funciona")
