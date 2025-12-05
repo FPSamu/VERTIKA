@@ -2,32 +2,90 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Experience from "../experiences/experience.model";
 import Guide from "../guides/guide.model";
+import { StatusType } from '../varTypes';
 
 /* GET /experiences */
 export async function listExperiences(req: Request, res: Response) {
   try {
-    const search = req.query.search?.toString().trim() || "";
+    // 1. Extraer parámetros del Query String
+    const { 
+        search, 
+        startDate, 
+        endDate, 
+        minPrice, 
+        maxPrice, 
+        people, 
+        activity 
+    } = req.query;
 
-    let filter = {};
+    // 2. Filtros Base (Obligatorios)
+    // - Status: Publicado
+    // - Booked: No llena (false)
+    // - Date: Futuras (por defecto hoy en adelante, a menos que especifiquen fecha)
+    const filter: any = {
+      status: StatusType.PUBLISHED,
+      booked: false,
+    };
 
-    if (search !== "") {
-      const regex = new RegExp(search, "i"); // i = case insensitive
-      filter = {
-        $or: [
-          { title: regex },
-          { description: regex },
-          { location: regex },
-          { activity: regex }
-        ]
-      };
+    // 3. Lógica de Fechas
+    if (startDate || endDate) {
+      filter.date = {};
+      // Si hay fecha inicio, buscamos desde esa fecha. Si no, desde "ahora".
+      if (startDate) {
+        filter.date.$gte = new Date(startDate as string);
+      } else {
+        filter.date.$gte = new Date(); 
+      }
+      
+      // Si hay fecha fin
+      if (endDate) {
+        filter.date.$lte = new Date(endDate as string);
+      }
+    } else {
+      // Si no filtran por fecha, por defecto mostrar solo futuras
+      filter.date = { $gte: new Date() };
     }
 
-    const experiences = await Experience.find(filter);
+    // 4. Filtro de Búsqueda de Texto (Tu regex anterior)
+    if (search) {
+      const cleanSearch = (search as string).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(cleanSearch, "i");
+      
+      filter.$or = [
+        { title: regex },
+        { description: regex },
+        { location: regex }
+      ];
+    }
+
+    // 5. Filtro por Actividad (Dropdown)
+    if (activity && activity !== "") {
+      filter.activity = activity;
+    }
+
+    // 6. Filtro por Personas (Capacidad)
+    // Buscamos experiencias donde el cupo máximo sea >= a las personas que van
+    if (people) {
+      filter.maxGroupSize = { $gte: Number(people) };
+    }
+
+    // 7. Filtro por Precio (Rango)
+    if (minPrice || maxPrice) {
+      filter.pricePerPerson = {};
+      if (minPrice) filter.pricePerPerson.$gte = Number(minPrice);
+      if (maxPrice) filter.pricePerPerson.$lte = Number(maxPrice);
+    }
+
+    // 8. Ejecución
+    const experiences = await Experience.find(filter)
+                                      .sort({ date: 1 }) // Ordenar por fecha más próxima
+                                      .populate('guideId', 'name avatarUrl rating');
 
     res.json(experiences);
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error al listar experiencias" });
+    console.error("Error filtrando experiencias:", err);
+    res.status(500).json({ error: "Error al buscar experiencias" });
   }
 }
 

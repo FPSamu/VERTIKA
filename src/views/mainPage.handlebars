@@ -159,47 +159,105 @@
       padding: 0 20px;
     }
 
-    .experiences {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
+    /*Experiencias card*/
+    /* Grid para las tarjetas */
+#experiencesContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 20px 0;
+}
 
-    .experience-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-    }
+/* Tarjeta */
+.experience-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
 
-    .experience-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-    }
+.experience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+}
 
-    .experience-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
+/* Imagen */
+.card-image-wrapper {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
 
-    .experience-card .content {
-      padding: 15px;
-    }
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    .experience-card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #2c3e50;
-    }
+.card-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
 
-    .experience-card p {
-      margin: 0;
-      font-size: 14px;
-      color: #555;
-    }
+/* Contenido */
+.content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.content h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.location {
+    color: #777;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.date {
+    color: #555;
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.price-row {
+    margin-top: auto; /* Empuja el precio al fondo */
+    padding-top: 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price strong {
+    font-size: 1.1rem;
+    color: #222;
+}
+/*Experiencias*/
+
+
 
     @media (max-width: 768px) {
       .search-container input {
@@ -1075,7 +1133,13 @@
 .notif-icon {
   position: relative; /* necesario para la bolita */
   display: inline-block;
+  font-size: 1.2rem;
 }
+.notif-icon:hover {
+  font-size: 1.25rem;
+  color: #706f6f;
+}
+
 .notif-badge {
   position: absolute;
   top: 0px;
@@ -1105,6 +1169,274 @@
   font-weight: 600;
   background-color: #f9f9f9;
 }
+
+/* Contenedor del usuario (Texto + Avatar) */
+.user-menu-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative; /* Necesario para el dropdown */
+    padding: 5px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.user-menu-container:hover {
+    background-color: #f0f0f0;
+}
+
+/* Texto "Hola, Nombre" */
+.user-greeting {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+/* Avatar Imagen */
+.nav-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0px solid #ddd;
+}
+
+/* Menú Dropdown */
+.dropdown-menu {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 100%; /* Justo debajo del contenedor */
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Separador en el menú */
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 4px 0;
+}
+/* Estilo específico para el botón de Cerrar Sesión */
+#dropdownLogout {
+    background-color: #e74c3c; /* Rojo */
+    color: white !important;   /* Texto Blanco */
+    font-weight: 600;
+    margin-top: 5px;           /* Un poco de separación arriba */
+}
+
+/* Efecto al pasar el mouse (Rojo más oscuro) */
+#dropdownLogout:hover {
+    background-color: #c0392b; 
+    color: white;
+}
+
+/*Barra busqueda*/
+.form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+  /* Contenedor principal para centrar */
+.search-bar-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+}
+
+/* La barra en sí (La "píldora") */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 50px; /* Bordes muy redondos */
+  padding: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1); /* Sombra suave */
+  border: 1px solid #e0e0e0;
+  max-width: 900px;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-bar:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+}
+
+/* Cada sección de input */
+.search-field {
+  flex: 1;
+  padding: 5px 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 30px;
+  transition: background 0.2s;
+}
+
+.search-field:hover {
+  background-color: #f7f7f7; /* Efecto hover sutil en cada campo */
+}
+
+/* Campo pequeño para personas */
+.search-field.small-field {
+  flex: 0.6; 
+}
+
+/* Divisores verticales */
+.divider {
+  width: 1px;
+  height: 30px;
+  background-color: #ddd;
+  margin: 0 5px;
+}
+
+/* Etiquetas e Iconos */
+.label-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.label-icon i {
+  font-size: 0.8rem;
+  color: var(--accent1, #667eea); /* Usa tu color de acento */
+}
+
+.label-icon label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #333;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs y Selects limpios */
+.search-bar input, 
+.search-bar select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #555;
+  padding: 0;
+  outline: none; /* Quita el borde azul al hacer click */
+  font-family: inherit;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.search-bar input::placeholder {
+  color: #aaa;
+}
+
+/* Botón de Buscar */
+.search-btn {
+  background: linear-gradient(135deg, var(--accent1, #667eea), var(--accent2, #764ba2));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0; /* Evita que se aplaste */
+}
+
+.search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive: En móviles se apilan */
+@media (max-width: 850px) {
+  .search-bar {
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .divider { display: none; }
+  
+  .search-field {
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .search-btn {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
+/* Botón de Borrar Filtros */
+.clear-btn {
+  background: #f0f2f5;
+  color: #777;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Círculo perfecto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px; /* Separación del input anterior */
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.clear-btn:hover {
+  background: #ffebee; /* Rojo muy suave de fondo */
+  color: #e74c3c;      /* Icono rojo */
+  transform: rotate(-15deg); /* Pequeña animación divertida */
+}
+
+/* Ajuste Responsive */
+@media (max-width: 850px) {
+  .clear-btn {
+    width: 100%;
+    border-radius: 8px; /* En móvil se hace rectangular */
+    margin-left: 0;
+    margin-top: 5px;
+    background: #fff0f0;
+    color: #e74c3c;
+  }
+}
   </style>
 </head>
 
@@ -1133,9 +1465,65 @@
   <section class="hero">
     <h2>Explora Experiencias en la Montaña</h2>
     <p>Encuentra, comparte y disfruta aventuras únicas.</p>
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Buscar experiencia...">
+    <div class="search-bar-wrapper">
+      <div class="search-bar">
+        
+        <div class="search-field">
+          <div class="label-icon">
+            <i class="fa-solid fa-location-dot"></i>
+            <label for="searchInput">Destino</label>
+          </div>
+          <input type="text" id="searchInput" placeholder="¿A dónde vas?">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="search-field">
+          <div class="label-icon">
+            <i class="fa-regular fa-calendar"></i>
+            <label for="dateInput">Fecha</label>
+          </div>
+          <input type="date" id="dateInput">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="search-field small-field">
+          <div class="label-icon">
+            <i class="fa-solid fa-user-group"></i>
+            <label for="peopleInput">Personas</label>
+          </div>
+          <input type="number" id="peopleInput" min="1" placeholder="1">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="search-field">
+          <div class="label-icon">
+            <i class="fa-solid fa-person-hiking"></i>
+            <label for="activityInput">Actividad</label>
+          </div>
+          <select id="activityInput">
+              <option value="">Cualquiera</option>
+              <option value="Alpinismo">Alpinismo</option>
+              <option value="Senderismo">Senderismo</option>
+              <option value="Escalada">Escalada</option>
+          </select>
+        </div>
+
+        <button id="btnClear" class="clear-btn" title="Borrar filtros">
+        <i class="fa-solid fa-eraser"></i>
+    </button>
+
+
+        <button id="btnSearch" class="search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span class="btn-text">Buscar</span>
+        </button>
+
+      </div>
     </div>
+
   </section>
 
   <main>
@@ -1478,6 +1866,90 @@
           navExperiences.style.display = 'none';
           navRequestGuide.style.display = 'block';
         }
+        //Foto
+        // 1. Intentamos usar la del localStorage primero
+        let avatarSrc = user.avatarUrl || 'https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg';
+
+        // 2. Si no viene en localStorage, la pedimos al backend "en caliente"
+        if (!user.avatarUrl) {
+            try {
+                // Asumo que tienes una ruta para ver datos de usuario por ID
+                const res = await fetch(`/api/users/${user._id}`); // O /api/auth/profile
+                if (res.ok) {
+                    const userData = await res.json();
+                    if (userData.avatarUrl) {
+                        avatarSrc = userData.avatarUrl;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // Creamos la estructura HTML con Template String
+        const userMenuHTML = `
+            <div class="notif-icon" id="notifIcon" style="cursor:pointer; position: relative; margin-right: 15px;">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+
+            <div class="user-menu-container" id="userMenuTrigger">
+                <span class="user-greeting">Hola, ${user.name}</span>
+                <img src="${avatarSrc}" alt="Avatar" class="nav-avatar" onerror="this.src='https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg'">
+                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: #777; margin-left:5px;"></i>
+
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="/api/auth/profile"> Mi Perfil</a>
+                    
+                    <a href="#" id="dropdownGuideLink" style="display:none; color: #667eea; font-weight: 600;">
+                         Mi Perfil de Guía
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="#" id="dropdownLogout"> Cerrar Sesión</a>
+                </div>
+            </div>
+        `;
+
+        // Inyectamos el HTML
+        userActions.innerHTML = userMenuHTML;
+        userActions.style.display = 'flex'; // Aseguramos que se vea
+
+          // 4. LÓGICA DEL DROPDOWN (Abrir/Cerrar)
+        const trigger = document.getElementById('userMenuTrigger');
+        const dropdown = document.getElementById('userDropdown');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar cerrar inmediatamente
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', () => {
+            dropdown.style.display = 'none';
+        });
+
+
+            // 5. LÓGICA ESPECÍFICA DE GUÍA (Buscar ID y actualizar link)
+          if (isGuide) {
+              try {
+                  // Hacemos fetch para obtener el ID del perfil de guía asociado a este usuario
+                  const res = await fetch(`/api/guides/by-user/${user._id}`);
+                  if (res.ok) {
+                      const data = await res.json();
+                      const guideLink = document.getElementById('dropdownGuideLink');
+                      
+                      if (data.guideId && guideLink) {
+                          // Actualizamos el HREF y mostramos el enlace
+                          guideLink.href = `/api/guides/profile/${data.guideId}`; 
+                          // O si prefieres ir a editar: `/api/guides/edit/${data.guideId}`
+                          guideLink.style.display = 'block';
+                      }
+                  }
+              } catch (err) {
+                  console.error("Error buscando ID de guía:", err);
+              }
+          }
+
+
         // Event listeners para navegación
         navReservations.addEventListener('click', (e) => {
           e.preventDefault();
@@ -1496,6 +1968,26 @@
           modal.style.display = 'block';
         });
 
+
+        //Logout
+        document.getElementById('dropdownLogout').addEventListener('click', async () => {
+          const token = localStorage.getItem('accessToken');
+          if (token) {
+            try {
+              await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          }
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('user');
+          document.cookie = "token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          window.location.href = '/api'; // redirige a landing page
+        });
+
             // 4. VERIFICACIÓN INICIAL DE NOTIFICACIONES (Ahora sí funcionará)
           try {
               // Usamos la variable 'token' que declaramos arriba
@@ -1510,15 +2002,6 @@
                   const notifications = await response.json();
                   // Si hay alguna sin leer (read: false), encendemos la luz
                   const hasUnread = notifications.some(n => !n.read);
-                  
-                  // Acciones de usuario (Renderizamos el icono primero para poder ponerle el badge)
-                  userActions.innerHTML = `
-                    <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
-                      <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
-                    <button class="logout" id="logoutBtn">Cerrar Sesión</button>
-                  `;
 
                   // Ahora que el icono existe en el HTML, le ponemos el badge si hace falta
                   if (hasUnread) {
@@ -1527,14 +2010,6 @@
               }
           } catch (err) {
             console.error("Error verificando notificaciones iniciales:", err);
-            // Renderizar acciones de usuario aunque falle la notificación
-            userActions.innerHTML = `
-                <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
-                  <i class="fa-solid fa-bell"></i>
-                </div>
-                <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
-                <button class="logout" id="logoutBtn">Cerrar Sesión</button>
-              `;
           }
           //Socket
           // Configurar socket **después** de crear HTML
@@ -1610,32 +2085,147 @@
                 console.error(err);
             }
           });
-        
-        // Redirigir al perfil al hacer click en el nombre
-        document.getElementById('userName').addEventListener('click', async (e) => {
-           window.location.href = '/api/auth/profile'; 
-        });
-
-        //Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-          const token = localStorage.getItem('accessToken');
-          if (token) {
-            try {
-              await fetch('/api/auth/logout', {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + token }
-              });
-            } catch (err) {
-              console.error(err);
-            }
-          }
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('user');
-          document.cookie = "token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          window.location.href = '/api'; // redirige a landing page
-        });
       
     });
+
+    //Buscador
+        // Referencias
+          const searchInput = document.getElementById('searchInput');
+          const dateInput = document.getElementById('dateInput');
+          const peopleInput = document.getElementById('peopleInput');
+          const activityInput = document.getElementById('activityInput');
+          const btnSearch = document.getElementById('btnSearch');
+
+          // Función principal de búsqueda
+          const performSearch = () => {
+            const filters = {
+                search: searchInput?.value.trim(),
+                date: dateInput?.value,
+                people: peopleInput?.value,
+                activity: activityInput?.value
+            };
+            fetchExperiences(filters);
+        };
+
+          // Listeners: Buscar cuando el usuario interactúe
+          // Debounce para el texto (esperar a que termine de escribir)
+          let debounceTimer;
+          if(searchInput) {
+              searchInput.addEventListener('input', () => {
+                  clearTimeout(debounceTimer);
+                  debounceTimer = setTimeout(performSearch, 400); 
+              });
+          }
+
+          // Búsqueda inmediata al cambiar fecha, actividad o personas
+          if(dateInput) dateInput.addEventListener('change', performSearch);
+          if(activityInput) activityInput.addEventListener('change', performSearch);
+          if(peopleInput) peopleInput.addEventListener('change', performSearch);
+
+          // Carga inicial (sin filtros)
+          performSearch();
+
+          // Referencia al botón
+          const btnClear = document.getElementById('btnClear');
+
+          // Listener para borrar
+          if (btnClear) {
+              btnClear.addEventListener('click', () => {
+                  // 1. Resetear valores de los inputs
+                  if(searchInput) searchInput.value = '';
+                  if(dateInput) dateInput.value = '';
+                  if(peopleInput) peopleInput.value = '';
+                  if(activityInput) activityInput.value = ''; // Vuelve a la opción por defecto
+
+                  // 2. Ejecutar la búsqueda de nuevo (sin filtros)
+                  // Esto recargará todas las experiencias originales
+                  if (typeof performSearch === 'function') {
+                      performSearch();
+                  }
+              });
+          }
+
+    //Cargar experiencias
+    async function fetchExperiences(filters = {}) {
+          try {
+            // 1. Construir los parámetros URL dinámicamente
+            const params = new URLSearchParams();
+            
+            // Solo agregamos al URL lo que tenga valor
+            if (filters.search) params.append('search', filters.search);
+            if (filters.date) params.append('startDate', filters.date); // Coincide con backend
+            if (filters.people) params.append('people', filters.people);
+            if (filters.activity) params.append('activity', filters.activity);
+
+            // 2. Fetch al backend
+            const res = await fetch(`/api/experiences?${params.toString()}`);
+            
+            if (!res.ok) throw new Error('Error en la petición');
+
+            const data = await res.json();
+            const container = document.getElementById('experiencesContainer');
+            container.innerHTML = ''; // Limpiar contenedor
+
+            // 3. Manejo de "Sin Resultados"
+            if (!data.length) {
+              container.innerHTML = `
+                <div style="text-align:center; width:100%; grid-column: 1 / -1; padding: 40px;">
+                    <h3> No encontramos resultados</h3>
+                    <p>Intenta cambiar las fechas o quitar algunos filtros.</p>
+                </div>
+              `;
+              return;
+            }
+
+            // 4. Renderizar Tarjetas
+            data.forEach(exp => {
+              const card = document.createElement('div');
+              card.className = 'experience-card';
+              
+              // Imagen por defecto si no hay
+              const imageUrl = exp.photos && exp.photos.length > 0 ? exp.photos[0] : 'https://via.placeholder.com/280x180';
+              
+              // Formato de Fecha (ej: 25 Dic)
+              const dateObj = new Date(exp.date);
+              const dateStr = dateObj.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+
+              // HTML estilo Airbnb
+              card.innerHTML = `
+                <div class="card-image-wrapper">
+                    <img src="${imageUrl}" alt="${exp.title}">
+                    <span class="card-badge">${exp.activity}</span>
+                </div>
+                <div class="content">
+                  <div class="card-header">
+                    <h3>${exp.title}</h3>
+                  </div>
+                  <p class="location">${exp.location}</p>
+                  <p class="date">${dateStr}</p>
+                  <div class="price-row">
+                    <span class="price"><strong>$${exp.pricePerPerson}</strong> <small>${exp.currency}</small></span>
+                    <span class="per-person">por persona</span>
+                  </div>
+                </div>
+              `;
+
+              
+
+              card.addEventListener('click', () => {
+                if(typeof openExperienceModal === 'function') openExperienceModal(exp._id);
+              });
+            
+
+              container.appendChild(card);
+            });
+          } catch (err) {
+            console.error("Error cargando experiencias:", err);
+          }
+        }
+
+
+
+
+
 
 
     // Lógica del Modal
@@ -1896,49 +2486,11 @@
       }
     });
 
-    // Carga de experiencias
-    async function fetchExperiences(query = '') {
-      try {
-        const res = await fetch(`/api/experiences?search=${encodeURIComponent(query)}`);
-        const data = await res.json();
-
-        const container = document.getElementById('experiencesContainer');
-        container.innerHTML = '';
-
-        if (!data.length) {
-          container.innerHTML = '<p>No se encontraron experiencias</p>';
-          return;
-        }
-
-        data.forEach(exp => {
-          const card = document.createElement('div');
-          card.className = 'experience-card';
-          const imageUrl = exp.photos && exp.photos.length > 0 ? exp.photos[0] : 'https://via.placeholder.com/280x180';
-          card.innerHTML = `
-            <img src="${imageUrl}" alt="${exp.title}">
-            <div class="content">
-              <h3>${exp.title}</h3>
-              <p>${exp.description || ''}</p>
-            </div>
-          `;
-
-          // Abrir modal al hacer click
-          card.addEventListener('click', () => {
-            openExperienceModal(exp._id);
-          });
-
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
 
     //Buscador experiencias
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        fetchExperiences(e.target.value);
-      });
+    //document.getElementById('searchInput').addEventListener('input', (e) => {
+        //fetchExperiences(e.target.value);
+      //});
 
     // Abrir modal de detalle de experiencia
     async function openExperienceModal(experienceId) {
@@ -2352,8 +2904,6 @@
       return stars;
     }
 
-
-    fetchExperiences();
   </script>
 </body>
 
