@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Guide from "../guides/guide.model";
+import userModel from "../users/user.model";
+import Experience from '../experiences/experience.model';
+import Review from '../reviews/review.model';
+
 
 /* GET /guides */
 export async function listGuides(req: Request, res: Response) {
@@ -36,31 +40,103 @@ export async function listGuides(req: Request, res: Response) {
 /* GET /guides/:id */
 export async function getGuideById(req: Request, res: Response) {
   try {
-    const guide = await Guide.findById(req.params.guideId);
-    if (!guide) return res.status(404).json({ error: "Guía no encontrada" });
-
-    if (!mongoose.connection.db) {
-      return res.status(500).json({ error: "Base de datos no conectada" });
+    const { id } = req.params;
+    
+    // 2. Buscas la guía
+    const guide = await Guide.findById(id).lean();
+    
+    if (!guide) {
+        return res.status(404).json({ error: "Guía no encontrada" });
     }
 
-    const user = await mongoose.connection.db
-      .collection("users")
-      .findOne(
-        { _id: new mongoose.Types.ObjectId(guide.userId) },
-        { projection: { name: 1, email: 1 } }
-      );
+    console.log("1. ID de guía encontrado:", guide._id);
+    console.log("2. ID de usuario a buscar:", guide.userId);
 
+    const user = await userModel.findById(guide.userId).select('name email avatarUrl').lean();
+
+    console.log("3. Resultado de búsqueda de usuario:", user); // ¿Sigue siendo null aquí?
+
+    // 4. Armas la respuesta
     const guideWithUser = {
-      ...guide.toObject(),
-      user: user ? { name: user.name, email: user.email } : null
+      ...guide,
+      user: user || null 
     };
 
     res.json(guideWithUser);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener guía" });
   }
 }
+
+/* GET /guides/profile/:guideId */
+export async function getGuidePublicProfile(req: Request, res: Response) {
+  try {
+    const { guideId } = req.params;
+
+    console.log("1. 🚀 Iniciando carga de datos para:", guideId);
+
+    // 1. Ejecutamos las consultas principales en paralelo (SIN POPULATE en Guide)
+    const [guideRaw, experiences, reviewsRaw] = await Promise.all([
+      // Buscamos la guía "pelona" (sin datos de usuario aún)
+      Guide.findById(guideId).lean(),
+
+      // Buscamos experiencias
+      Experience.find({ guideId: guideId, status: 'published' })
+                .sort({ date: 1 })
+                .lean(),
+
+      // Buscamos reviews (aquí sí dejamos el populate porque suele funcionar bien en reviews, 
+      // pero abajo normalizamos el nombre del campo)
+      Review.find({ guideId: guideId })
+            .populate('userId', 'name avatarUrl')
+            .sort({ createdAt: -1 })
+            .lean()
+    ]);
+
+    // Validación básica
+    if (!guideRaw) {
+        return res.status(404).render('error', { message: "Guía no encontrado" });
+    }
+
+    // 2. Buscamos MANUALMENTE al usuario dueño del perfil de guía
+    // (Esto es lo que evita el StrictPopulateError)
+    const guideUser = await userModel.findById(guideRaw.userId)
+                                     .select('name email avatarUrl')
+                                     .lean();
+
+    // 3. Armamos el objeto final del guía combinando los datos
+    const guideWithUser = {
+      ...guideRaw,
+      user: guideUser || null // Si no encuentra usuario, pone null en vez de romper
+    };
+
+    console.log("2. ✅ Guía armado con usuario:", guideWithUser);
+   
+
+
+    // 4. Preparamos las reviews para que tengan la misma estructura 
+    // (Movemos la info de 'userId' a 'user' para que tu Handlebars sea consistente)
+    const formattedReviews = reviewsRaw.map((r: any) => ({
+        ...r,
+        user: r.userId || null 
+    }));
+
+    // 5. Renderizamos
+    res.render('guides/guide-profile', {
+      layout: false,
+      guide: guideWithUser, // Pasamos el objeto manual
+      experiences,
+      reviews: formattedReviews
+    });
+
+  } catch (err) {
+    console.error("❌ Error en getGuidePublicProfile:", err);
+    res.status(500).send("Error interno del servidor");
+  }
+}
+
 
 /*POST /guides */
 export async function createGuide(req: Request, res: Response) {

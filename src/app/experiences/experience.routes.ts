@@ -69,7 +69,7 @@ router.get("/create", showCreateExperiencePage);
  *       200:
  *         description: Lista de experiencias del guía
  */
-router.get("/guide/:userId", authMiddleware, getGuideExperiences);
+router.get("/guide/:userId", getGuideExperiences);
 
 /**
  * @swagger

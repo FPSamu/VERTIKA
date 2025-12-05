@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listGuides, getGuideById, createGuide, updateGuide, deleteGuide } from "./guide.controller";
+import { listGuides, getGuideById, createGuide, updateGuide, deleteGuide,getGuidePublicProfile } from "./guide.controller";
 import { authMiddleware } from "../middlewares/auth";
 
 const router = Router();
@@ -43,6 +43,10 @@ router.get("/", listGuides);
  *         description: Guía no encontrada
  */
 router.get("/:id", getGuideById);
+
+
+/* GET /guides/profile/:guideId */
+router.get("/profile/:guideId", getGuidePublicProfile);
 
 /**
  * @swagger

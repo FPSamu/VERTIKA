@@ -21,17 +21,23 @@ export async function getUsers(req: Request, res: Response) {
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    console.log("ID recibido:", id);
 
     const user = await UserModel.findById(id).lean();
-    console.log("Usuario encontrado:", user);
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    //res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
-    res.status(200).json(user);
+    const safeUser = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      roles: user.roles,
+      createdAt: user.createdAt
+    };
+
+    res.status(200).json(safeUser);
 
   } catch (error) {
     console.error("Error en getUserById:", error);
@@ -49,7 +55,17 @@ export const getUserProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
+    res.render("users/public-profile", { 
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        avatarUrl: user.avatarUrl,
+        roles: user.roles,
+        createdAt: user.createdAt
+      },
+      title: `Perfil — ${user.name}`
+    });
   
 
   } catch (error) {

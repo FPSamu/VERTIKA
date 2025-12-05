@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{guide.user.name}} | Guía Vertika</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg: #f4f6f8;
+      --card: #fff;
+      --accent1: #667eea;
+      --accent2: #764ba2;
+      --text: #222;
+      --muted: #777;
+      --success: #2ecc71;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family: Inter, system-ui, sans-serif;background:var(--bg);color:var(--text)}
+
+    /* Header (Igual que tu perfil anterior) */
+    .container{max-width:980px;margin:36px auto;padding:0 18px}
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      background:var(--card);padding:14px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(14,18,36,0.04);
+      margin-bottom:18px;
+    }
+    .logo{display:flex;gap:12px;align-items:center;cursor:pointer}
+    .logo img{height:38px}
+    .logo h1{font-size:18px;margin:0;color:var(--accent2)}
+    header nav a{color:var(--accent1);text-decoration:none;font-weight:600}
+
+    /* Guide Profile Card */
+    .profile-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 12px 30px rgba(14,18,36,0.06);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 30px;
+      margin-bottom: 24px;
+    }
+
+    .avatar-col { text-align: center; }
+    .avatar {
+      width: 180px; height: 180px; border-radius: 50%; object-fit: cover;
+      border: 4px solid #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      background: #ddd;
+    }
+    
+    .info-col { display: flex; flex-direction: column; justify-content: center; }
+    .guide-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .guide-name h1 { margin: 0; font-size: 28px; color: #1a202c; }
+    .guide-role { color: var(--accent1); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .stats-row {
+      display: flex; gap: 24px; margin: 16px 0;
+      padding: 12px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+    }
+    .stat-item strong { display: block; font-size: 20px; color: #333; }
+    .stat-item span { font-size: 12px; color: var(--muted); text-transform: uppercase; }
+
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tag { font-size: 12px; padding: 5px 12px; border-radius: 20px; background: #f0f4f8; color: #555; font-weight: 600; }
+    .tag.cert { background: #e6fffa; color: #2c7a7b; border: 1px solid #b2f5ea; }
+
+    .btn-contact {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: white; border: none; padding: 12px 24px; border-radius: 8px;
+      font-weight: 700; cursor: pointer; transition: transform 0.2s;
+      font-size: 14px; display: inline-block;
+    }
+    .btn-contact:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3); }
+
+    /* Columns Layout */
+    .grid-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    
+    /* Experiences List */
+    .exp-card {
+      display: flex; background: white; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+    .exp-card:hover { transform: translateY(-2px); }
+    .exp-img { width: 120px; height: auto; object-fit: cover; background: #eee; }
+    .exp-content { padding: 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .exp-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; color: #2d3748; }
+    .exp-meta { font-size: 13px; color: var(--muted); display: flex; gap: 10px; }
+    .exp-price { color: var(--accent1); font-weight: 700; }
+    
+    /* Reviews List */
+    .review-card {
+      background: white; border-radius: 12px; padding: 16px;
+      margin-bottom: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+    .review-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+    .review-author { font-weight: 700; }
+    .star-rating { color: #f6ad55; }
+    .review-text { font-size: 14px; line-height: 1.4; color: #4a5568; font-style: italic; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
+    }
+    .modal { background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; }
+    .modal h3 { margin-top: 0; }
+    .modal-field { margin: 15px 0; padding: 10px; background: #f7fafc; border-radius: 6px; font-family: monospace; font-size: 16px; }
+    .close-modal { margin-top: 15px; background: transparent; border: 1px solid #ccc; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .profile-card { grid-template-columns: 1fr; text-align: center; }
+      .avatar { margin: 0 auto; }
+      .info-col { align-items: center; }
+      .grid-layout { grid-template-columns: 1fr; }
+      .stats-row { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo" onclick="window.location.href='/api'">
+      <img src="https://i.imgur.com/G39Rg8s.png" alt="Vertika">
+      <h1>Vertika</h1>
+    </div>
+    <nav><a href="/guides">Explorar Guías</a></nav>
+  </header>
+
+  <div class="profile-card">
+    <div class="avatar-col">
+    <img 
+        src="{{#if guide.user.avatarUrl}}{{guide.user.avatarUrl}}{{else}}https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg{{/if}}" 
+        alt="Foto de perfil" 
+        class="avatar" 
+        id="profileImage"
+        onerror="this.src='https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg'"
+    >
+    </div>
+    
+    <div class="info-col">
+      <div class="guide-header">
+        <div class="guide-name">
+          <span class="guide-role">Guía Profesional</span>
+          <h1>
+            {{guide.user.name}} 
+            {{#if guide.verified}}<span style="color:var(--accent1); font-size:0.8em; vertical-align:middle">✔</span>{{/if}}
+          </h1>
+        </div>
+        
+        <div id="action-buttons">
+            <button id="btn-contact" class="btn-contact" onclick="openContact()">
+                Contactar
+            </button>
+
+            <button id="btn-edit" 
+                    class="btn-contact" 
+                    style="display: none; background: linear-gradient(135deg, #f39c12, #d35400);"
+                    onclick="window.location.href='/api/guides/edit/{{guide._id}}'">
+               ✏️ Editar Perfil
+            </button>
+        </div>
+      </div>
+
+      <p style="color:#555; line-height:1.5; margin: 12px 0;">{{guide.bio}}</p>
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <strong>{{guide.experienceYears}}</strong>
+          <span>Años Exp.</span>
+        </div>
+        <div class="stat-item">
+          <strong>{{guide.rating}} ★</strong>
+          <span>Calificación</span>
+        </div>
+        <div class="stat-item">
+          <strong>{{experiences.length}}</strong>
+          <span>Salidas</span>
+        </div>
+      </div>
+
+      <div class="tags">
+        {{#each guide.languages}}
+          <span class="tag">🗣 {{this}}</span>
+        {{/each}}
+        {{#each guide.specialties}}
+          <span class="tag">🏔 {{this}}</span>
+        {{/each}}
+        {{#each guide.certifications}}
+          <span class="tag cert">📜 {{this}}</span>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <div class="col-main">
+      <div class="section-title">Experiencias Publicadas ({{experiences.length}})</div>
+      
+      {{#if experiences.length}}
+        <div class="experiences-list">
+          {{#each experiences}}
+          <div class="exp-card" onclick="window.location.href='/api/experiences/view/{{this._id}}'" 
+                                style="cursor: pointer;">
+            <img src="{{#if this.photos.[0]}}{{this.photos.[0]}}{{else}}https://via.placeholder.com/150{{/if}}" class="exp-img">
+            
+            <div class="exp-content">
+              <div>
+                <div class="exp-title">{{this.title}}</div>
+                <div class="exp-meta">
+                  <span>{{this.activity}}</span> • 
+                  <span>{{this.difficulty}}</span>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:end; margin-top:10px;">
+                <span class="exp-meta date-placeholder">{{this.date}}</span>
+                <span class="exp-price">{{this.pricePerPerson}} {{this.currency}}</span>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <p style="color:var(--muted)">Este guía no tiene experiencias activas.</p>
+      {{/if}}
+    </div>
+
+    <div class="col-side">
+      <div class="section-title">Reseñas ({{reviews.length}})</div>
+      
+      {{#if reviews.length}}
+        {{#each reviews}}
+        <div class="review-card">
+          <div class="review-header">
+            <span class="review-author">{{#if this.user.name}}{{this.user.name}}{{else}}Usuario{{/if}}</span>
+            <span class="star-rating">★ {{this.guideRating}}</span>
+          </div>
+          <div class="review-text">"{{this.comment}}"</div>
+          <div style="font-size:11px; color:#999; margin-top:6px; text-align:right" class="date-placeholder">{{this.createdAt}}</div>
+        </div>
+        {{/each}}
+      {{else}}
+        <p style="color:var(--muted); font-size:14px;">Aún no hay reseñas.</p>
+      {{/if}}
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div style="text-align:center; padding: 20px; color: var(--muted); font-size: 12px;">
+    Vertika &copy; 2025
+  </div>
+</footer>
+
+<div id="contactModal" class="modal-overlay">
+  <div class="modal">
+    <h3>Información de Contacto</h3>
+    <p>Ponte en contacto directamente con <strong>{{guide.user.name}}</strong> para dudas específicas.</p>
+    
+    <div class="modal-field">{{guide.user.email}}</div>
+    
+    <button class="close-modal" onclick="closeContact()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // 1. ID del dueño del perfil (viene del servidor/handlebars)
+    const profileOwnerId = "{{guide.user._id}}"; 
+
+    // 2. Obtener la data del usuario logueado del LocalStorage
+    // IMPORTANTE: Cambia 'user' por el nombre exacto de la llave donde guardas el JSON
+    const storedData = localStorage.getItem('user'); 
+
+    if (storedData) {
+      try {
+        // Convertimos el texto JSON a Objeto
+        const userData = JSON.parse(storedData);
+        
+        // Extraemos el ID (según tu JSON es ._id)
+        const loggedUserId = userData._id;
+
+        console.log("Dueño Perfil:", profileOwnerId);
+        console.log("Usuario Logueado:", loggedUserId);
+
+        // 3. Comprobamos si coinciden
+        if (loggedUserId && profileOwnerId && loggedUserId === profileOwnerId) {
+          // ES EL DUEÑO: Ocultar Contactar, Mostrar Editar
+          const btnContact = document.getElementById('btn-contact');
+          const btnEdit = document.getElementById('btn-edit');
+          
+          if(btnContact) btnContact.style.display = 'none';
+          if(btnEdit) btnEdit.style.display = 'inline-block'; // O 'flex' si prefieres
+        }
+      } catch (e) {
+        console.error("Error al leer datos del usuario:", e);
+      }
+    }
+  });
+
+  // Scripts básicos de UI y formato
+  const modal = document.getElementById('contactModal');
+  function openContact() { modal.style.display = 'flex'; }
+  function closeContact() { modal.style.display = 'none'; }
+
+  // Formato de fechas en cliente
+  document.querySelectorAll('.date-placeholder').forEach(el => {
+    const raw = el.innerText;
+    if(raw) {
+      const d = new Date(raw);
+      if(!isNaN(d)) el.innerText = d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+    }
+  });
+
+  //Dom
+  
+</script>
+
+</body>
+</html>
