@@ -180,3 +180,22 @@ export async function deleteGuide(req: Request, res: Response) {
         res.status(500).json({ error: "Error al eliminar guía" });
     }
 }
+
+export async function getGuideIdByUserId(req: Request, res: Response) {
+    try {
+        const { userId } = req.params;
+
+        // Buscamos si existe un guía ligado a este userId
+        const guide = await Guide.findOne({ userId: userId }).select('_id').lean();
+        
+        if (!guide) {
+            return res.status(404).json({ error: 'Usuario no es guía' });
+        }
+        
+        // Devolvemos solo el ID
+        res.json({ guideId: guide._id });
+    } catch (error) {
+        console.error("Error buscando ID de guía:", error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+}

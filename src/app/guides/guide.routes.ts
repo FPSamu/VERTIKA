@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listGuides, getGuideById, createGuide, updateGuide, deleteGuide,getGuidePublicProfile } from "./guide.controller";
+import { listGuides, getGuideById, createGuide, updateGuide, deleteGuide,getGuidePublicProfile, getGuideIdByUserId } from "./guide.controller";
 import { authMiddleware } from "../middlewares/auth";
 
 const router = Router();
@@ -150,5 +150,10 @@ router.patch("/:id", authMiddleware, updateGuide);
  *         description: Guía no encontrada
  */
 router.delete("/:id", authMiddleware, deleteGuide);
+
+
+
+//Guia por user
+router.get('/by-user/:userId', getGuideIdByUserId);
 
 export default router;
