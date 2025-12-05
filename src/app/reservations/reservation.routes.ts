@@ -7,8 +7,7 @@ import {
   cancelReservation,
   deleteReservation,
   showMyReservationsPage,
-  getUserReservations,
-  confirmReservation,
+  getUserReservations
 } from "./reservation.controller";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -32,29 +31,6 @@ const router = Router();
  *         description: Página renderizada
  */
 router.get("/my-reservations", showMyReservationsPage);
-
-/**
- * @swagger
- * /api/reservations/confirm/{reservationId}/{token}:
- *   get:
- *     tags: [Reservations]
- *     summary: Confirmar reservación con token de email
- *     parameters:
- *       - in: path
- *         name: reservationId
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
- *         name: token
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Reservación confirmada exitosamente
- */
-router.get("/confirm/:reservationId/:token", confirmReservation);
 
 /**
  * @swagger

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Reservation from "../reservations/reservation.model";
 import mongoose from "mongoose";
-import { randomBytes } from "crypto";
 import EmailService from "../services/email.service";
 import User from "../users/user.model";
 import Experience from "../experiences/experience.model";
@@ -78,6 +77,18 @@ export async function createReservation(req: Request, res: Response) {
       return res.status(400).json({ error: "ID de experiencia inválido" });
     }
 
+    // 1. BUSCAR LA EXPERIENCIA PRIMERO
+    const experienceToCheck = await Experience.findById(experienceId);
+    if (!experienceToCheck) {
+      return res.status(404).json({ error: "Experiencia no encontrada" });
+    }
+
+    // 2. VERIFICAR SI YA ESTÁ RESERVADA (BOOKED)
+    // Esto evita que alguien reserve si ya está ocupada
+    if (experienceToCheck.booked) {
+      return res.status(409).json({ error: "Lo sentimos, esta experiencia ya ha sido reservada por otro usuario." });
+    }
+
     // Validar userId válido
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ error: "ID de usuario inválido" });
@@ -88,21 +99,16 @@ export async function createReservation(req: Request, res: Response) {
       return res.status(400).json({ error: "El número de asientos debe ser mayor a 0" });
     }
 
-    // Generar token de confirmación
-    const confirmationToken = randomBytes(32).toString('hex');
-    const confirmationTokenExpires = new Date();
-    confirmationTokenExpires.setHours(confirmationTokenExpires.getHours() + 48); // 48 horas
-
     const newReservation = await Reservation.create({
       experienceId,
       userId,
       seats,
       total,
-      status: status || 'pending',
-      confirmationToken,
-      confirmationTokenExpires,
+      status: 'confirmed'
     });
-
+    //Experiencia reservada
+    experienceToCheck.booked = true;
+    await experienceToCheck.save();
     // Obtener información del usuario y experiencia para el email
     try {
       const user = await User.findById(userId);
@@ -112,8 +118,14 @@ export async function createReservation(req: Request, res: Response) {
       console.log("guide userId:", experience!.userId);    
 
       if (user && experience) {
+        
+        const photos = experienceToCheck.photos as string[];
+
+        const mainImage = photos && photos.length > 0 
+          ? photos[0] 
+          : '';
         // Enviar email de confirmación
-        await emailService.sendReservationConfirmationEmail(
+        await emailService.sendReservationConfirmedEmail(
           user.email,
           user.name,
           experience.title as string,
@@ -122,10 +134,9 @@ export async function createReservation(req: Request, res: Response) {
           seats,
           total,
           (experience.currency as string) || 'MXN',
-          (newReservation._id as mongoose.Types.ObjectId).toString(),
-          confirmationToken
+          mainImage
         );
-
+        console.log(`Email de confirmación enviado a ${user.email}`);
         //Notificacion
         const guide = await Guide.findById(experience.guideId);
         const guideUserId = guide?.userId;
@@ -135,7 +146,7 @@ export async function createReservation(req: Request, res: Response) {
             userId: guideUserId,   // user._id del guia
             actorId: user._id,     // quien hizo la accion
             type: "reservation",
-            title: "Nueva reserva",
+            title: "Nueva reserva confirmada",
             message: `${user.name} ha reservado tu experiencia "${experience.title}"`,
             data: {
               reservationId: newReservation._id,
@@ -158,10 +169,6 @@ export async function createReservation(req: Request, res: Response) {
       console.error('Error al enviar email de confirmación:', emailError);
       // No fallar la creación de la reserva si el email falla
     }
-
-
-
-
     res.status(201).json(newReservation);
   } catch (err) {
     console.error(err);
@@ -178,6 +185,7 @@ export async function updateReservation(req: Request, res: Response) {
     // Si el status cambió a 'cancelled', avisar al guía
     if (req.body.status === 'cancelled') {
       // Buscar la experiencia relacionada
+      await Experience.findByIdAndUpdate(updated.experienceId, { booked: false });
       const experience = await Experience.findById(updated.experienceId);
       if (!experience) return res.status(404).json({ error: "Experiencia no encontrada" });
 
@@ -232,6 +240,10 @@ export async function cancelReservation(req: Request, res: Response) {
     // Notificar al guía
     const experience = await Experience.findById(reservation.experienceId);
     if (experience) {
+
+      experience.booked = false;
+      await experience.save();
+
       const guide = await Guide.findById(experience.guideId);
       const guideUserId = guide?.userId;
       const cancellingUser = await User.findById(reservation.userId);
@@ -262,261 +274,6 @@ export async function cancelReservation(req: Request, res: Response) {
   }
 }
 
-/* GET /reservations/confirm/:reservationId/:token */
-export async function confirmReservation(req: Request, res: Response) {
-  try {
-    const { reservationId, token } = req.params;
-
-    // Buscar la reservación con el token
-    const reservation = await Reservation.findById(reservationId)
-      .populate('experienceId')
-      .populate('userId');
-
-    if (!reservation) {
-      return res.status(404).send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Reservación no encontrada</title>
-          <style>
-            body { font-family: Arial; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-            .container { background: white; color: #333; padding: 40px; border-radius: 15px; max-width: 500px; margin: 0 auto; }
-            h1 { color: #e74c3c; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>❌ Error</h1>
-            <p>La reservación no fue encontrada.</p>
-            <a href="/" style="color: #667eea;">Volver al inicio</a>
-          </div>
-        </body>
-        </html>
-      `);
-    }
-
-    // Verificar que el token coincida
-    if (reservation.confirmationToken !== token) {
-      return res.status(400).send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Token inválido</title>
-          <style>
-            body { font-family: Arial; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-            .container { background: white; color: #333; padding: 40px; border-radius: 15px; max-width: 500px; margin: 0 auto; }
-            h1 { color: #e74c3c; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>❌ Token Inválido</h1>
-            <p>El enlace de confirmación no es válido.</p>
-            <a href="/" style="color: #667eea;">Volver al inicio</a>
-          </div>
-        </body>
-        </html>
-      `);
-    }
-
-    // Verificar que el token no haya expirado
-    if (reservation.confirmationTokenExpires && new Date() > reservation.confirmationTokenExpires) {
-      return res.status(400).send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Enlace Expirado</title>
-          <style>
-            body { font-family: Arial; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-            .container { background: white; color: #333; padding: 40px; border-radius: 15px; max-width: 500px; margin: 0 auto; }
-            h1 { color: #ff9800; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>⏰ Enlace Expirado</h1>
-            <p>El enlace de confirmación ha expirado (48 horas).</p>
-            <p>Por favor, crea una nueva reservación.</p>
-            <a href="/" style="color: #667eea;">Volver al inicio</a>
-          </div>
-        </body>
-        </html>
-      `);
-    }
-
-    // Verificar que la reservación no esté ya confirmada
-    if (reservation.status === 'confirmed') {
-      return res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Ya Confirmada</title>
-          <style>
-            body { font-family: Arial; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-            .container { background: white; color: #333; padding: 40px; border-radius: 15px; max-width: 500px; margin: 0 auto; }
-            h1 { color: #48bb78; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>✅ Ya Confirmada</h1>
-            <p>Esta reservación ya fue confirmada anteriormente.</p>
-            <a href="/api/reservations/my-reservations" style="color: #667eea;">Ver mis reservaciones</a>
-          </div>
-        </body>
-        </html>
-      `);
-    }
-
-    // Actualizar el estado a confirmado
-    reservation.status = 'confirmed';
-    reservation.confirmationToken = undefined;
-    reservation.confirmationTokenExpires = undefined;
-    await reservation.save();
-
-    // Enviar email de confirmación exitosa
-    const user = reservation.userId as any;
-    const experience = reservation.experienceId as any;
-
-    if (user && experience) {
-      try {
-        await emailService.sendReservationConfirmedEmail(
-          user.email,
-          user.name,
-          experience.title,
-          experience.date,
-          experience.location,
-          reservation.seats as number,
-          reservation.total as number,
-          experience.currency || 'MXN'
-        );
-      } catch (emailError) {
-        console.error('Error al enviar email de confirmación exitosa:', emailError);
-      }
-    }
-
-    // Mostrar página de éxito
-    res.send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Reservación Confirmada</title>
-        <style>
-          body { 
-            font-family: Arial; 
-            text-align: center; 
-            padding: 50px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            color: white; 
-            margin: 0;
-          }
-          .container { 
-            background: white; 
-            color: #333; 
-            padding: 40px; 
-            border-radius: 15px; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-          }
-          .success-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-          }
-          h1 { 
-            color: #48bb78; 
-            margin-bottom: 20px;
-          }
-          .reservation-details {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: left;
-          }
-          .detail-row {
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
-          }
-          .detail-row:last-child {
-            border-bottom: none;
-          }
-          .button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            margin-top: 20px;
-            font-weight: bold;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="success-icon">✅</div>
-          <h1>¡Reservación Confirmada!</h1>
-          <p>Tu reservación ha sido confirmada exitosamente.</p>
-          
-          <div class="reservation-details">
-            <div class="detail-row">
-              <strong>Experiencia:</strong> ${experience.title}
-            </div>
-            <div class="detail-row">
-              <strong>Fecha:</strong> ${new Date(experience.date).toLocaleDateString('es-MX', { 
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-              })}
-            </div>
-            <div class="detail-row">
-              <strong>Ubicación:</strong> ${experience.location}
-            </div>
-            <div class="detail-row">
-              <strong>Personas:</strong> ${reservation.seats}
-            </div>
-          </div>
-          
-          <p>Hemos enviado un email de confirmación con todos los detalles.</p>
-          <p>El guía se pondrá en contacto contigo pronto.</p>
-          
-          <a href="/api/reservations/my-reservations" class="button">Ver Mis Reservaciones</a>
-          <br><br>
-          <a href="/api" style="color: #667eea;">Volver al inicio</a>
-        </div>
-      </body>
-      </html>
-    `);
-  } catch (err) {
-    console.error('Error al confirmar reservación:', err);
-    res.status(500).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Error</title>
-        <style>
-          body { font-family: Arial; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-          .container { background: white; color: #333; padding: 40px; border-radius: 15px; max-width: 500px; margin: 0 auto; }
-          h1 { color: #e74c3c; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1>❌ Error</h1>
-          <p>Ocurrió un error al confirmar la reservación.</p>
-          <a href="/" style="color: #667eea;">Volver al inicio</a>
-        </div>
-      </body>
-      </html>
-    `);
-  }
-}
-
 /* DELETE /reservations/:id */
 export async function deleteReservation(req: Request, res: Response) {
   try {
@@ -528,3 +285,4 @@ export async function deleteReservation(req: Request, res: Response) {
     res.status(500).json({ error: "Error al eliminar reserva" });
   }
 }
+

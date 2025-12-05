@@ -25,6 +25,7 @@ export const StatusType = {
   EXPIRED: "expired",
   CONFIRMED: "confirmed",
   PENDING: "pending",
+  PROGRESS: "progress"
 } as const;
 
 export type UserType = 'customer' | 'guide'
