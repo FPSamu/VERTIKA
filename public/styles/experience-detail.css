@@ -10,144 +10,20 @@ body {
 h1, h2, h3 { margin: 0; font-weight: 600; }
 button { font-family: inherit; }
 
-/* --- NAVBAR --- */
-.navbar {
-    border-bottom: 1px solid #ebebeb;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 100;
-}
-.nav-container {
-    max-width: 1120px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    color: #ff385c;
-    font-weight: 800;
-    font-size: 20px;
-}
-.logo img { height: 35px; }
-
-.nav-links a {
-    text-decoration: none;
-    color: #222;
-    font-weight: 600;
-    margin: 0 15px;
-}
-
-.user-menu {
-    border: 1px solid #dddddd;
-    border-radius: 21px;
-    padding: 5px 5px 5px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: box-shadow 0.2s;
-    position: relative;
-}
-.user-menu:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.18); }
-.user-avatar-placeholder {
-    background: #717171;
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-/* Dropdown Menu */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    width: 200px;
-    overflow: hidden;
-    padding: 8px 0;
-}
-.dropdown-menu a {
-    display: block;
-    padding: 10px 16px;
-    color: #222;
-    text-decoration: none;
-    font-size: 14px;
-}
-.dropdown-menu a:hover { background: #f7f7f7; }
 
 /* --- MAIN LAYOUT --- */
 .detail-container {
-    max-width: 1120px;
+    max-width: 110vh;
     margin: 20px auto;
     padding: 0 24px;
 }
 
 /* Header Info */
-.listing-header { margin-bottom: 24px; }
-.listing-header h1 { font-size: 26px; margin-bottom: 5px; }
+.listing-header { margin-bottom: 30px; }
+.listing-header h1 { font-size: 36px; margin-bottom: 5px; }
 .listing-subtext { font-size: 14px; color: #222; font-weight: 500; display: flex; align-items: center; gap: 5px; }
 .listing-subtext i { color: #ff385c; }
 .dot { margin: 0 5px; }
-
-/* --- GALLERY GRID --- */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: 200px 200px;
-    gap: 8px;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 15px;
-}
-
-/* Primer hijo ocupa 2 columnas de alto y 1 de ancho (lado izquierdo grande) */
-.gallery-item:first-child {
-    grid-column: 1 / 2;
-    grid-row: 1 / 3;
-}
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-.gallery-item img:hover { opacity: 0.9; }
-
-.btn-view-photos {
-    background: white;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 7px 15px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    float: right;
-    margin-top: -50px;
-    margin-right: 20px;
-    position: relative;
-    z-index: 5;
-}
 
 /* --- CONTENT COLUMNS --- */
 .content-layout {
@@ -169,7 +45,7 @@ button { font-family: inherit; }
 .guide-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
 .badge-icon {
     position: absolute; bottom: 0; right: -5px;
-    background: #ff385c; color: white; border-radius: 50%;
+    background: #0e54f6; color: white; border-radius: 50%;
     width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white;
 }
 
@@ -231,7 +107,7 @@ button { font-family: inherit; }
     color: white;
     padding: 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 30px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -239,69 +115,3 @@ button { font-family: inherit; }
 }
 .btn-reserve-large:active { transform: scale(0.98); }
 
-/* --- LIGHTBOX --- */
-.lightbox {
-    display: none;
-    position: fixed; z-index: 2000;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.95);
-    flex-direction: column; justify-content: center; align-items: center;
-}
-.lightbox-content { position: relative; max-width: 80%; max-height: 80%; display: flex; align-items: center; }
-.lightbox-content img { max-width: 100%; max-height: 80vh; object-fit: contain; }
-.lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
-.lightbox-prev, .lightbox-next {
-    color: white; font-size: 40px; cursor: pointer; padding: 20px; user-select: none;
-}
-.lightbox-prev:hover, .lightbox-next:hover { color: #ddd; }
-.lightbox-counter { color: white; margin-top: 10px; font-size: 16px; }
-
-/* --- MODAL RESERVA COMPLETO --- */
-.reservation-modal {
-    display: none; position: fixed; z-index: 3000;
-    left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    animation: fadeIn 0.3s;
-}
-.reservation-modal-content {
-    background: white; margin: 5% auto;
-    width: 90%; max-width: 800px;
-    border-radius: 12px; padding: 24px;
-    animation: slideUp 0.3s;
-}
-@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-.modal-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 20px; }
-.close-modal { font-size: 24px; cursor: pointer; }
-
-.reservation-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-
-.trip-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.stepper { display: flex; align-items: center; gap: 15px; }
-.stepper-btn {
-    width: 32px; height: 32px; border-radius: 50%; border: 1px solid #b0b0b0;
-    background: white; color: #717171; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px;
-}
-.stepper-btn:hover:not(:disabled) { border-color: #222; color: #222; }
-
-.price-summary-card { border: 1px solid #ddd; border-radius: 12px; padding: 20px; }
-.summary-header { display: flex; gap: 15px; margin-bottom: 15px; }
-.summary-header img { width: 100px; height: 80px; object-fit: cover; border-radius: 8px; }
-.summary-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-.summary-loc { font-size: 12px; color: #717171; }
-.price-row { display: flex; justify-content: space-between; margin: 10px 0; font-size: 15px; color: #222; }
-.price-row.total { font-weight: 800; font-size: 18px; margin-top: 15px; }
-
-.btn-confirm-reservation {
-    width: 100%; margin-top: 20px; padding: 14px; background: #E61E4D; color: white;
-    border: none; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer;
-}
-
-/* Responsive Mobile */
-@media (max-width: 768px) {
-    .content-layout { grid-template-columns: 1fr; gap: 40px; }
-    .gallery-grid { display: flex; overflow-x: auto; height: 250px; scroll-snap-type: x mandatory; }
-    .gallery-item { min-width: 90%; scroll-snap-align: center; margin-right: 10px; }
-    .reservation-grid-layout { grid-template-columns: 1fr; }
-    .booking-card { display: none; } /* Ocultar card sticky en móvil, usar botón flotante inferior si se desea */
-}

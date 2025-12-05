@@ -1,0 +1,224 @@
+/* --- 3. GALERÍA DE FOTOS (CORREGIDO) --- */
+.gallery-grid {
+    display: grid;
+    gap: 8px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative; 
+    margin-bottom: 40px;
+    width: 100%;
+    background-color: #f0f0f0; 
+    
+    /* --- CAMBIO CLAVE AQUÍ --- */
+    /* Borra el 'height: clamp(...)' y usa esto: */
+    height: auto; /* Dejamos que la altura sea automática */
+    
+    /* Proporción 2:1 (Por cada 2px de ancho, 1px de alto) */
+    /* Es el estándar estilo Airbnb/Booking */
+    aspect-ratio: 2 / 1; 
+    
+    /* Si la pantalla es muy ancha, que no crezca infinito */
+    max-height: 600px; 
+
+    /* Configuración por defecto (5 fotos) */
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+/* --- AJUSTE IMPORTANTE PARA MÓVILES --- */
+/* En celulares, la proporción 2:1 queda muy bajita. 
+   Aquí cambiamos a una proporción más cuadrada o fija. */
+@media (max-width: 768px) {
+    .gallery-grid {
+        aspect-ratio: 3 / 2; /* Un poco más alto para ver bien la foto principal */
+        /* O puedes usar height fijo: height: 300px; */
+    }
+}
+
+/* AQUI ESTABA EL ERROR: Ahora apuntamos directo a la IMG dentro del grid */
+.gallery-grid > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Esto hace que se rellenen bien */
+    cursor: pointer;   /* Esto activa la manita */
+    transition: filter 0.2s;
+    display: block;
+    min-width: 0;
+    min-height: 0;
+}
+
+.gallery-grid > img:hover {
+    filter: brightness(0.9); /* Efecto hover */
+}
+
+/* --- LÓGICA DE ADAPTACIÓN (Adaptada para detectar IMGs) --- */
+
+/* 1 FOTO: Ocupa todo */
+.gallery-grid:has(img:first-of-type:last-of-type) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+/* 2 FOTOS: Mitad y mitad */
+.gallery-grid:has(img:nth-of-type(2):last-of-type) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+/* 3 FOTOS: 1 Grande izq, 2 derecha */
+.gallery-grid:has(img:nth-of-type(3):last-of-type) {
+    /* Dividimos en dos columnas iguales */
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr 1fr;
+}
+.gallery-grid:has(img:nth-child(3):last-child) > img:first-child {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+/* 4 FOTOS: 1 Grande izq, 1 arriba der, 2 abajo der */
+.gallery-grid:has(img:nth-of-type(4):last-of-type) {
+    /* Usamos la estructura de 5 fotos (50% | 25% | 25%) para poder dividir las de abajo */
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+.gallery-grid:has(img:nth-of-type(4):last-of-type) > img:first-of-type {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+.gallery-grid:has(img:nth-of-type(4):last-of-type) > img:nth-of-type(2) {
+    grid-column: 2 / 4; /* Abarca columnas 2 y 3 */
+    grid-row: 1 / 2;
+}
+
+/* 5 FOTOS (Default): Forzamos la primera a ser grande */
+.gallery-grid > img:first-child {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+/* Botón Ver Fotos */
+.btn-view-photos {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 5;
+    transition: transform 0.2s;
+    cursor: pointer; /* Aseguramos cursor aquí también */
+}
+.btn-view-photos:hover {
+    transform: scale(1.03);
+    background-color: #f8f8f8;
+}
+
+
+/* --- LIGHTBOX --- */
+/* --- LIGHTBOX (MODO CINE) --- */
+.lightbox {
+    display: none; /* JS lo cambia a flex */
+    position: fixed;
+    z-index: 5000;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95); /* Fondo casi negro puro */
+    
+    /* Centrado perfecto */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    backdrop-filter: blur(5px); /* Opcional: difumina el fondo de atrás */
+}
+
+
+.lightbox-content {
+    position: relative;
+    
+
+    width: 90vw;  
+    height: 85vh;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content img {
+    width: 100%;
+    height: 100%;
+    
+    object-fit: contain; 
+    
+    border-radius: 4px;
+    
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); 
+    box-shadow: none; 
+}
+
+/* --- CONTROLES (Flechas fijas a la pantalla) --- */
+.lightbox-prev, .lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    color: rgba(255, 255, 255, 0.5); 
+    
+    font-size: 60px; 
+    padding: 30px;   
+    cursor: pointer;
+    z-index: 5001;
+    transition: all 0.3s ease; 
+    user-select: none;
+    
+    /* Quitamos cualquier fondo o borde */
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.lightbox-prev { left: 10px; }
+.lightbox-next { right: 10px; }
+
+.lightbox-prev:hover, .lightbox-next:hover {
+    color: #ffffff; /* Se vuelve blanco puro */
+    transform: translateY(-50%) scale(1.2); /* Crece un 20% */
+    
+    /* Opcional: Un pequeño brillo para que resalte más en lo oscuro */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    
+    /* Aseguramos que NO haya fondo */
+    background: transparent;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 0px;
+    right: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 60px;
+    cursor: pointer;
+    z-index: 5002;
+    transition: color 0.3s, transform 0.3s;
+    line-height: 1;
+}
+
+.lightbox-close:hover {
+    color: white;
+    transform: rotate(90deg); /* Efecto giratorio al cerrar */
+}
+
+.lightbox-counter {
+    position: fixed;
+    bottom: 20px;
+    color: #aaa;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 300;
+}

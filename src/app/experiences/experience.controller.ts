@@ -317,13 +317,15 @@ export async function uploadExperiencePhotos(req: Request, res: Response) {
   }
 }
 
-/* GET /experiences/view (Vista de detalle de experiencia) */
+/* GET /experiences/view/:id (Vista de detalle de experiencia) */
 export async function showExperienceDetailPage(req: Request, res: Response) {
   try {
-    // Renderiza la vista ubicada en views/experiences/experience.handlebars
-    res.render('experiences/experience');
+    const experienceId = req.params.id;
+
+    // Pasamos el ID como variable a la plantilla Handlebars
+    res.render('experiences/experience', { experienceId }); 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error al cargar la página de experiencia" });
+    res.status(500).send("Error al cargar la página");
   }
 }

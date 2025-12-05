@@ -3,7 +3,7 @@
 /*body*/
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #ffffff 0%, #cacaca 100%);
+    background: linear-gradient(135deg, #efeeee 0%, #ecebeb 100%);
     min-height: 100vh;
     margin: 0;          /* Quita el margen externo por defecto */
     padding: 0;         /* Quita el relleno interno */
