@@ -3,43 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Mis Reservaciones - Vertika</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/styles/vertika-header.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
 
     .container {
+      padding-top: 1.5rem;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .header {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      color: #2c3e50;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
 
     .btn-back {
       padding: 12px 24px;
@@ -289,13 +262,13 @@
     .loading {
       text-align: center;
       padding: 60px 20px;
-      color: white;
+      color: #000000;
       font-size: 18px;
     }
 
     .loading-spinner {
       border: 4px solid rgba(255,255,255,0.3);
-      border-top: 4px solid white;
+      border-top: 4px solid #000000;
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -417,12 +390,28 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>📋 Mis Reservaciones</h1>
-      <a href="/api" class="btn-back">← Volver al Inicio</a>
+  <header>
+    <div class="logo">
+      <img src="https://imgur.com/2R9vMFY.png" onclick="window.location.href='/api'" alt="Vertika Logo" class="app-logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
 
+    <nav id="mainNav" style="display: none;">
+      <a href="/api" class="nav-link" data-page="home">Inicio</a>
+      <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis
+        Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser
+        Guía</a>
+    </nav>
+
+    <div class="user-actions" id="userActions">
+      <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
+      <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
+    </div>
+  </header>
+
+  <div class="container">
     <div class="filters">
       <div class="filter-group">
         <label for="statusFilter">Estado:</label>
@@ -467,7 +456,8 @@
       </div>
     </div>
   </div>
-
+  <script src="/static/scripts/notifications.js"></script>
+  <script src="/static/scripts/load-header.js"></script>
   <script>
     let allReservations = [];
     let currentFilter = 'all';

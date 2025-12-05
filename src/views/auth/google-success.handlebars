@@ -2,44 +2,147 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirigiendo...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; }
-        .loader { text-align: center; color: #333; }
+        body { 
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            /* Imagen de fondo de montaña (puedes cambiar la URL por la que gustes) */
+            background: url('https://images.unsplash.com/photo-1600788032608-418d21d92170?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover;
+            color: #333;
+        }
+
+        /* Capa oscura ligera sobre la imagen para que no lastime la vista */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .loader-container { 
+            text-align: center; 
+            /* Estilo de tarjeta de vidrio (Glassmorphism) */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* El círculo giratorio de carga */
+        .spinner {
+            border: 4px solid #f3f3f3; /* Gris claro */
+            border-top: 4px solid #3498db; /* Azul */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        /* Animación de entrada de la tarjeta */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Animación del spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .logo {
+                width: 200px;       /* 1. Bajamos a 100px para que no se vea tosco */
+                height: auto;       /* 2. AUTO es clave: mantiene la proporción original */
+                margin-bottom: 15px;
+                display: inline-block;
+            }
     </style>
 </head>
 <body>
-    <div class="loader">
-        <h2>¡Autenticación Exitosa! 🚀</h2>
-        <p>Guardando sesión...</p>
+
+    <div class="loader-container">
+        <div>
+            <img src="https://imgur.com/2R9vMFY.png" alt="Vertika Logo" class="logo">
+        </div>
+        
+        <div id="success-content">
+            <h2>¡Cumbre Alcanzada!</h2>
+            <p>Autenticación exitosa. Preparando tu equipo...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <div id="error-content" style="display: none;">
+            <h3 class="error-msg">⚠️ Error de Autenticación</h3>
+            <p>Faltan datos en la mochila.</p>
+            <a href='/login' style="text-decoration: none; color: white; background: #e74c3c; padding: 10px 20px; border-radius: 5px;">Volver al Base</a>
+        </div>
     </div>
 
     <script>
-        // 1. Recibimos los datos del servidor
+        // 1. Recibimos los datos del servidor (Handlebars)
         const accessToken = "{{accessToken}}";
         const refreshToken = "{{refreshToken}}";
         
-        // IMPORTANTE: Aquí abajo usamos triple llave para que imprima el JSON tal cual
+        // Usamos triple llave para el JSON crudo
         const userJson = '{{{user}}}'; 
 
-        if (accessToken && refreshToken) {
-            // 2. Guardamos TODO en LocalStorage
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-            
-            // Guardamos el usuario
-            localStorage.setItem('user', userJson);
-            //Guardamos cookie
-            document.cookie = `token=${accessToken}; path=/; max-age=86400`;
+        const successDiv = document.getElementById('success-content');
+        const errorDiv = document.getElementById('error-content');
 
-            console.log("Sesión guardada. Redirigiendo...");
+        if (accessToken && refreshToken && accessToken !== "" && refreshToken !== "") {
+            try {
+                // 2. Guardamos TODO en LocalStorage
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('user', userJson);
+                
+                // Guardamos cookie (útil si el back la necesita)
+                document.cookie = `token=${accessToken}; path=/; max-age=86400; SameSite=Strict`;
 
-            // 3. Redirección
-            setTimeout(() => {
-                window.location.href = "/api"; 
-            }, 1000); 
+                console.log("Sesión guardada. Iniciando ascenso...");
+
+                // 3. Redirección
+                setTimeout(() => {
+                    window.location.href = "/api"; 
+                }, 1500); 
+
+            } catch (e) {
+                console.error("Error guardando datos", e);
+                successDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+            }
         } else {
-            document.body.innerHTML = "<h3>Error: Datos de sesión incompletos.</h3><a href='/login'>Volver</a>";
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'block';
         }
     </script>
 </body>
