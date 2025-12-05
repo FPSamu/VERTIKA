@@ -1089,6 +1089,22 @@
 .notif-icon-container {
   position: relative; /* Necesario para posicionar la bolita */
 }
+
+/* El círculo azul */
+.unread-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #007bff; /* Azul */
+  border-radius: 100%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* Estilo para el item de la lista no leído (opcional, negrita) */
+.notif-item.unread {
+  font-weight: 600;
+  background-color: #f9f9f9;
+}
   </style>
 </head>
 
@@ -1291,8 +1307,153 @@
   </div>
 
   <script>
+      //Funciones auxiliares notificaciones
+      // --- FUNCIONES AUXILIARES ---
+
+      // Función para actualizar la campana (Badge)
+      function updateBellBadge(show) {
+          const bell = document.getElementById('notifIcon');
+          let badge = bell.querySelector('.notif-badge');
+          
+          if (show) {
+              if (!badge) {
+                  badge = document.createElement('span');
+                  badge.classList.add('notif-badge'); // Asegúrate de tener CSS para este badge (puntito rojo)
+                  bell.appendChild(badge);
+              }
+          } else {
+              if (badge) badge.remove();
+          }
+      }
+
+      // Función para crear el elemento de lista de la notificación
+      function createNotificationItem(notif) {
+          const li = document.createElement("li");
+          li.classList.add("notif-item");
+          li.style.cursor = "pointer";
+          li.style.display = "flex"; // Usar flex para alinear texto y X
+          li.style.justifyContent = "space-between";
+          li.style.alignItems = "center";
+          
+          // Contenedor izquierdo (Punto azul + Texto)
+          const leftContainer = document.createElement("div");
+          leftContainer.style.display = "flex";
+          leftContainer.style.alignItems = "center";
+
+          // 1. Lógica del Círculo Azul (Si no está leída)
+          if (!notif.read) {
+              li.classList.add('unread'); 
+              const dot = document.createElement("span");
+              dot.classList.add("unread-dot"); 
+              // Estilos inline por si faltan en CSS
+              dot.style.height = "10px";
+              dot.style.width = "10px";
+              dot.style.backgroundColor = "#007bff";
+              dot.style.borderRadius = "50%";
+              dot.style.display = "inline-block";
+              dot.style.marginRight = "8px";
+              leftContainer.appendChild(dot);
+          }
+
+          const content = document.createElement("span");
+          content.textContent = notif.message;
+          leftContainer.appendChild(content);
+
+          // 2. Botón de Eliminar (X)
+          const closeBtn = document.createElement("span");
+          closeBtn.innerHTML = "&times;"; // Símbolo de multiplicación (X)
+          closeBtn.style.fontSize = "20px";
+          closeBtn.style.color = "#999";
+          closeBtn.style.marginLeft = "10px";
+          closeBtn.style.padding = "0 5px";
+          closeBtn.style.fontWeight = "bold";
+          closeBtn.title = "Eliminar";
+
+          // --- LOGICA DE ELIMINAR ---
+          closeBtn.addEventListener('click', async (e) => {
+              // IMPORTANTE: Detiene que el click llegue al LI (evita redirección)
+              e.stopPropagation(); 
+
+              // 1. Eliminación visual inmediata (UX rápida)
+              li.remove();
+
+              // 2. Verificar si quedó vacía la lista
+              const list = document.getElementById('notificationsList');
+              if (list && list.children.length === 0) {
+                  const emptyLi = document.createElement("li");
+                  emptyLi.textContent = "No tienes notificaciones";
+                  list.appendChild(emptyLi);
+                  updateBellBadge(false);
+              } else {
+                  // Re-checar si quedan no leídas para el badge
+                  checkUnreadStatusInList(); 
+              }
+
+              // 3. Petición al Backend para borrar de DB
+              try {
+                  const token = localStorage.getItem("accessToken");
+                  // Asumiendo que tienes una ruta DELETE /api/notifications/:id
+                  await fetch(`/api/notifications/${notif._id}`, { 
+                      method: 'DELETE',
+                      headers: { 'Authorization': 'Bearer ' + token }
+                  });
+              } catch (err) {
+                  console.error("Error eliminando notificación", err);
+              }
+          });
+
+          // Agregar contenedores al LI
+          li.appendChild(leftContainer);
+          li.appendChild(closeBtn);
+
+          // 2. Evento Click: Marcar como leída y navegar
+          li.addEventListener('click', async (e) => {
+              // Si no está leída, marcarla en el backend
+              if (!notif.read) {
+                  try {
+                      const token = localStorage.getItem("accessToken");
+                      // Llamamos al endpoint markAsRead que ya tienes en el backend
+                      await fetch(`/api/notifications/${notif._id}/read`, { 
+                          method: 'PATCH',
+                          headers: { 'Authorization': 'Bearer ' + token }
+                      });
+                      
+                      // Actualizar UI visualmente (quitar punto azul)
+                      li.classList.remove('unread');
+                      const dot = li.querySelector('.unread-dot');
+                      if (dot) dot.remove();
+                      notif.read = true; // Actualizar estado local
+
+                      // Opcional: Re-checar si quedan notificaciones sin leer para quitar el badge de la campana
+                      checkUnreadStatusInList(); 
+                  } catch (error) {
+                      console.error("Error al marcar como leída", error);
+                  }
+              }
+
+              if (notif.type === 'reservation') {
+                // Ajusta la URL según tus rutas de frontend
+                window.location.href = `/api/experiences/view/${notif.data.experienceId}`; 
+              }
+          });
+
+          return li;
+      }
+
+      // Función para revisar si quedan elementos sin leer en la lista visual actual
+      function checkUnreadStatusInList() {
+          const list = document.getElementById('notificationsList');
+          const unreadItems = list.querySelectorAll('.notif-item.unread');
+          // Si ya no hay items con clase unread, quitamos el badge de la campana
+          if (unreadItems.length === 0) {
+              updateBellBadge(false);
+          }
+      }
+
+
+
     // Mostrar botones según usuario logueado
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const userActions = document.getElementById('userActions');
       const mainNav = document.getElementById('mainNav');
       const navExperiences = document.getElementById('navExperiences');
@@ -1300,6 +1461,7 @@
       const navReservations = document.getElementById('navReservations');
 
       const user = JSON.parse(localStorage.getItem('user') || 'null');
+      const token = localStorage.getItem("accessToken");
 
       if (!user) return;
       
@@ -1316,7 +1478,6 @@
           navExperiences.style.display = 'none';
           navRequestGuide.style.display = 'block';
         }
-
         // Event listeners para navegación
         navReservations.addEventListener('click', (e) => {
           e.preventDefault();
@@ -1335,106 +1496,118 @@
           modal.style.display = 'block';
         });
 
-        // Acciones de usuario
-        userActions.innerHTML = `
-          <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
-            <i class="fa-solid fa-bell"></i>
-          </div>
-          <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
-          <button class="logout" id="logoutBtn">Cerrar Sesión</button>
-        `;
-        //Socket
-        // Configurar socket **después** de crear HTML
-        const socket = io('/');
-        socket.emit('join', user._id); //Se une al room de su user
+            // 4. VERIFICACIÓN INICIAL DE NOTIFICACIONES (Ahora sí funcionará)
+          try {
+              // Usamos la variable 'token' que declaramos arriba
+              const response = await fetch(`/api/notifications/${user._id}`, {
+                  method: 'GET',
+                  headers: {
+                      'Authorization': 'Bearer ' + token 
+                  }
+              });
 
-        socket.on('newNotification', (notif) => { //Recibe datos enviados desde el servidor 
-          console.log('Nueva notificación:', notif);
+              if (response.ok) {
+                  const notifications = await response.json();
+                  // Si hay alguna sin leer (read: false), encendemos la luz
+                  const hasUnread = notifications.some(n => !n.read);
+                  
+                  // Acciones de usuario (Renderizamos el icono primero para poder ponerle el badge)
+                  userActions.innerHTML = `
+                    <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
+                      <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
+                    <button class="logout" id="logoutBtn">Cerrar Sesión</button>
+                  `;
 
-          const bell = document.getElementById('notifIcon');
-          //Blink y anadir notificacion
-          if (bell) {
-            bell.classList.add('blink');
-            setTimeout(() => bell.classList.remove('blink'), 2000);
+                  // Ahora que el icono existe en el HTML, le ponemos el badge si hace falta
+                  if (hasUnread) {
+                      updateBellBadge(true);
+                  }
+              }
+          } catch (err) {
+            console.error("Error verificando notificaciones iniciales:", err);
+            // Renderizar acciones de usuario aunque falle la notificación
+            userActions.innerHTML = `
+                <div class="notif-icon" id="notifIcon" style="cursor:pointer;position: relative;">
+                  <i class="fa-solid fa-bell"></i>
+                </div>
+                <span class="username" id="userName" style="cursor:pointer;">Hola, ${user.name}</span>
+                <button class="logout" id="logoutBtn">Cerrar Sesión</button>
+              `;
+          }
+          //Socket
+          // Configurar socket **después** de crear HTML
+          const socket = io('/');
+          socket.emit('join', user._id); 
 
-            if (!bell.querySelector('.notif-badge')) {
-                const badge = document.createElement('span');
-                badge.classList.add('notif-badge');
-                bell.appendChild(badge);
+          socket.on('newNotification', (notif) => { 
+              console.log('Nueva notificación:', notif);
+
+              // Animación visual de la campana
+              const bell = document.getElementById('notifIcon');
+              if (bell) {
+                  bell.classList.add('blink');
+                  setTimeout(() => bell.classList.remove('blink'), 2000);
+                  
+                  // MOSTRAR BADGE EN CAMPANA (Porque acaba de llegar una nueva)
+                  updateBellBadge(true);
               }
 
-          }
-          //Agregar notificacion dinamica
-          const list = document.getElementById('notificationsList');
-          if (list) {
-            const li = document.createElement('li');
-            li.textContent = notif.message;
-            list.prepend(li);
-          }
-        });
+              // Agregar a la lista dinámicamente
+              const list = document.getElementById('notificationsList');
+              if (list) {
+                  // Aseguramos que venga como no leída desde el socket (usualmente sí, pero forzamos para UI)
+                  notif.read = false; 
+                  const li = createNotificationItem(notif);
+                  list.prepend(li);
+              }
+          });
 
         //Modal notificaciones
-        document.getElementById('notifIcon').addEventListener('click', async () => { // **Añadir 'async' aquí**
-          console.log("Campana de notificaciones clickeada");
-          try {
-              const token = localStorage.getItem("accessToken");
-              console.log("token:", token);
-              const response = await fetch(`/api/notifications/${user._id}`, {
-                method: 'GET',
-                headers: {
-                  'Authorization': 'Bearer ' + token
-                }
-              });  
+          document.getElementById('notifIcon').addEventListener('click', async () => {
+            const modal = document.getElementById("notificationsModal");
+            const notificationsList = document.getElementById("notificationsList");
+            
+            // Mostrar modal primero (UX rápida)
+            modal.style.display = "block";
+            
+            try {
+                const token = localStorage.getItem("accessToken");
+                const response = await fetch(`/api/notifications/${user._id}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });  
 
-              const notifications = await response.json();
-              console.log("Notificaciones:", notifications);
-            // Seleccionamos el modal y la lista
-              const modal = document.getElementById("notificationsModal");
-              const notificationsList = document.getElementById("notificationsList");
+                const notifications = await response.json();
+                
+                notificationsList.innerHTML = "";
 
-              // Limpiamos la lista
-              notificationsList.innerHTML = "";
+                if (notifications.length) {
+                    // Verificar si hay alguna no leída para mantener el badge de la campana
+                    const hasUnread = notifications.some(n => !n.read);
+                    updateBellBadge(hasUnread); 
 
-              // Llenamos la lista con las notificaciones recibidas
-              if (notifications.length) {
-                notifications.forEach(n => {
-                  const li = document.createElement("li");
-                  li.textContent = n.message;
-                  li.style.cursor = "pointer"; // indica que es clickeable
-
-                  // Si es tipo 'reservation' y es guía
-                  if (n.type === 'reservation' && user.roles.includes('guide')) {
-                    li.addEventListener('click', () => {
-                      window.location.href = `/api/experiences/${n.data.experienceId}`;
+                    notifications.forEach(n => {
+                        const li = createNotificationItem(n);
+                        notificationsList.appendChild(li);
                     });
-                  }
+                } else {
+                    const li = document.createElement("li");
+                    li.textContent = "No tienes notificaciones";
+                    notificationsList.appendChild(li);
+                    updateBellBadge(false); // No hay notificaciones, limpiar badge
+                }
 
-                  notificationsList.appendChild(li);
-                });
-              } else {
-                const li = document.createElement("li");
-                li.textContent = "No tienes notificaciones";
-                notificationsList.appendChild(li);
-              }
-
-              // Mostramos el modal
-              modal.style.display = "block";
-
-              /// Quitar badge si existe
-              const badge = document.querySelector('#notifIcon .notif-badge');
-              if (badge) badge.remove();
-
-              // Configuramos cierre del modal
-              const closeBtn = modal.querySelector(".close");
-              closeBtn.onclick = () => modal.style.display = "none";
-
-              // Cerrar al hacer click fuera del contenido
-              window.onclick = (event) => {
-                if (event.target === modal) modal.style.display = "none";
-              };
+                // --- Cierre del modal ---
+                const closeBtn = modal.querySelector(".close");
+                closeBtn.onclick = () => modal.style.display = "none";
+                window.onclick = (event) => {
+                    if (event.target === modal) modal.style.display = "none";
+                };
 
             } catch (err) {
-              console.error(err);
+                console.error(err);
             }
           });
         

@@ -4,6 +4,7 @@ import {
   getUserNotifications,
   markAsRead,
   markAllAsRead,
+  deleteNotification
 } from "./notification.controller";
 
 import { authMiddleware } from "../middlewares/auth";
@@ -21,5 +22,8 @@ router.patch("/:id/read", authMiddleware, markAsRead);
 
 // Marcar todas las notificaciones de un usuario como leídas
 router.patch("/:userId/read-all", authMiddleware, markAllAsRead);
+
+//Borrar notificaciones
+router.delete('/:id',authMiddleware, deleteNotification);
 
 export default router;

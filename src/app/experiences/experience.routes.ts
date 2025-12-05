@@ -12,6 +12,7 @@ import {
   showMyExperiencesPage,
   showCreateExperiencePage,
   getGuideExperiences,
+  showExperienceDetailPage
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
 import { guideVerificationMiddleware } from "../middlewares/guideVerification";
@@ -336,5 +337,8 @@ router.post(
   uploadExperiencePhotos.array("photos", 10),
   uploadPhotosController
 );
+
+// Ejemplo de uso: http://localhost:3000/api/experiences/view?id=12345
+router.get('/view/:id', showExperienceDetailPage);
 
 export default router;

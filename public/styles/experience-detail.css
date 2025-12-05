@@ -1,0 +1,231 @@
+/* Layout General */
+.detail-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 1. Galería Estilo Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.gallery-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+}
+
+.gallery-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.gallery-side img:hover, .gallery-main img:hover {
+    filter: brightness(0.9);
+}
+
+.btn-view-photos {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 1px solid #333;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Layout de Contenido (2 Columnas) */
+.content-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+}
+
+/* Columna Izquierda */
+.header-info h1 {
+    font-size: 26px;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.location-row {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.badges {
+    margin-bottom: 10px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
+}
+
+/* Perfil del Guía */
+.guide-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.guide-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.guide-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.hosted-by {
+    font-size: 16px;
+    color: #222;
+}
+
+.guide-link {
+    color: #666;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Grid de Características */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    gap: 15px;
+}
+
+.feature-icon {
+    font-size: 20px;
+    color: #222;
+}
+
+.description-section {
+    line-height: 1.6;
+    color: #222;
+}
+
+/* Columna Derecha: Tarjeta Sticky */
+.sidebar-info {
+    position: relative;
+}
+
+.booking-card {
+    position: sticky;
+    top: 100px; /* Para que se quede pegado al scrollear */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    background: white;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+
+.price {
+    font-size: 22px;
+    font-weight: bold;
+    color: #222;
+}
+
+.price-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.booking-details {
+    border: 1px solid #b0b0b0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.booking-row {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.booking-row:first-child {
+    border-bottom: 1px solid #b0b0b0;
+}
+
+.btn-reserve-large {
+    width: 100%;
+    background: linear-gradient(to right, #E61E4D, #D80565); /* Color estilo Airbnb */
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btn-reserve-large:active {
+    transform: scale(0.98);
+}
+
+/* Estilos de Reseñas */
+.guide-rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.big-star { color: #222; }
+
+@media (max-width: 768px) {
+    .content-layout {
+        grid-template-columns: 1fr; /* Una sola columna en móvil */
+    }
+    
+    .gallery-grid {
+        height: 250px;
+    }
+    
+    .booking-card {
+        position: static; /* Ya no es sticky en móvil */
+        margin-top: 20px;
+    }
+}

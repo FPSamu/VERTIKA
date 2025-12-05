@@ -24,19 +24,40 @@ export const getUserById = async (req: Request, res: Response) => {
     console.log("ID recibido:", id);
 
     const user = await UserModel.findById(id).lean();
-    //console.log("Usuario encontrado:", user);
+    console.log("Usuario encontrado:", user);
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
+    //res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
+    res.status(200).json(user);
 
   } catch (error) {
     console.error("Error en getUserById:", error);
     res.status(500).json({ error: "Error obteniendo usuario" });
   }
 };
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await UserModel.findById(id).lean();
+    console.log("Usuario encontrado:", user);
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.render("users/public-profile", { user, title: `Perfil — ${user.name}`});
+  
+
+  } catch (error) {
+    console.error("Error en getUserById:", error);
+    res.status(500).json({ error: "Error obteniendo usuario" });
+  }
+};
+
 
 export async function updateUser(req: Request, res: Response) {
   try {

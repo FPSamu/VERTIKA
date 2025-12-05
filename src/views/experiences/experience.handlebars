@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Experiencia - Vertika</title>
+  <link rel="stylesheet" href="/static/styles/experience-detail.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo" onclick="window.location.href='/api'">
+       <h1>VERTIKA</h1>
+    </div>
+    <div class="user-actions" id="userActions">
+        </div>
+  </header>
+
+  <main class="detail-container">
+    
+    <section class="gallery-grid" id="galleryGrid">
+        <div class="gallery-main skeleton"></div>
+        <div class="gallery-side">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+        </div>
+        <button id="viewGalleryBtn" class="btn-view-photos"><i class="fa fa-th"></i> Ver fotos</button>
+    </section>
+
+    <div class="content-layout">
+        
+        <div class="main-info">
+            <div class="header-info">
+                <h1 id="expTitle">Cargando experiencia...</h1>
+                <div class="badges" id="expBadges"></div>
+                <div class="location-row">
+                    <span id="expLocation"></span> • <span id="expRating"></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="guide-profile-section" id="guideSection">
+                <img src="https://via.placeholder.com/60" alt="Guía" class="guide-avatar" id="guideAvatar">
+                <div class="guide-info">
+                    <span class="hosted-by">Experiencia ofrecida por <strong id="guideName">...</strong></span>
+                    <a href="#" id="guideProfileLink" class="guide-link">Ver perfil del guía</a>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="features-grid" id="expFeatures">
+                </div>
+
+            <hr>
+
+            <div class="description-section">
+                <h3>Acerca de esta experiencia</h3>
+                <p id="expDescription"></p>
+            </div>
+
+            <hr>
+
+            <div class="reviews-section">
+                <h3>Reseñas</h3>
+                <div class="guide-rating-summary">
+                    <span class="big-star">★</span>
+                    <span class="big-rating" id="avgRatingNum">-</span>
+                    <span class="total-reviews" id="totalReviewsText">Sin reseñas</span>
+                </div>
+                <div id="reviewsContainer" class="reviews-list">
+                    </div>
+            </div>
+        </div>
+
+        <div class="sidebar-info">
+            <div class="booking-card">
+                <div class="booking-header">
+                    <div>
+                        <span class="price" id="cardPrice">$0</span> 
+                        <span class="price-text">por persona</span>
+                    </div>
+                    <div class="card-rating" id="cardRating">★ -</div>
+                </div>
+
+                <div class="booking-details">
+                    <div class="booking-row">
+                        <label>Fecha</label>
+                        <span id="cardDate">-</span>
+                    </div>
+                    <div class="booking-row">
+                        <label>Grupo</label>
+                        <span id="cardGroup">-</span>
+                    </div>
+                </div>
+
+                <button class="btn-reserve-large" id="btnOpenReservation">Reservar</button>
+                <div id="availabilityMsg" class="availability-msg"></div>
+            </div>
+        </div>
+
+    </div>
+  </main>
+
+  <div id="reservationModal" class="reservation-modal">
+    <div class="reservation-modal-content">
+      <div class="reservation-modal-header">
+        <h2>Reservar Experiencia</h2>
+        <span class="close" id="closeReservationModal">&times;</span>
+      </div>
+
+      <div id="reservationAlert" class="reservation-alert" style="display: none;"></div>
+
+      <div class="reservation-summary">
+        <div class="reservation-summary-title" id="reservationExpTitle"></div>
+        <div class="reservation-summary-item">
+          <span>Fecha:</span> <span id="reservationExpDate"></span>
+        </div>
+        <div class="reservation-summary-item">
+          <span>Precio:</span> <span id="reservationPricePerPerson"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="text-align: center; display: block; margin-bottom: 15px;">Número de personas</label>
+        <div class="seats-selector">
+          <button class="seats-btn" id="decreaseSeats">−</button>
+          <div class="seats-display" id="seatsDisplay">1</div>
+          <button class="seats-btn" id="increaseSeats">+</button>
+        </div>
+        <div class="seats-label" id="seatsAvailableLabel"></div>
+      </div>
+
+      <div class="reservation-summary-total">
+        <span>Total:</span> <span id="reservationTotal">$0.00</span>
+      </div>
+
+      <div class="reservation-modal-footer">
+        <button class="btn-cancel-reservation" id="btnCancelReservation">Cancelar</button>
+        <button class="btn-confirm-reservation" id="btnConfirmReservation">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="lightbox">
+      <span id="lightbox-close">&times;</span>
+      <span id="lightbox-prev">&#10094;</span>
+      <img id="lightbox-img" src="" alt="">
+      <span id="lightbox-next">&#10095;</span>
+      <div id="lightbox-counter"></div>
+  </div>
+
+  <script src="/static/scripts/experience-detail.js"></script> 
+</body>
+</html>

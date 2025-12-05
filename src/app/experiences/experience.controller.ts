@@ -258,3 +258,14 @@ export async function uploadExperiencePhotos(req: Request, res: Response) {
     res.status(500).json({ error: "Error al subir fotos de experiencia" });
   }
 }
+
+/* GET /experiences/view (Vista de detalle de experiencia) */
+export async function showExperienceDetailPage(req: Request, res: Response) {
+  try {
+    // Renderiza la vista ubicada en views/experiences/experience.handlebars
+    res.render('experiences/experience');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al cargar la página de experiencia" });
+  }
+}

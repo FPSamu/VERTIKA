@@ -70,3 +70,14 @@ export const markAllAsRead = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Error updating notifications" });
   }
 };
+
+// Eliminar notificación
+export const deleteNotification = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await Notification.findByIdAndDelete(id);
+    res.status(200).json({ message: "Notification deleted" });
+  } catch (err: any) {
+    res.status(500).json({ error: "Error deleting notification" });
+  }
+};
