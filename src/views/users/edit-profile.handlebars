@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Perfil | Vertika</title>
+  <link rel="stylesheet" href="/static/styles/vertika-header.css">
   <style>
     /* === ESTILOS GENERALES (Heredados) === */
     body {
@@ -13,25 +14,6 @@
       color: #333;
     }
 
-    /* === HEADER === */
-    header {
-      background: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    header .logo img { height: 40px; }
-    header .logo h1 { font-size: 22px; margin: 0; color: #2c3e50; }
 
     /* === CONTENEDOR === */
     .profile-container {
@@ -209,12 +191,13 @@
 <body>
 
   <header>
-    <div class="logo" onclick="window.location.href='/api'">
-      <img src="https://imgur.com/G39Rg8s.png" alt="Logo VERTIKA">
-      <h1>Vertika</h1>
+    <div class="logo">
+      <img src="https://imgur.com/2R9vMFY.png" onclick="window.location.href='/api'" alt="Vertika Logo" class="app-logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
     <nav>
-      <a href="/api" style="text-decoration: none; color: #667eea; font-weight: bold;">Inicio</a>
+      <a href="/api/auth/profile" style="text-decoration: none; color: #667eea; font-weight: bold;">Volver al Perfil</a>
+      <a href="/api" style="text-decoration: none; color: #667eea; font-weight: bold;">Volver al Inicio</a>
     </nav>
   </header>
 

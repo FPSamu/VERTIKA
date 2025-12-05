@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>{{guide.user.name}} | Guía Vertika</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/styles/vertika-header.css">
   <style>
     :root{
       --bg: #f4f6f8;
@@ -18,16 +20,7 @@
     body{margin:0;font-family: Inter, system-ui, sans-serif;background:var(--bg);color:var(--text)}
 
     /* Header (Igual que tu perfil anterior) */
-    .container{max-width:980px;margin:36px auto;padding:0 18px}
-    header{
-      display:flex;justify-content:space-between;align-items:center;
-      background:var(--card);padding:14px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(14,18,36,0.04);
-      margin-bottom:18px;
-    }
-    .logo{display:flex;gap:12px;align-items:center;cursor:pointer}
-    .logo img{height:38px}
-    .logo h1{font-size:18px;margin:0;color:var(--accent2)}
-    header nav a{color:var(--accent1);text-decoration:none;font-weight:600}
+    .container{max: width 60%; margin:1rem auto;padding:0 18px}
 
     /* Guide Profile Card */
     .profile-card {
@@ -121,15 +114,30 @@
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <div class="logo" onclick="window.location.href='/api'">
-      <img src="https://i.imgur.com/G39Rg8s.png" alt="Vertika">
-      <h1>Vertika</h1>
+<header>
+    <div class="logo">
+      <img src="https://imgur.com/2R9vMFY.png" onclick="window.location.href='/api'" alt="Vertika Logo" class="app-logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
     </div>
-    <nav><a href="/guides">Explorar Guías</a></nav>
+
+    <nav id="mainNav" style="display: none;">
+      <a href="/api" class="nav-link" data-page="home">Inicio</a>
+      <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis
+        Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser
+        Guía</a>
+    </nav>
+
+    <div class="user-actions" id="userActions">
+      <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
+      <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
+    </div>
   </header>
 
+
+
+<div class="container">
   <div class="profile-card">
     <div class="avatar-col">
     <img 
@@ -267,6 +275,8 @@
   </div>
 </div>
 
+<script src="/static/scripts/notifications.js"></script>
+<script src="/static/scripts/load-header.js"></script>
 <script>
 
     document.addEventListener('DOMContentLoaded', () => {
