@@ -97,7 +97,7 @@
               
               // Formato de Fecha (ej: 25 Dic)
               const dateObj = new Date(exp.date);
-              const dateStr = dateObj.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+              const dateStr = dateObj.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric'});
 
               // HTML estilo Airbnb
               card.innerHTML = `
@@ -119,7 +119,7 @@
               `;
 
               
-
+              //Abrir experiencia al picarle al card
               card.addEventListener('click', () => {
                 if(typeof openExperienceModal === 'function') openExperienceModal(exp._id);
               });

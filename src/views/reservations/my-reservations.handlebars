@@ -5,6 +5,8 @@
   <title>Mis Reservaciones - Vertika</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/static/styles/vertika-header.css">
+   <link rel="stylesheet" href="/static/styles/guide-modal.css">
+
   <style>
 
     .container {
@@ -456,6 +458,59 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal para solicitar ser guía -->
+  <div id="guideModal" class="guide-modal">
+    <div class="guide-modal-content">
+      <div class="guide-modal-header">
+        <h2>Solicitar ser Guía</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+
+      <div class="modal-body">
+        <form id="guideForm">
+          <div class="form-group">
+            <label for="guideBio">Biografía *</label>
+            <textarea id="guideBio" name="bio" required
+              placeholder="Cuéntanos sobre ti, tu experiencia y qué te apasiona de las aventuras en la montaña..."></textarea>
+            <small>Comparte tu historia y experiencia como guía</small>
+          </div>
+
+          <div class="form-group">
+            <label for="guideExperienceYears">Años de Experiencia *</label>
+            <input type="number" id="guideExperienceYears" name="experienceYears" min="0" max="50" required
+              placeholder="0">
+            <small>¿Cuántos años de experiencia tienes como guía?</small>
+          </div>
+
+          <div class="form-group">
+            <label>Idiomas que hablas *</label>
+            <div class="add-item-container">
+              <input type="text" id="languageInput" placeholder="Ej: Español, Inglés, Francés">
+              <button type="button" id="addLanguageBtn">Agregar</button>
+            </div>
+            <div class="language-tags" id="languageTags"></div>
+            <small>Agrega los idiomas que hablas. Al menos uno es requerido.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Especialidades</label>
+            <div class="add-item-container">
+              <input type="text" id="specialtyInput" placeholder="Ej: Escalada, Senderismo, Rappel">
+              <button type="button" id="addSpecialtyBtn">Agregar</button>
+            </div>
+            <div class="specialty-tags" id="specialtyTags"></div>
+            <small>Agrega tus especialidades o áreas de expertise (opcional)</small>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+        <button type="button" class="btn-submit" id="submitGuideBtn">Enviar Solicitud</button>
+      </div>
+    </div>
+  </div>
   <!-- Modal notificaciones-->
   <div id="notificationsModal" class="notif-modal" style="display:none;">
     <div class="notif-modal-content">
@@ -468,6 +523,7 @@
   </div>
   <script src="/static/scripts/notifications.js"></script>
   <script src="/static/scripts/load-header.js"></script>
+  <script src="/static/scripts/request_guide.js"></script>
   <script>
     let allReservations = [];
     let currentFilter = 'all';

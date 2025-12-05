@@ -1,0 +1,565 @@
+/* Modal de Detalle de Experiencia */
+    .experience-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      animation: fadeIn 0.3s;
+    }
+
+    .experience-modal-content {
+      background-color: #fefefe;
+      margin: 2% auto;
+      padding: 0;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 900px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .experience-modal-header {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .experience-modal-header img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .experience-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+      z-index: 10;
+      line-height: 1;
+    }
+
+    .experience-modal-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .experience-modal-body {
+      padding: 30px;
+    }
+
+    .experience-modal-title {
+      font-size: 32px;
+      color: #2c3e50;
+      margin: 0 0 20px;
+      font-weight: bold;
+    }
+
+    .experience-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .experience-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-activity {
+      background: #667eea;
+      color: white;
+    }
+
+    .badge-difficulty {
+      background: #764ba2;
+      color: white;
+    }
+
+    .badge-status {
+      background: #48bb78;
+      color: white;
+    }
+
+    .experience-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .experience-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .experience-info-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .experience-info-value {
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .experience-description {
+      margin: 30px 0;
+      line-height: 1.8;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .experience-photos-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .experience-photos-gallery img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .experience-photos-gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .experience-modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 30px;
+      border-top: 2px solid #f0f0f0;
+      background: #fafafa;
+      border-radius: 0 0 15px 15px;
+    }
+
+    .experience-price {
+      font-size: 28px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .experience-price-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: normal;
+    }
+
+    .btn-reserve {
+      padding: 15px 40px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-reserve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .experience-modal-content {
+        width: 95%;
+        margin: 5% auto;
+      }
+
+      .experience-modal-header {
+        height: 250px;
+      }
+
+      .experience-modal-title {
+        font-size: 24px;
+      }
+
+      .experience-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .experience-modal-footer {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+
+
+    /* Estilos para Reviews del Guía */
+    .guide-reviews-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .guide-reviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .guide-reviews-title {
+      font-size: 24px;
+      color: #2c3e50;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .guide-rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #f8f9fa;
+      padding: 15px 25px;
+      border-radius: 10px;
+    }
+
+    .guide-rating-number {
+      font-size: 36px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .guide-rating-stars {
+      display: flex;
+      gap: 4px;
+      font-size: 24px;
+    }
+
+    .guide-rating-stars .star-filled {
+      color: #ffd700;
+    }
+
+    .guide-rating-stars .star-empty {
+      color: #ddd;
+    }
+
+    .guide-rating-count {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .review-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      transition: box-shadow 0.3s;
+    }
+
+    .review-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .review-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .review-user-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+
+    .review-date {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .review-ratings {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+    }
+
+    .review-rating-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+    }
+
+    .review-stars .star-filled {
+      color: #ffd700;
+    }
+
+    .review-stars .star-empty {
+      color: #ddd;
+    }
+
+    .review-comment {
+      color: #555;
+      line-height: 1.6;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    .review-photos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .review-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .review-photo:hover {
+      transform: scale(1.1);
+    }
+
+    .no-reviews {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 16px;
+    }
+
+    .reviews-loading {
+      text-align: center;
+      padding: 40px;
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    /* Modal de Reserva */
+    .reservation-modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      animation: fadeIn 0.3s;
+    }
+
+    .reservation-modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s;
+    }
+
+    .reservation-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .reservation-modal-header h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    .reservation-summary {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .reservation-summary-title {
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .reservation-summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .reservation-summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-top: 2px solid #ddd;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    .seats-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .seats-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seats-btn:hover:not(:disabled) {
+      background: #667eea;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .seats-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .seats-display {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .seats-label {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .reservation-modal-footer {
+      display: flex;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .reservation-modal-footer button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel-reservation {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-cancel-reservation:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-confirm-reservation {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-confirm-reservation:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .reservation-alert {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }

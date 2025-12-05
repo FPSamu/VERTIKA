@@ -4,24 +4,32 @@
     .hero {
       text-align: center;
       padding: 60px 20px 30px;
-      background: linear-gradient(to right, #1e3c72 0%, #2a5298 100%);
       color: white;
+      background: linear-gradient(to right, rgba(30, 60, 114, 0.85), rgba(42, 82, 152, 0.30)),
+              url('https://images.unsplash.com/photo-1528148204584-a1910b6efa11?q=80&w=1121&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  
+        background-size: cover;       /* Escala la imagen para cubrir todo */
+        background-position: center;  /* Centra la imagen */
+        background-repeat: no-repeat; /* Evita que se repita */
     }
 
     .hero h2 {
-      font-size: 36px;
+      font-size: 40px;
       margin-bottom: 10px;
+      margin-top: 3rem;
     }
 
     .hero p {
-      font-size: 18px;
+      font-size: 22px;
       margin: 0;
+      margin-top: 1rem;
+      margin-bottom: 4rem;
     }
 
 /*Experiencias*/
 main {
       max-width: 1200px;
-      margin: 40px auto;
+      margin: 20px auto;
       padding: 0 20px;
     }
 
