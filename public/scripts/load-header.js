@@ -257,3 +257,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error inicializando UI de usuario:', err);
   }
 });
+
+// Función para refrescar el token si ha expirado
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (!refreshToken) {
+        console.error('No hay refresh token disponible');
+        return null;
+      }
+
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refreshToken })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('accessToken', data.data.accessToken);
+          console.log('Token refrescado exitosamente');
+          return data.data.accessToken;
+        } else {
+          console.error('Error al refrescar token');
+          return null;
+        }
+      } catch (err) {
+        console.error('Error en refresh token:', err);
+        return null;
+      }
+    }
+
+// Función para obtener un token válido (refrescar si es necesario)
+    async function getValidToken() {
+      let token = localStorage.getItem('accessToken');
+
+      if (!token) {
+        return null;
+      }
+
+      // Intentar usar el token actual primero
+      return token;
+    }
