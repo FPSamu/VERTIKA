@@ -121,8 +121,8 @@
               
               //Abrir experiencia al picarle al card
               card.addEventListener('click', () => {
-                if(typeof openExperienceModal === 'function') openExperienceModal(exp._id);
-              });
+                window.location.href = `/api/experiences/view/${exp._id}`;
+            });
             
 
               container.appendChild(card);
