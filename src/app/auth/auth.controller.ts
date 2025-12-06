@@ -209,12 +209,15 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    //  res.status(200).json({
-    //    success: true,
-    //    data: {
-    //     user,
-    //    },
-    //  });
+    if (req.accepts('json') && !req.accepts('html')) {
+      res.status(200).json({
+        success: true,
+        data: {
+          user,
+        },
+      });
+      return;
+    }
 
     res.render("users/profile", { user, title: `Perfil — ${user.name}`});
 

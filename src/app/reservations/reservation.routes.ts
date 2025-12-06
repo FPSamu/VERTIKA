@@ -7,7 +7,8 @@ import {
   cancelReservation,
   deleteReservation,
   showMyReservationsPage,
-  getUserReservations
+  getUserReservations,
+  showReservationDetailsPage
 } from "./reservation.controller";
 import { authMiddleware } from "../middlewares/auth";
 
@@ -31,6 +32,24 @@ const router = Router();
  *         description: Página renderizada
  */
 router.get("/my-reservations", showMyReservationsPage);
+
+/**
+ * @swagger
+ * /api/reservations/view/{id}:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: Página de detalles de una reservación
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Página renderizada
+ */
+router.get("/view/:id", showReservationDetailsPage);
 
 /**
  * @swagger

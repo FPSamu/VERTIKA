@@ -1,6 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import reviewRoutes from '../src/app/reviews/review.routes';
+import '../src/app/users/user.model'; // Import User model to ensure schema registration
+import '../src/app/experiences/experience.model'; // Import Experience model to ensure schema registration
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';

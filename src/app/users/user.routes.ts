@@ -53,7 +53,7 @@ router.get("/profile/:id", getUserProfile);
  *       404:
  *         description: Usuario no encontrado
  */
-router.get("/:id", getUserById);
+router.get("/:id", authMiddleware, getUserById);
 
 
 /**

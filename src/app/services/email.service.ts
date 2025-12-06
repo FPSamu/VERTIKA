@@ -60,8 +60,53 @@ class EmailService {
   }
 
   /**
-   * Envía email de verificación
+   * Envía email de solicitud de review
    */
+  async sendReviewRequestEmail(email: string, name: string, experienceTitle: string, reservationId: string): Promise<boolean> {
+    const backendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+    
+    // Enlace directo a la página de creación de review
+    const reviewUrl = `${backendUrl}/api/reviews/new/${reservationId}`;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; margin-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>¡Gracias por tu aventura!</h1>
+          </div>
+          <div class="content">
+            <h2>Hola ${name},</h2>
+            <p>Esperamos que hayas disfrutado tu experiencia <strong>"${experienceTitle}"</strong>.</p>
+            <p>Nos encantaría conocer tu opinión. Por favor, tómate un momento para calificar tu experiencia y a tu guía.</p>
+            <div style="text-align: center;">
+              <a href="${reviewUrl}" class="button">Dejar una Reseña</a>
+            </div>
+            <p style="margin-top: 30px; font-size: 12px; color: #666;">Si el botón no funciona, copia y pega este enlace en tu navegador:<br>${reviewUrl}</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return this.sendEmail({
+      to: email,
+      subject: `Califica tu experiencia: ${experienceTitle}`,
+      html
+    });
+  }
+
   async sendVerificationEmail(email: string, name: string, token: string): Promise<boolean> {
     // URL del backend para verificación directa
     const backendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;

@@ -32,6 +32,47 @@ export async function showMyReservationsPage(req: Request, res: Response) {
   }
 }
 
+/* GET /reservations/view/:id (Vista de detalles de reserva) */
+export async function showReservationDetailsPage(req: Request, res: Response) {
+  try {
+    const reservation = await Reservation.findById(req.params.id)
+      .populate('userId')
+      .populate({
+        path: 'experienceId',
+        populate: {
+          path: 'guideId',
+          populate: {
+            path: 'userId'
+          }
+        }
+      })
+      .lean();
+      
+    if (!reservation) {
+        return res.status(404).send("Reserva no encontrada");
+    }
+    
+    const r = reservation as any;
+
+    res.render('reservations/reservation-details', {
+        layout: 'main',
+        reservation: {
+            _id: r._id,
+            status: r.status,
+            seats: r.seats,
+            total: r.total,
+            createdAt: r.createdAt,
+            experience: r.experienceId,
+            user: r.userId,
+            guide: r.experienceId.guideId // Pass guide info explicitly if needed, or access via experience
+        }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error al cargar página de detalles de reserva");
+  }
+}
+
 /* GET /reservations/user/:userId (API para obtener reservaciones del usuario) */
 export async function getUserReservations(req: Request, res: Response) {
   try {
@@ -43,7 +84,23 @@ export async function getUserReservations(req: Request, res: Response) {
     .populate('experienceId')
     .sort({ createdAt: -1 });
     
-    res.json(reservations);
+    // Actualizar estado si la experiencia ya terminó
+    const updatedReservations = await Promise.all(reservations.map(async (reservation) => {
+      const exp = reservation.experienceId as any;
+      if (exp) {
+        const isCompleted = exp.status === 'completed';
+        const isPastDate = new Date(exp.date) < new Date();
+        
+        // Si la experiencia terminó o ya pasó la fecha, y la reserva está confirmada
+        if ((isCompleted || isPastDate) && reservation.status === 'confirmed') {
+          reservation.status = 'completed';
+          await reservation.save();
+        }
+      }
+      return reservation;
+    }));
+    
+    res.json(updatedReservations);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener reservaciones del usuario" });
@@ -81,6 +138,12 @@ export async function createReservation(req: Request, res: Response) {
     const experienceToCheck = await Experience.findById(experienceId);
     if (!experienceToCheck) {
       return res.status(404).json({ error: "Experiencia no encontrada" });
+    }
+
+    // Validar que el guía no reserve su propia experiencia
+    const guide = await Guide.findById(experienceToCheck.guideId);
+    if (guide && guide.userId.toString() === userId) {
+      return res.status(403).json({ error: "No puedes reservar tu propia experiencia" });
     }
 
     // 2. VERIFICAR SI YA ESTÁ RESERVADA (BOOKED)

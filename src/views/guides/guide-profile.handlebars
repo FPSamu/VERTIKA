@@ -160,16 +160,20 @@
         </div>
         
         <div id="action-buttons">
+            {{#unless isOwner}}
             <button id="btn-contact" class="btn-contact" onclick="openContact()">
                 Contactar
             </button>
+            {{/unless}}
 
+            {{#if isOwner}}
             <button id="btn-edit" 
                     class="btn-contact" 
-                    style="display: none; background: linear-gradient(135deg, #f39c12, #d35400);"
-                    onclick="window.location.href='/api/guides/edit/{{guide._id}}'">
+                    style="background: linear-gradient(135deg, #f39c12, #d35400);"
+                    onclick="openEditModal()">
                ✏️ Editar Perfil
             </button>
+            {{/if}}
         </div>
       </div>
 
@@ -288,46 +292,124 @@
 
 <script src="/static/scripts/notifications.js"></script>
 <script src="/static/scripts/load-header.js"></script>
-<script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-    // 1. ID del dueño del perfil (viene del servidor/handlebars)
-    const profileOwnerId = "{{guide.user._id}}"; 
-
-    // 2. Obtener la data del usuario logueado del LocalStorage
-    // IMPORTANTE: Cambia 'user' por el nombre exacto de la llave donde guardas el JSON
-    const storedData = localStorage.getItem('user'); 
-
-    if (storedData) {
-      try {
-        // Convertimos el texto JSON a Objeto
-        const userData = JSON.parse(storedData);
+<!-- Modal de Edición -->
+<div id="editModal" class="modal-overlay">
+  <div class="modal" style="max-width: 500px; text-align: left;">
+    <h2 style="text-align: center; margin-bottom: 20px;">Editar Perfil</h2>
+    <form id="editProfileForm">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Nombre</label>
+        <input type="text" name="name" value="{{guide.user.name}}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px; text-align: center;">
+        <label style="display: block; font-weight: bold; margin-bottom: 10px;">Foto de Perfil</label>
         
-        // Extraemos el ID (según tu JSON es ._id)
-        const loggedUserId = userData._id;
-
-        console.log("Dueño Perfil:", profileOwnerId);
-        console.log("Usuario Logueado:", loggedUserId);
-
-        // 3. Comprobamos si coinciden
-        if (loggedUserId && profileOwnerId && loggedUserId === profileOwnerId) {
-          // ES EL DUEÑO: Ocultar Contactar, Mostrar Editar
-          const btnContact = document.getElementById('btn-contact');
-          const btnEdit = document.getElementById('btn-edit');
+        <div style="position: relative; width: 150px; height: 150px; margin: 0 auto;">
+          <img id="previewAvatar" 
+               src="{{#if guide.user.avatarUrl}}{{guide.user.avatarUrl}}{{else}}https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg{{/if}}" 
+               style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd; cursor: pointer;"
+               onclick="document.getElementById('avatarInput').click()"
+               onerror="this.src='https://ttwo.dk/wp-content/uploads/2017/08/person-placeholder.jpg'">
           
-          if(btnContact) btnContact.style.display = 'none';
-          if(btnEdit) btnEdit.style.display = 'inline-block'; // O 'flex' si prefieres
-        }
-      } catch (e) {
-        console.error("Error al leer datos del usuario:", e);
-      }
-    }
-  });
+          <div onclick="document.getElementById('avatarInput').click()" 
+               style="position: absolute; bottom: 5px; right: 5px; background: var(--accent1); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+            <i class="fas fa-camera"></i>
+          </div>
+        </div>
 
-  // Scripts básicos de UI y formato
-  const modal = document.getElementById('contactModal');
-  function openContact() { modal.style.display = 'flex'; }
-  function closeContact() { modal.style.display = 'none'; }
+        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;" onchange="previewImage(this)">
+        <p style="font-size: 12px; color: #777; margin-top: 8px;">Click en la imagen para cambiar</p>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Años de Experiencia</label>
+        <input type="number" name="experienceYears" value="{{guide.experienceYears}}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Idiomas (separados por coma)</label>
+        <input type="text" name="languages" value="{{guide.languages}}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Especialidades (separadas por coma)</label>
+        <input type="text" name="specialties" value="{{guide.specialties}}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Bio</label>
+        <textarea name="bio" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">{{guide.bio}}</textarea>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button type="button" onclick="closeEditModal()" style="padding: 10px 20px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancelar</button>
+        <button type="submit" style="padding: 10px 20px; background: var(--accent1); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Modal de Contacto (Existente)
+  const contactModal = document.getElementById('contactModal');
+  function openContact() { if(contactModal) contactModal.style.display = 'flex'; }
+  function closeContact() { if(contactModal) contactModal.style.display = 'none'; }
+
+  // Modal de Edición (Nuevo)
+  const editModal = document.getElementById('editModal');
+  function openEditModal() { if(editModal) editModal.style.display = 'flex'; }
+  function closeEditModal() { if(editModal) editModal.style.display = 'none'; }
+
+  // Cerrar modales al hacer click fuera
+  window.onclick = function(event) {
+    if (event.target == contactModal) closeContact();
+    if (event.target == editModal) closeEditModal();
+  }
+
+  // Previsualización de imagen
+  function previewImage(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('previewAvatar').src = e.target.result;
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // Manejo del formulario de edición
+  const editForm = document.getElementById('editProfileForm');
+  if (editForm) {
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(editForm);
+      
+      // No necesitamos convertir a JSON manualmente porque usaremos FormData directamente
+      // Pero si el backend espera arrays para languages/specialties en multipart, 
+      // debemos asegurarnos de enviarlos correctamente.
+      // Multer maneja campos de texto, pero si enviamos "a,b,c" como string, el backend lo recibe como string.
+      // El backend actual espera arrays en el body si fuera JSON, pero con multipart todo llega como string o file.
+      // Vamos a ajustar el backend para parsear estos strings si es necesario, o enviarlos como strings y que el backend los parta.
+      
+      // NOTA: Como estamos enviando FormData, no seteamos Content-Type: application/json
+      // El navegador pondrá multipart/form-data con el boundary correcto.
+
+      try {
+        const res = await fetch('/api/guides/{{guide._id}}', {
+          method: 'PATCH',
+          // headers: { 'Content-Type': 'multipart/form-data' }, // NO poner esto manualmente con fetch+FormData
+          body: formData
+        });
+
+        if (res.ok) {
+          window.location.reload();
+        } else {
+          const err = await res.json();
+          alert('Error al actualizar perfil: ' + (err.error || 'Error desconocido'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error de conexión');
+      }
+    });
+  }
 
   // Formato de fechas en cliente
   document.querySelectorAll('.date-placeholder').forEach(el => {
@@ -337,9 +419,6 @@
       if(!isNaN(d)) el.innerText = d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
     }
   });
-
-  //Dom
-  
 </script>
 
 </body>

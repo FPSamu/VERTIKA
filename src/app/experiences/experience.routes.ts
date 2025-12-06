@@ -12,7 +12,9 @@ import {
   showMyExperiencesPage,
   showCreateExperiencePage,
   getGuideExperiences,
-  showExperienceDetailPage
+  showExperienceDetailPage,
+  startExperience,
+  finishExperience
 } from "./experience.controller";
 import { authMiddleware } from "../middlewares/auth";
 import { guideVerificationMiddleware } from "../middlewares/guideVerification";
@@ -202,7 +204,7 @@ router.post("/", authMiddleware, uploadExperiencePhotos.array("photos", 10), gui
  *       200:
  *         description: Experiencia actualizada
  */
-router.patch("/:id", authMiddleware, guideVerificationMiddleware, updateExperience);
+router.patch("/:id", authMiddleware, guideVerificationMiddleware, uploadExperiencePhotos.array("photos", 10), updateExperience);
 
 /**
  * @swagger
@@ -336,6 +338,22 @@ router.post(
   experienceOwnershipMiddleware,
   uploadExperiencePhotos.array("photos", 10),
   uploadPhotosController
+);
+
+router.patch(
+  "/:id/start",
+  authMiddleware,
+  guideVerificationMiddleware,
+  experienceOwnershipMiddleware,
+  startExperience
+);
+
+router.patch(
+  "/:id/finish",
+  authMiddleware,
+  guideVerificationMiddleware,
+  experienceOwnershipMiddleware,
+  finishExperience
 );
 
 // Ejemplo de uso: http://localhost:3000/api/experiences/view?id=12345

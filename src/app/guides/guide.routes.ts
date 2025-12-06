@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { listGuides, getGuideById, createGuide, updateGuide, deleteGuide,getGuidePublicProfile, getGuideIdByUserId } from "./guide.controller";
-import { authMiddleware } from "../middlewares/auth";
+import { authMiddleware, optionalAuthMiddleware } from "../middlewares/auth";
+import { uploadS3Profile } from "../middlewares/upload/upload_s3_image";
 
 const router = Router();
 
@@ -46,7 +47,7 @@ router.get("/:id", getGuideById);
 
 
 /* GET /guides/profile/:guideId */
-router.get("/profile/:guideId", getGuidePublicProfile);
+router.get("/profile/:guideId", optionalAuthMiddleware, getGuidePublicProfile);
 
 /**
  * @swagger
@@ -127,7 +128,7 @@ router.post("/", authMiddleware,createGuide);
  *       404:
  *         description: Guía no encontrada
  */
-router.patch("/:id", authMiddleware, updateGuide);
+router.patch("/:id", authMiddleware, uploadS3Profile.single("avatar"), updateGuide);
 
 /**
  * @swagger

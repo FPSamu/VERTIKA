@@ -326,6 +326,16 @@ class AuthService {
         };
       }
 
+      // Si el usuario es un guía, actualizar también el estado de verificación en la colección de guías
+      if (result.roles && result.roles.includes('guide')) {
+        if (connection.db) {
+           await connection.db.collection('guides').updateOne(
+             { userId: result._id },
+             { $set: { verified: true } }
+           );
+        }
+      }
+
       // Enviar email de bienvenida
       await emailService.sendWelcomeEmail(result.email, result.name);
 

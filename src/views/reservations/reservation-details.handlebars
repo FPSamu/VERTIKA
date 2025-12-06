@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalles de Reserva - Vertika</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/styles/vertika-header.css">
+  <style>
+    .container {
+      padding-top: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .status-badge {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: #4a5568;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-top: 20px;
+    }
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .info-item {
+      margin-bottom: 10px;
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: #718096;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      color: #2d3748;
+      font-weight: 500;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #edf2f7;
+      color: #4a5568;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="https://imgur.com/2R9vMFY.png" onclick="window.location.href='/api'" alt="Vertika Logo" class="app-logo">
+      <h1 onclick="window.location.href='/api'">VERTIKA</h1>
+    </div>
+
+    <nav id="mainNav" style="display: none;">
+      <a href="/api" class="nav-link" data-page="home">Inicio</a>
+      <a href="#" class="nav-link" data-page="reservations" id="navReservations">Mis Reservaciones</a>
+      <a href="#" class="nav-link" data-page="experiences" id="navExperiences" style="display: none;">Mis
+        Experiencias</a>
+      <a href="#" class="nav-link" data-page="request-guide" id="navRequestGuide" style="display: none;">Solicitar ser
+        Guía</a>
+    </nav>
+
+    <div class="user-actions" id="userActions">
+      <button class="login" onclick="window.location.href='/api/auth/login'">Iniciar Sesión</button>
+      <button class="register" onclick="window.location.href='/api/auth/register'">Registrarse</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="javascript:history.back()" class="btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
+    
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header">
+        <h2>Reserva #{{reservation._id}}</h2>
+        <span class="status-badge">{{reservation.status}}</span>
+      </div>
+      <div class="card-body">
+        
+        <div class="section-title"><i class="fas fa-mountain"></i> Experiencia</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Título</span>
+            <span class="info-value">{{reservation.experience.title}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha</span>
+            <span class="info-value">{{reservation.experience.date}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ubicación</span>
+            <span class="info-value">{{reservation.experience.location}}</span>
+          </div>
+        </div>
+
+        <div class="section-title"><i class="fas fa-map-marked-alt"></i> Guía</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre</span>
+            <span class="info-value">{{reservation.guide.userId.name}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{reservation.guide.userId.email}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bio</span>
+            <span class="info-value">{{reservation.guide.bio}}</span>
+          </div>
+        </div>
+
+        <div class="section-title"><i class="fas fa-user"></i> Cliente</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre</span>
+            <span class="info-value">{{reservation.user.name}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{reservation.user.email}}</span>
+          </div>
+          <!-- Agrega más campos del usuario si es necesario -->
+        </div>
+
+        <div class="section-title"><i class="fas fa-receipt"></i> Detalles del Pago</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Asientos Reservados</span>
+            <span class="info-value">{{reservation.seats}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Total Pagado</span>
+            <span class="info-value">${{reservation.total}} {{reservation.experience.currency}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha de Reserva</span>
+            <span class="info-value">{{reservation.createdAt}}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/scripts/load-header.js"></script>
+</body>
+</html>

@@ -135,6 +135,10 @@ describe('Auth Endpoints', () => {
       expect(response.body).toHaveProperty('data');
       expect(response.body.data).toHaveProperty('accessToken');
       expect(response.body.data).toHaveProperty('refreshToken');
+
+      // Actualizar tokens para pruebas subsiguientes
+      accessToken = response.body.data.accessToken;
+      refreshToken = response.body.data.refreshToken;
     });
 
     it('should fail to login with wrong password', async () => {
@@ -203,6 +207,7 @@ describe('Auth Endpoints', () => {
       const response = await request(app)
         .get('/api/auth/profile')
         .set('Authorization', `Bearer ${accessToken}`)
+        .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200);
 

@@ -5,6 +5,7 @@ import {
   createReview,
   updateReview,
   deleteReview,
+  showCreateReviewPage,
   uploadReviewPhotos as uploadPhotosController
 } from "./review.controller";
 import { authMiddleware } from "../middlewares/auth";
@@ -18,6 +19,9 @@ const router = Router();
  *   name: Reviews
  *   description: Endpoints de reseñas
  */
+
+// Vista para crear review
+router.get("/new/:reservationId", showCreateReviewPage);
 
 /**
  * @swagger

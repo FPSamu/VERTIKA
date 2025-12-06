@@ -1,7 +1,45 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import User from "../users/user.model";
+import Experience from "../experiences/experience.model";
 import Review from "./review.model";
+import Reservation from "../reservations/reservation.model";
 
+
+/* GET /reviews/new/:reservationId (Vista para crear review) */
+export async function showCreateReviewPage(req: Request, res: Response) {
+  try {
+    const reservation = await Reservation.findById(req.params.reservationId)
+      .populate({
+        path: 'experienceId',
+        populate: {
+          path: 'guideId',
+          populate: {
+            path: 'userId'
+          }
+        }
+      })
+      .lean();
+
+    if (!reservation) {
+      return res.status(404).send("Reserva no encontrada");
+    }
+
+    // Verificar si ya existe una review para esta reserva
+    const existingReview = await Review.findOne({ reservationId: req.params.reservationId });
+    if (existingReview) {
+      return res.status(400).send("Ya has dejado una reseña para esta experiencia.");
+    }
+
+    res.render('reviews/create-review', { 
+      layout: false, // Usamos layout false porque el archivo ya tiene estructura HTML completa
+      reservation 
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error al cargar página de reseña");
+  }
+}
 
 /* GET /reviews */
 export async function listReviews(req: Request, res: Response) {
@@ -27,7 +65,11 @@ export async function listReviews(req: Request, res: Response) {
       filter.reservationId = new mongoose.Types.ObjectId(reservationId as string);
     }
 
-    const reviews = await Review.find(filter);
+    const reviews = await Review.find(filter)
+      .populate('userId', 'name avatarUrl')
+      .populate('experienceId', 'title')
+      .sort({ createdAt: -1 });
+      
     res.json(reviews);
   } catch (err) {
     console.error(err);

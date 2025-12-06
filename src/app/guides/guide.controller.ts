@@ -71,7 +71,7 @@ export async function getGuideById(req: Request, res: Response) {
 }
 
 /* GET /guides/profile/:guideId */
-export async function getGuidePublicProfile(req: Request, res: Response) {
+export async function getGuidePublicProfile(req: any, res: Response) {
   try {
     const { guideId } = req.params;
 
@@ -123,12 +123,19 @@ export async function getGuidePublicProfile(req: Request, res: Response) {
         user: r.userId || null 
     }));
 
+    // Verificar si es dueño
+    let isOwner = false;
+    if (req.user && guideRaw.userId.toString() === req.user.userId) {
+        isOwner = true;
+    }
+
     // 5. Renderizamos
     res.render('guides/guide-profile', {
       layout: false,
       guide: guideWithUser, // Pasamos el objeto manual
       experiences,
-      reviews: formattedReviews
+      reviews: formattedReviews,
+      isOwner
     });
 
   } catch (err) {
@@ -158,11 +165,59 @@ export async function createGuide(req: Request, res: Response) {
 }
 
 /*PATCH /guides/:id */
-export async function updateGuide(req: Request, res: Response) {
+export async function updateGuide(req: any, res: Response) {
     try {
-        const guide = await Guide.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { id } = req.params;
+        const { bio, experienceYears, languages, specialties, name } = req.body;
+        let { avatarUrl } = req.body;
+
+        // Si se subió un archivo, usamos su URL
+        if (req.file && (req.file as any).location) {
+            avatarUrl = (req.file as any).location;
+        }
+
+        // 1. Buscar el guía
+        const guide = await Guide.findById(id);
         if (!guide) return res.status(404).json({ error: "Guía no encontrada" });
-        res.json(guide);
+
+        // 2. Verificar permisos (solo el dueño puede editar)
+        if (guide.userId.toString() !== req.user.userId) {
+            return res.status(403).json({ error: "No tienes permiso para editar este perfil" });
+        }
+
+        // 3. Actualizar datos del Guía
+        if (bio !== undefined) guide.bio = bio;
+        if (experienceYears !== undefined) guide.experienceYears = experienceYears;
+        
+        // Manejo de arrays que pueden venir como strings desde FormData
+        if (languages !== undefined) {
+            guide.languages = typeof languages === 'string' ? languages.split(',').map((s: string) => s.trim()).filter((s: string) => s) : languages;
+        }
+        if (specialties !== undefined) {
+            guide.specialties = typeof specialties === 'string' ? specialties.split(',').map((s: string) => s.trim()).filter((s: string) => s) : specialties;
+        }
+        
+        await guide.save();
+
+        // 4. Actualizar datos del Usuario si es necesario
+        let updatedUser = null;
+        if (name || avatarUrl) {
+            const updateData: any = {};
+            if (name) updateData.name = name;
+            if (avatarUrl) updateData.avatarUrl = avatarUrl;
+
+            updatedUser = await userModel.findByIdAndUpdate(guide.userId, updateData, { new: true }).select('name email avatarUrl');
+        } else {
+            updatedUser = await userModel.findById(guide.userId).select('name email avatarUrl');
+        }
+
+        // 5. Responder con datos combinados
+        const guideObject = guide.toObject();
+        res.json({
+            ...guideObject,
+            user: updatedUser
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Error al actualizar guía" });

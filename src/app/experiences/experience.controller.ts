@@ -2,7 +2,11 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Experience from "../experiences/experience.model";
 import Guide from "../guides/guide.model";
+import Reservation from "../reservations/reservation.model";
+import EmailService from "../services/email.service";
 import { StatusType } from '../varTypes';
+
+const emailService = new EmailService();
 
 /* GET /experiences */
 export async function listExperiences(req: Request, res: Response) {
@@ -203,8 +207,46 @@ export async function createExperience(req: Request, res: Response) {
 /* PATCH /experiences/:id (editar campos) */
 export async function updateExperience(req: Request, res: Response) {
   try {
-    const updated = await Experience.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ error: "Experiencia no encontrada" });
+    const { id } = req.params;
+    const experience = await Experience.findById(id);
+    if (!experience) return res.status(404).json({ error: "Experiencia no encontrada" });
+
+    // Preparar objeto de actualización
+    const updates: any = { ...req.body };
+
+    // Manejo de fotos
+    // 1. Determinar qué fotos existentes se conservan
+    let finalPhotos: string[] = experience.photos as string[] || [];
+    
+    // Si el frontend envía 'keepPhotos', usamos eso como base.
+    // Si no lo envía, asumimos que no se borró ninguna (o que no se tocó la sección de fotos)
+    // Para soportar "borrar todas", el frontend debería enviar un flag o un array vacío explícito si es posible.
+    // Vamos a usar un campo auxiliar 'photosEdited' para saber si se tocó la lista.
+    
+    if (req.body.photosEdited === 'true') {
+        let keep = req.body.keepPhotos || [];
+        if (!Array.isArray(keep)) {
+            keep = [keep];
+        }
+        finalPhotos = keep;
+    }
+
+    // 2. Agregar nuevas fotos subidas
+    if (req.files) {
+        const files = req.files as Express.MulterS3.File[];
+        const newUrls = files.map(f => f.location);
+        finalPhotos = [...finalPhotos, ...newUrls];
+        updates.photos = finalPhotos;
+    } else if (req.body.photosEdited === 'true') {
+        // Si no hubo archivos nuevos pero sí se editaron (ej. borrar), actualizamos
+        updates.photos = finalPhotos;
+    }
+
+    // Limpiar campos auxiliares
+    delete updates.keepPhotos;
+    delete updates.photosEdited;
+
+    const updated = await Experience.findByIdAndUpdate(id, updates, { new: true });
     res.json(updated);
   } catch (err) {
     console.error(err);
@@ -264,6 +306,54 @@ export async function archiveExperience(req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al archivar experiencia" });
+  }
+}
+
+/* PATCH /experiences/:id/start */
+export async function startExperience(req: Request, res: Response) {
+  try {
+    const updated = await Experience.findByIdAndUpdate(
+      req.params.id,
+      { status: "progress" },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Experiencia no encontrada" });
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al iniciar experiencia" });
+  }
+}
+
+/* PATCH /experiences/:id/finish */
+export async function finishExperience(req: Request, res: Response) {
+  try {
+    const updated = await Experience.findByIdAndUpdate(
+      req.params.id,
+      { status: "completed" },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Experiencia no encontrada" });
+
+    // Enviar correos a los usuarios que reservaron
+    try {
+      const reservations = await Reservation.find({ experienceId: updated._id }).populate('userId');
+      
+      for (const reservation of reservations) {
+        const user = reservation.userId as any;
+        if (user && user.email) {
+          emailService.sendReviewRequestEmail(user.email, user.name, (updated as any).title, (reservation as any)._id.toString())
+            .catch(e => console.error(`Error enviando correo a ${user.email}:`, e));
+        }
+      }
+    } catch (emailError) {
+      console.error("Error en proceso de envío de correos:", emailError);
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al finalizar experiencia" });
   }
 }
 

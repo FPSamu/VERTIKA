@@ -347,6 +347,56 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Reviews Modal Styles */
+    .review-item {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .review-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+    }
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+    }
+    .review-stars {
+      color: #f6e05e;
+    }
+    .review-date {
+      font-size: 0.85rem;
+      color: #888;
+      font-weight: normal;
+    }
+    .review-photos {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .review-photo {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
@@ -397,6 +447,19 @@
     </div>
   </div>
 
+  <!-- Modal de Reseñas -->
+  <div id="reviewsModal" class="modal">
+    <div class="modal-content" style="max-width: 800px; text-align: left; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <h2 style="margin: 0; font-size: 1.5rem;">Reseñas de la Experiencia</h2>
+        <button onclick="closeReviewsModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+      </div>
+      <div id="reviewsListContainer">
+        <!-- Reviews will be loaded here -->
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de confirmación -->
   <div id="confirmModal" class="modal">
     <div class="modal-content">
@@ -406,6 +469,78 @@
         <button class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
         <button class="btn btn-confirm" id="confirmBtn" onclick="confirmAction()">Confirmar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal de Edición -->
+  <div id="editExperienceModal" class="modal">
+    <div class="modal-content" style="max-width: 600px; text-align: left;">
+      <h2 style="text-align: center; margin-bottom: 20px;">Editar Experiencia</h2>
+      <form id="editExperienceForm">
+        <input type="hidden" id="editExpId" name="id">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Título</label>
+            <input type="text" id="editTitle" name="title" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Ubicación</label>
+            <input type="text" id="editLocation" name="location" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 5px;">Descripción</label>
+          <textarea id="editDescription" name="description" rows="3" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Precio</label>
+            <input type="number" id="editPrice" name="pricePerPerson" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Moneda</label>
+            <select id="editCurrency" name="currency" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="MXN">MXN</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Fecha</label>
+            <input type="datetime-local" id="editDate" name="date" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Mín. Personas</label>
+            <input type="number" id="editMinGroup" name="minGroupSize" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Máx. Personas</label>
+            <input type="number" id="editMaxGroup" name="maxGroupSize" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Fotos Actuales</label>
+            <div id="currentPhotosContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;"></div>
+            <p style="font-size: 12px; color: #666;">Haz clic en una foto para eliminarla.</p>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Agregar Fotos Nuevas</label>
+            <input type="file" id="newPhotosInput" name="photos" multiple accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" onchange="previewNewPhotos(this)">
+            <div id="newPhotosPreview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 20px;">
+          <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Cancelar</button>
+          <button type="submit" class="btn btn-edit">Guardar Cambios</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -567,12 +702,17 @@
             <p class="card-description">${exp.description}</p>
             <div class="card-actions">
               <button class="btn btn-edit" onclick="editExperience('${exp._id}')">Editar</button>
-              ${exp.status === 'draft' 
+              ${(exp.status === 'draft' || exp.status === 'archived')
                 ? `<button class="btn btn-publish" onclick="publishExperience('${exp._id}')">Publicar</button>` 
                 : ''}
               ${exp.status === 'published' 
-                ? `<button class="btn btn-archive" onclick="archiveExperience('${exp._id}')">Archivar</button>` 
+                ? `<button class="btn btn-archive" onclick="archiveExperience('${exp._id}')">Archivar</button>
+                   <button class="btn" onclick="startExperience('${exp._id}')" style="background-color: #17a2b8; color: white;">Iniciar</button>` 
                 : ''}
+              ${exp.status === 'progress'
+                ? `<button class="btn" onclick="finishExperience('${exp._id}')" style="background-color: #28a745; color: white;">Terminar</button>`
+                : ''}
+              <button class="btn" onclick="viewReviews('${exp._id}')" style="background-color: #f6e05e; color: #2c3e50;"><i class="fas fa-star"></i> Ver Reseñas</button>
               <button class="btn btn-delete" onclick="showDeleteModal('${exp._id}')">Eliminar</button>
             </div>
           </div>
@@ -586,7 +726,8 @@
         'published': 'Publicada',
         'archived': 'Archivada',
         'cancelled': 'Cancelada',
-        'completed': 'Completada'
+        'completed': 'Completada',
+        'progress': 'En Progreso'
       };
       return labels[status] || status;
     }
@@ -607,10 +748,191 @@
       window.location.href = '/api/experiences/create';
     }
 
-    function editExperience(id) {
-      // Redirigir a formulario de edición (por implementar)
-      alert(`Editar experiencia ${id} - Funcionalidad en desarrollo`);
+    const editModal = document.getElementById('editExperienceModal');
+    let photosToKeep = [];
+    let newPhotosFiles = [];
+
+    function closeEditModal() {
+      editModal.style.display = 'none';
     }
+
+    function previewNewPhotos(input) {
+        if (input.files) {
+            Array.from(input.files).forEach(file => {
+                newPhotosFiles.push(file);
+            });
+            renderNewPhotos();
+            input.value = ''; // Limpiar input para permitir seleccionar más
+        }
+    }
+
+    function renderNewPhotos() {
+        const container = document.getElementById('newPhotosPreview');
+        container.innerHTML = '';
+        
+        newPhotosFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.style.position = 'relative';
+                div.style.width = '80px';
+                div.style.height = '80px';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '4px';
+                img.style.border = '1px solid #ddd';
+                
+                const btn = document.createElement('div');
+                btn.innerHTML = '×';
+                btn.style.position = 'absolute';
+                btn.style.top = '-5px';
+                btn.style.right = '-5px';
+                btn.style.background = 'red';
+                btn.style.color = 'white';
+                btn.style.borderRadius = '50%';
+                btn.style.width = '20px';
+                btn.style.height = '20px';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.fontSize = '12px';
+                btn.style.cursor = 'pointer';
+                
+                btn.onclick = () => {
+                    newPhotosFiles.splice(index, 1);
+                    renderNewPhotos();
+                };
+
+                div.appendChild(img);
+                div.appendChild(btn);
+                container.appendChild(div);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function editExperience(id) {
+      const exp = allExperiences.find(e => e._id === id);
+      if (!exp) return;
+
+      document.getElementById('editExpId').value = exp._id;
+      document.getElementById('editTitle').value = exp.title;
+      document.getElementById('editLocation').value = exp.location;
+      document.getElementById('editDescription').value = exp.description;
+      document.getElementById('editPrice').value = exp.pricePerPerson;
+      document.getElementById('editCurrency').value = exp.currency;
+      document.getElementById('editMinGroup').value = exp.minGroupSize;
+      document.getElementById('editMaxGroup').value = exp.maxGroupSize;
+      
+      // Clear new photos preview
+      document.getElementById('newPhotosInput').value = '';
+      newPhotosFiles = [];
+      renderNewPhotos();
+      
+      // Format date for datetime-local input (YYYY-MM-DDTHH:mm)
+      if (exp.date) {
+        const d = new Date(exp.date);
+        // Adjust for timezone offset to show correct local time or just use UTC slice if stored as UTC
+        // Assuming date is ISO string. datetime-local expects local time.
+        // Simple hack:
+        const formatted = d.toISOString().slice(0, 16);
+        document.getElementById('editDate').value = formatted;
+      }
+
+      // Photos
+      photosToKeep = [...(exp.photos || [])];
+      renderCurrentPhotos();
+
+      editModal.style.display = 'block';
+    }
+
+    function renderCurrentPhotos() {
+        const container = document.getElementById('currentPhotosContainer');
+        container.innerHTML = '';
+        photosToKeep.forEach((url, index) => {
+            const div = document.createElement('div');
+            div.style.position = 'relative';
+            div.style.width = '80px';
+            div.style.height = '80px';
+            div.style.cursor = 'pointer';
+            div.title = 'Click para eliminar';
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '4px';
+            
+            const badge = document.createElement('div');
+            badge.innerHTML = '×';
+            badge.style.position = 'absolute';
+            badge.style.top = '-5px';
+            badge.style.right = '-5px';
+            badge.style.background = 'red';
+            badge.style.color = 'white';
+            badge.style.borderRadius = '50%';
+            badge.style.width = '20px';
+            badge.style.height = '20px';
+            badge.style.display = 'flex';
+            badge.style.alignItems = 'center';
+            badge.style.justifyContent = 'center';
+            badge.style.fontSize = '12px';
+
+            div.appendChild(img);
+            div.appendChild(badge);
+            
+            div.onclick = () => {
+                photosToKeep.splice(index, 1);
+                renderCurrentPhotos();
+            };
+            
+            container.appendChild(div);
+        });
+    }
+
+    document.getElementById('editExperienceForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const id = document.getElementById('editExpId').value;
+        const formData = new FormData(form);
+        
+        // Append keepPhotos
+        photosToKeep.forEach(url => {
+            formData.append('keepPhotos', url);
+        });
+
+        // Append new photos manually
+        formData.delete('photos'); // Remove the empty/partial input value
+        newPhotosFiles.forEach(file => {
+            formData.append('photos', file);
+        });
+
+        formData.append('photosEdited', 'true');
+
+        try {
+            const res = await fetchWithAuth(`/api/experiences/${id}`, {
+                method: 'PATCH',
+                body: formData
+            });
+
+            if (res.ok) {
+                alert('Experiencia actualizada');
+                closeEditModal();
+                loadExperiences();
+            } else {
+                const err = await res.json();
+                alert('Error: ' + (err.error || 'Error al actualizar'));
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión');
+        }
+    });
 
     async function publishExperience(id) {
       try {
@@ -650,6 +972,48 @@
         console.error(err);
         if (err.message !== 'Sesión expirada') {
           alert('Error al archivar experiencia');
+        }
+      }
+    }
+
+    async function startExperience(id) {
+      try {
+        const res = await fetchWithAuth(`/api/experiences/${id}/start`, {
+          method: 'PATCH'
+        });
+
+        if (res.ok) {
+          alert('Experiencia iniciada exitosamente');
+          await loadExperiences();
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al iniciar experiencia');
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          alert('Error al iniciar experiencia');
+        }
+      }
+    }
+
+    async function finishExperience(id) {
+      try {
+        const res = await fetchWithAuth(`/api/experiences/${id}/finish`, {
+          method: 'PATCH'
+        });
+
+        if (res.ok) {
+          alert('Experiencia finalizada exitosamente');
+          await loadExperiences();
+        } else {
+          const error = await res.json();
+          alert(error.error || 'Error al finalizar experiencia');
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.message !== 'Sesión expirada') {
+          alert('Error al finalizar experiencia');
         }
       }
     }
@@ -716,10 +1080,65 @@
 
     // Cerrar modal al hacer click fuera
     window.onclick = function(event) {
-      const modal = document.getElementById('confirmModal');
-      if (event.target === modal) {
-        closeModal();
-      }
+      const confirmModal = document.getElementById('confirmModal');
+      const reviewsModal = document.getElementById('reviewsModal');
+      
+      if (event.target === confirmModal) closeModal();
+      if (event.target === editModal) closeEditModal();
+      if (event.target === reviewsModal) closeReviewsModal();
+    }
+
+    function viewReviews(experienceId) {
+      const modal = document.getElementById('reviewsModal');
+      const container = document.getElementById('reviewsListContainer');
+      
+      container.innerHTML = '<div class="loading">Cargando reseñas...</div>';
+      modal.style.display = 'block';
+
+      fetchWithAuth(`/api/reviews/experience/${experienceId}`)
+        .then(res => res.json())
+        .then(reviews => {
+          if (!Array.isArray(reviews) || reviews.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Aún no hay reseñas para esta experiencia.</p>';
+            return;
+          }
+
+          container.innerHTML = reviews.map(review => `
+            <div class="review-item">
+              <div class="review-header">
+                <div class="review-user">
+                  ${review.userId && review.userId.avatarUrl 
+                    ? `<img src="${review.userId.avatarUrl}" class="review-avatar" alt="${review.userId.name}">`
+                    : `<div class="review-avatar"><i class="fas fa-user"></i></div>`
+                  }
+                  <div>
+                    <div>${review.userId ? review.userId.name : 'Usuario desconocido'}</div>
+                    <div class="review-date">${new Date(review.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+                <div class="review-rating">
+                  <div class="review-stars">
+                    ${'★'.repeat(review.experienceRating)}${'☆'.repeat(5 - review.experienceRating)}
+                  </div>
+                </div>
+              </div>
+              <p>${review.comment || ''}</p>
+              ${review.photos && review.photos.length > 0 ? `
+                <div class="review-photos">
+                  ${review.photos.map(photo => `<img src="${photo}" class="review-photo" onclick="window.open('${photo}', '_blank')">`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        })
+        .catch(err => {
+          console.error(err);
+          container.innerHTML = '<p style="color: red; text-align: center;">Error al cargar las reseñas.</p>';
+        });
+    }
+
+    function closeReviewsModal() {
+      document.getElementById('reviewsModal').style.display = 'none';
     }
   </script>
 </body>
