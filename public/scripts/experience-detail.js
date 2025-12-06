@@ -56,6 +56,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function fetchGuideDetails(guideId) {
+        if (dom.guideAvatar) {
+            dom.guideAvatar.style.cursor = 'pointer';
+            dom.guideAvatar.onclick = () => {
+                window.location.href = `/api/guides/profile/${guideId}`;
+            };
+        }
+        
+        
         try {
             const res = await fetch(`/api/guides/${guideId}`); 
             
@@ -73,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Fallback
                 if (currentExperience && currentExperience.guideId && currentExperience.guideId.userId) {
                      const user = currentExperience.guideId.userId;
-                     setText('guideName', user.name || "Anfitrión");
+                     setText('guideName', user.name || "Guia");
                      if(user.avatarUrl && dom.guideAvatar) dom.guideAvatar.src = user.avatarUrl;
                 }
             }
